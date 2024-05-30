@@ -1,0 +1,31 @@
+{
+  "name": "twitter-clone-mern-stack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "i": "cd tests/ && npm i && cd .. && cd socket/ && npm install && cd .. && cd frontend/ && npm install && cd .. && cd backend/ && npm install && cd .. && cd blockchain/ && npm install -f",
+    "install": "npm run i",
+    "app": " concurrently 'cd backend/ && npm run dev'  'cd frontend/ && npm run dev' 'cd socket/ && npm run dev' 'cd blockchain/ && npx hardhat node' ",
+    "cypress": "'cd tests/ && npx cypress open'",
+    "hardhat:local": " npx hardhat node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LakshmiSanikommu/Twitter-Clone.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LakshmiSanikommu/Twitter-Clone/issues"
+  },
+  "homepage": "https://github.com/LakshmiSanikommu/Twitter-Clone#readme",
+  "dependencies": {
+    "concurrently": "^7.6.0",
+    "fs": "^0.0.1-security"
+  }
+}

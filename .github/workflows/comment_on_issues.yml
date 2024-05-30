@@ -1,0 +1,15 @@
+name : Creating an auto comment on issues 
+
+on : 
+  issues : 
+    type : [opened]
+
+jobs : 
+  comment_with_action : 
+    runs-on : ubuntu-latest
+    steps : 
+      - name : issues action
+        run : echo '${{ toJSON(github.event)}}' | jq 
+        shell : bash
+      
+      

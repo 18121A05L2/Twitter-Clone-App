@@ -7,7 +7,7 @@ contract TwitterNfts {
     string public name;
     string public symbol;
 
-    uint256 public nextTokenIdToMint; // token ID number
+    uint256 public nextTokenIdToMint; // token ID numberr
     address public contractOwner;
 
     // token id => owner

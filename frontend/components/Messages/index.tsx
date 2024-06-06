@@ -139,16 +139,17 @@ function Messages() {
             <p>{receiverProfile?.bio}</p>
           </div>
           <div className="  flex h-full flex-col overflow-y-scroll p-2 py-3 ">
-            {allMessages?.map((msg: messageType) => {
-              return (
-                <Message
-                  msg={msg}
-                  key={msg._id + msg.msg}
-                  scrollRef={scrollRef}
-                  userId={profile?.userId}
-                />
-              );
-            })}
+            {allMessages &&
+              allMessages?.map((msg: messageType) => {
+                return (
+                  <Message
+                    msg={msg}
+                    key={msg._id + msg.msg}
+                    scrollRef={scrollRef}
+                    userId={profile?.userId}
+                  />
+                );
+              })}
           </div>
           <div className="sticky bottom-0 m-1  mx-2 mt-auto flex items-center gap-4 rounded-3xl bg-gray-100 p-4 py-2 text-[1.5rem] text-twitter ">
             <BsCardImage />

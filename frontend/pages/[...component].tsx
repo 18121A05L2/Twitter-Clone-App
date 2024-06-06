@@ -29,23 +29,11 @@ import DarkMode from "../components/utils/darkMode";
 function All() {
   const { isContractsLoading } = useContracts();
   const router = useRouter();
-  const dispatch = useDispatch();
 
-  const { profile, walletAddress, nftContract } = useSelector(
-    (state: RootState) => state.blockchain
-  );
+  const { profile } = useSelector((state: RootState) => state.blockchain);
   const { editProfileModalState, tweetBoxModalState } = useSelector(
     (state: RootState) => state.global
   );
-  // useEffect(() => {
-  //   (async () => {
-  //     if (walletAddress && nftContract?.getProfile) {
-  //       const nftUri = await nftContract?.getProfile(walletAddress);
-  //       const profileRes = await fetch(nftUri).then((res) => res.json());
-  //       dispatch(setProfile(profileRes));
-  //     }
-  //   })();
-  // }, [walletAddress, nftContract]);
 
   useEffect(() => {
     const nextElement = document.getElementById("__next");

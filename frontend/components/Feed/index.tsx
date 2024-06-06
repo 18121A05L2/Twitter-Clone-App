@@ -18,7 +18,10 @@ function Feed({ profileExists }: { profileExists: string }) {
 
   useEffect(() => {
     (async () => {
-      const tweetUrls = await twitterContract?.retriveTweets(walletAddress);
+      const tweetUrls = await twitterContract
+        ?.queryFilter("Tweet", 0, "latest")
+        .then((events) => events.map((event) => event?.args[1]));
+
       Promise.all(
         (await tweetUrls?.map(async (tokenUri: string): Promise<postType> => {
           const metadata = (await fetch(tokenUri).then((res) =>

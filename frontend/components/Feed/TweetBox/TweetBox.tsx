@@ -37,8 +37,6 @@ function TweetBox() {
       userId: profile.userId,
       userImage: profile.avatar,
     };
-    // console.log({ data });
-    // console.log({ profile });
 
     const userOwnedTokens = await twitterContract?.balanceOf();
     const userBalance = ethers.formatUnits(
@@ -65,10 +63,11 @@ function TweetBox() {
         .then(async (res) => {
           const tweetUrl = `${PINATA_GATEWAY_URL}/${res.data.IpfsHash}`;
 
-          await twitterContract?.tweet(tweetUrl, {
+          const txtResponse = await twitterContract?.tweet(tweetUrl, {
             value: ethers.parseUnits("1", tokenDecimals),
           });
-          console.log(await twitterContract?.retriveTweets(walletAddress));
+          await txtResponse.wait();
+          // console.log(await twitterContract?.retriveTweets(walletAddress));
           setInput("");
           dispatch(tweetAdded());
           tweetBoxModalState && dispatch(tweetBoxModal());

@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import useContracts from "../hooks/useContracts";
 import DarkMode from "../utils/darkMode";
+import { ConnectWallet } from "../utils/reusable";
 
 export default function SignIn() {
   useContracts();
@@ -24,24 +25,8 @@ export default function SignIn() {
   function connectWallet() {
     if (window.ethereum) {
       (async () => {
-        const { ethereum } = window;
-        const connectedAccounts = (await ethereum.request({
-          method: "eth_requestAccounts",
-        })) as Array<string>;
-
-        await window.ethereum.request({
-          method: "wallet_switchEthereumChain",
-          params: [
-            {
-              chainId: `0x${sepoliaTestnetId.toString(16)}`,
-            },
-          ],
-        });
-        console.log(connectedAccounts);
-        const walletAddress = connectedAccounts[0]; // it can rerturn the multiple conntected accounts
-        dispatch(setWalletAddress(walletAddress));
-        window.sessionStorage.setItem("walletAddress", walletAddress);
-        toast("Wallet connected successfully");
+        const fetchWalletAddress = await ConnectWallet();
+        dispatch(setWalletAddress(fetchWalletAddress));
       })();
     }
   }

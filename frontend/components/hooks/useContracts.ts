@@ -13,11 +13,16 @@ import {
   setProvider,
   setSigner,
   setTwitterContract,
+  setWalletAddress,
 } from "../../Redux/features/BlockchainSlice";
 import { toast } from "react-toastify";
+import { ConnectWallet } from "../utils/reusable";
+import { useRouter } from "next/router";
 
 const useContracts = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const isRootPath = router.pathname === "/";
   let nftContract, twitterContract;
   const [isContractsLoading, setIsContractsLoading] = useState(true);
 
@@ -25,6 +30,7 @@ const useContracts = () => {
 
   useEffect(() => {
     (async function () {
+      setIsContractsLoading(true);
       try {
         if (typeof window.ethereum !== "undefined" && walletAddress) {
           const provider = new ethers.BrowserProvider(window.ethereum);
@@ -59,7 +65,10 @@ const useContracts = () => {
           const profileRes = await fetch(nftUri).then((res) => res.json());
           dispatch(setProfile(profileRes));
         } else {
-          // console.log("connect wallet ");
+          if (!isRootPath) {
+            const fetchWalletAddress = await ConnectWallet();
+            dispatch(setWalletAddress(fetchWalletAddress));
+          }
         }
       } catch (err) {
         console.log({ err });

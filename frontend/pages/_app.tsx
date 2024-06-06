@@ -10,6 +10,7 @@ import { NotificationProvider } from "web3uikit";
 import { PersistGate } from "redux-persist/integration/react";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { useEffect } from "react";
 
 // need to learn about this Session type
 function MyApp({
@@ -17,6 +18,40 @@ function MyApp({
   pageProps: { session, ...pageProps },
 }: AppProps<{ session: Session }>) {
   // document.documentElement.classList.add("dark");
+
+  useEffect(() => {
+    const handleAccountsChanged = () => {
+      console.log("accountsChanged");
+      window.sessionStorage.clear();
+      window.localStorage.clear();
+      window.location.reload();
+    };
+
+    const handleChainChanged = () => {
+      console.log("chainChanged");
+      window.location.reload();
+    };
+
+    const handleDisconnect = () => {
+      console.log("disconnect");
+    };
+
+    if (window.ethereum) {
+      const { ethereum } = window;
+
+      ethereum.on("accountsChanged", handleAccountsChanged);
+      ethereum.on("chainChanged", handleChainChanged);
+      ethereum.on("disconnect", handleDisconnect);
+
+      // Cleanup listeners on component unmount
+      return () => {
+        ethereum.removeListener("accountsChanged", handleAccountsChanged);
+        ethereum.removeListener("chainChanged", handleChainChanged);
+        ethereum.removeListener("disconnect", handleDisconnect);
+      };
+    }
+  }, []);
+
   return (
     // <SessionProvider session={session}>
     <Provider store={store}>

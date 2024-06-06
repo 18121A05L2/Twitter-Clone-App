@@ -12,13 +12,13 @@ function Feed({ profileExists }: { profileExists: string }) {
   const { tweetAdded, dataChanged } = useSelector(
     (state: RootState) => state.global
   );
-  const { twitterContract, profile } = useSelector(
+  const { twitterContract, profile, walletAddress } = useSelector(
     (state: RootState) => state.blockchain
   );
 
   useEffect(() => {
     (async () => {
-      const tweetUrls = await twitterContract?.retriveTweets();
+      const tweetUrls = await twitterContract?.retriveTweets(walletAddress);
       Promise.all(
         (await tweetUrls?.map(async (tokenUri: string): Promise<postType> => {
           const metadata = (await fetch(tokenUri).then((res) =>

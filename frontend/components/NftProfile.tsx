@@ -23,6 +23,8 @@ function NftProfile() {
   const [userId, setUserId] = useState("");
   const [isMinting, setIsMinting] = useState(false);
   const [tempImg, setTempImg] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
+  const [errMsg, setErrMsg] = useState("");
   const [myNfts, setMyNfts] = useState<tokenUriType[]>();
   const dispatch = useDispatch();
   const { walletAddress, nftContract, profile, isSettingProfile } = useSelector(
@@ -64,12 +66,29 @@ function NftProfile() {
     }
   };
   const MintNft = async () => {
-    setIsMinting(true);
-    if (!tempImg || !nftName) {
-      console.log({ tempImg, nftName });
-      console.log(" add avatar and name ");
+    if (!tempImg || !nftName || !userId) {
+      setIsMinting(false);
+      if (!tempImg && !nftName && !userId) {
+        setErrMsg("Please select an image , enter nft name and userId");
+      } else if (!tempImg && !nftName) {
+        setErrMsg("Please select an image , enter nft name ");
+      } else if (!tempImg && !userId) {
+        setErrMsg("Please select an image , enter userId");
+      } else if (!nftName && !userId) {
+        setErrMsg("Please enter nft name and userId");
+      } else if (!tempImg) {
+        setErrMsg("Please select an image");
+      } else if (!nftName) {
+        setErrMsg("Please enter nft name");
+      } else if (!userId) {
+        setErrMsg("Please enter userId");
+      }
+
+      // console.log({ tempImg, nftName });
+      // console.log(" add avatar and name ");
       return;
     }
+    setIsMinting(true);
     try {
       const formData = new FormData();
       formData.append("image", tempImg);
@@ -106,7 +125,12 @@ function NftProfile() {
 
   const onImgChange = async (event: any) => {
     event.preventDefault();
-    setTempImg(event.target.files[0]);
+    let file = event.target.files[0];
+    setTempImg(file);
+    if (file) {
+      let imageUrl = URL.createObjectURL(file);
+      setImageUrl(imageUrl);
+    }
   };
 
   const switchProfile = async (event: any, nft: tokenUriType) => {
@@ -157,7 +181,12 @@ function NftProfile() {
         <div className=" flex flex-row">
           <div className=" flex flex-col gap-3 ">
             <h1>NftProfile</h1>
-            <input className="" onChange={onImgChange} type="file"></input>
+            <input
+              className=""
+              onChange={onImgChange}
+              type="file"
+              accept="image/*"
+            ></input>
             <input
               className=" rounded-md border-2 p-1 outline-none  "
               type="text"
@@ -176,6 +205,7 @@ function NftProfile() {
             >
               {isMinting ? "Minting...." : "Mint NFT Profile"}
             </div>
+            {errMsg && <p className=" text-red-500">{errMsg}</p>}
           </div>
           {isSettingProfile ? (
             <div className=" ml-auto mr-auto flex h-24 w-24 items-center self-center rounded-full bg-indigo-400 text-xs">
@@ -194,11 +224,11 @@ function NftProfile() {
           )}
         </div>
 
-        {avatar && !isMinting && (
+        {imageUrl && (
           <img
             alt="profile"
             className=" h-80 w-80 align-middle "
-            src={avatar}
+            src={imageUrl}
           ></img>
         )}
       </div>

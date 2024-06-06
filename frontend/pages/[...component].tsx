@@ -37,15 +37,15 @@ function All() {
   const { editProfileModalState, tweetBoxModalState } = useSelector(
     (state: RootState) => state.global
   );
-  useEffect(() => {
-    (async () => {
-      if (walletAddress && nftContract?.getProfile) {
-        const nftUri = await nftContract?.getProfile(walletAddress);
-        const profileRes = await fetch(nftUri).then((res) => res.json());
-        dispatch(setProfile(profileRes));
-      }
-    })();
-  }, [walletAddress, nftContract]);
+  // useEffect(() => {
+  //   (async () => {
+  //     if (walletAddress && nftContract?.getProfile) {
+  //       const nftUri = await nftContract?.getProfile(walletAddress);
+  //       const profileRes = await fetch(nftUri).then((res) => res.json());
+  //       dispatch(setProfile(profileRes));
+  //     }
+  //   })();
+  // }, [walletAddress, nftContract]);
 
   useEffect(() => {
     const nextElement = document.getElementById("__next");

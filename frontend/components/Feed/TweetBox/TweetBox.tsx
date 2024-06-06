@@ -17,7 +17,7 @@ import { Spinner } from "../../utils/svgs";
 
 function TweetBox() {
   const [isLoading, setIsLoading] = useState(false);
-  const { profile, twitterContract } = useSelector(
+  const { profile, twitterContract, walletAddress } = useSelector(
     (state: RootState) => state.blockchain
   );
   const router = useRouter();
@@ -68,7 +68,7 @@ function TweetBox() {
           await twitterContract?.tweet(tweetUrl, {
             value: ethers.parseUnits("1", tokenDecimals),
           });
-          console.log(await twitterContract?.retriveTweets());
+          console.log(await twitterContract?.retriveTweets(walletAddress));
           setInput("");
           dispatch(tweetAdded());
           tweetBoxModalState && dispatch(tweetBoxModal());

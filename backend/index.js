@@ -47,6 +47,8 @@ async function main() {
 
   twitterbackend();
 
+  app.get("/", (req, res) => res.send("Express on Vercel"));
+
   // ------------------ PINATA SDK -------------------------
 
   app.route("/uploadJsonToIpfs").post(async function (req, res) {

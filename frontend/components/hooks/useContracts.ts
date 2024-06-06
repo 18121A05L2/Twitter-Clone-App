@@ -9,6 +9,7 @@ import {
 } from "../../constants/exportJsons";
 import {
   setNftContract,
+  setProfile,
   setProvider,
   setSigner,
   setTwitterContract,
@@ -52,6 +53,11 @@ const useContracts = () => {
             signer
           );
           dispatch(setNftContract(nftContract));
+
+          // setting the profile if user already exists
+          const nftUri = await nftContract?.getProfile(walletAddress);
+          const profileRes = await fetch(nftUri).then((res) => res.json());
+          dispatch(setProfile(profileRes));
         } else {
           // console.log("connect wallet ");
         }

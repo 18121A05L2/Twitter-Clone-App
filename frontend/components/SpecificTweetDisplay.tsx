@@ -1,24 +1,35 @@
-import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { BsThreeDots } from "react-icons/bs";
 import { v4 as uuidv4 } from "uuid";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import Actions from "./Feed/DisplayTweets/Actions";
-import { useSession } from "next-auth/react";
 import CommentDesign from "./CommentDesign";
 import { clicked } from "../Redux/features/GlobalSlice";
 import { useRouter } from "next/router";
 import axiosAPI from "../axios";
 import { postType } from "../Types/Feed.types";
 import { RootState } from "../Redux/app/store";
+import { PINATA_GATEWAY_URL } from "../constants/frontend";
 
-function SpecificTweetDisplay({ post }: { post: postType }) {
+function SpecificTweetDisplay() {
   const [replyInput, setReplyInput] = useState("");
+  const [post, setPost] = useState<postType>();
   const router = useRouter();
   const dispatch = useDispatch();
   const { profile } = useSelector((state: RootState) => state.blockchain);
+  const ipfsHash = router.asPath.split("/").pop();
+  const postUrl = `${PINATA_GATEWAY_URL}/${ipfsHash}`;
+  useEffect(() => {
+    if (postUrl) {
+      (async () => {
+        const profileRes = await fetch(postUrl).then((res) => res.json());
+        setPost(profileRes);
+      })();
+    }
+  }, [postUrl]);
+
   console.log(post);
 
   const data = {
@@ -37,6 +48,8 @@ function SpecificTweetDisplay({ post }: { post: postType }) {
       console.log("reply added successfully");
     });
   }
+
+  if (!post && !profile) return null;
 
   return (
     <div className=" scrollbar-hide col-span-7 mr-2 max-h-screen  overflow-scroll border-x-[0.1rem] p-2 lg:col-span-5 ">
@@ -102,6 +115,24 @@ function SpecificTweetDisplay({ post }: { post: postType }) {
       ))}
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  const ipfsHash = context?.params?.tweetId;
+  console.log({ ipfsHash });
+
+  console.log("🥶 this is context" + context);
+  const post = "";
+
+  // const post = await axiosAPI
+  //   .post("/tweet", JSON.stringify(data))
+  //   .then((res) => res.data);
+
+  return {
+    props: {
+      post: post,
+    },
+  };
 }
 
 export default SpecificTweetDisplay;

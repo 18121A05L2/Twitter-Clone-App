@@ -9,11 +9,16 @@ import { useSelector } from "react-redux";
 import Link from "next/link";
 import axiosAPI from "../../../axios";
 import { RootState } from "../../../Redux/app/store";
-import { PINATA_GATEWAY_URL, tokenDecimals } from "../../../constants/frontend";
+import {
+  PINATA_GATEWAY_URL,
+  sepoliaTestnetId,
+  tokenDecimals,
+} from "../../../constants/frontend";
 import { ethers } from "ethers";
 import { postType } from "../../../Types/Feed.types";
 import { useRouter } from "next/router";
 import { Spinner } from "../../utils/svgs";
+import { contractAddresses } from "../../../constants/exportJsons";
 
 function TweetBox() {
   const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +49,7 @@ function TweetBox() {
       tokenDecimals
     );
     const contractOwnedTokens = await twitterContract?.s_balanceOf(
-      "0xcEe7d09ec201295232D0131AF4e2A75EC9A13125"
+      contractAddresses[sepoliaTestnetId].Twitter
     );
 
     console.log(" user Token balance : ", userBalance);

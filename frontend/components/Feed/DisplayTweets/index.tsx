@@ -14,7 +14,7 @@ function DisplayTweets({
   profile: tokenUriType;
 }) {
   return (
-    <Link passHref href={`/${post.userId?.slice(1)}/status/${post.ipfsHash}`}>
+    <Link passHref href={`home/status/${post?.userId}/${post.ipfsHash}`}>
       <div className="flex border-t-[0.1rem] p-2 hover:bg-gray-100">
         <div className="relative h-[3rem] w-[3.2rem] ">
           <Image

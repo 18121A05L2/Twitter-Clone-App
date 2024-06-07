@@ -12,6 +12,7 @@ import { useState } from "react";
 import useContracts from "../hooks/useContracts";
 import DarkMode from "../utils/darkMode";
 import { ConnectWallet } from "../utils/reusable";
+import axiosAPI from "../../axios";
 
 export default function SignIn() {
   useContracts();
@@ -48,6 +49,18 @@ export default function SignIn() {
     setIsLoading(false);
   }
 
+  async function handleSenbdEth() {
+    setIsLoading(true);
+
+    const res = await axiosAPI.post(
+      "/sendEth",
+      JSON.stringify({ address: walletAddress })
+    );
+    console.log({ res });
+
+    setIsLoading(false);
+  }
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-10 dark:bg-black dark:text-white">
       <DarkMode />
@@ -77,6 +90,13 @@ export default function SignIn() {
         onClick={handleFreeEth}
       >
         {isLoading ? <Spinner /> : " Get 0.01 testnet eth to play with"}
+      </div>
+
+      <div
+        className=" min-w-16 cursor-pointer rounded-full bg-orange-200 p-3 px-5 "
+        onClick={handleSenbdEth}
+      >
+        {isLoading ? <Spinner /> : " send eth without interacting"}
       </div>
     </div>
   );

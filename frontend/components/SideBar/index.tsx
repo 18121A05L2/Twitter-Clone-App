@@ -86,26 +86,27 @@ function SideBar() {
             : "Connect wallet"}
         </div>
       </div>
-      <div className="signout">
-        <div className="relative h-[2.5rem] w-[2.5rem]">
-          {isSettingProfile ? (
-            <div className=" ml-auto mr-auto flex h-14 w-14 items-center self-center rounded-full bg-indigo-400 text-xs">
-              <svg
-                className=" mr-3 h-5 w-5 animate-spin "
-                viewBox="0 0 24 24"
-              ></svg>
-              setting profile..
-            </div>
-          ) : (
-            <Image
-              layout="fill"
-              className=" rounded-full"
-              src={profile.avatar || "https://links.papareact.com/gll"}
-            ></Image>
-          )}
+      <div className=" mb-3 mt-auto flex  items-center justify-between rounded-full p-2 gap-2 ">
+        <div className="flex items-center gap-3 ">
+          <div className="relative h-[2.5rem] w-[2.5rem]">
+            {isSettingProfile ? (
+              <div className=" ml-auto mr-auto flex h-14 w-14 items-center self-center rounded-full bg-indigo-400 text-xs">
+                <svg
+                  className=" mr-3 h-5 w-5 animate-spin "
+                  viewBox="0 0 24 24"
+                ></svg>
+                setting profile..
+              </div>
+            ) : (
+              <Image
+                layout="fill"
+                className=" rounded-full"
+                src={profile.avatar || "https://links.papareact.com/gll"}
+              ></Image>
+            )}
+          </div>
+          <p>@{profile?.userId.split(" ")[0].toLowerCase()}</p>
         </div>
-
-        {/* <p>@{session?.user?.name?.split(" ")[0].toLowerCase()}</p> */}
 
         {walletAddress && (
           <button

@@ -13,9 +13,7 @@ import {
 } from "../Redux/features/BlockchainSlice";
 import Link from "next/link";
 import { toast } from "react-toastify";
-
-const PINATA_GATEWAY_URL =
-  "https://turquoise-electrical-halibut-222.mypinata.cloud/ipfs";
+import { PINATA_GATEWAY_URL } from "../constants/frontend";
 
 function NftProfile() {
   const [avatar, setAvatar] = useState("");
@@ -85,7 +83,7 @@ function NftProfile() {
       }
 
       // console.log({ tempImg, nftName });
-      // console.log(" add avatar and name ");
+      // console.log(" add avatar and name ")
       return;
     }
     setIsMinting(true);

@@ -23,7 +23,7 @@ const updateFrontEnd: DeployFunction = async (
         )
 
         // updating twitter contract
-        const twitter = await deployments.get("Twitter")
+        const twitter = await deployments.get("TwitterProxy")
         contractAddresses[chainId] = {}
         contractAddresses[chainId]["Twitter"] = twitter.address
 

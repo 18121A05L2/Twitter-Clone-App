@@ -8,7 +8,7 @@ const deployTwitter: DeployFunction = async ({
     getNamedAccounts,
     deployments,
 }: HardhatRuntimeEnvironment) => {
-    console.log(" ------------- 02-deploy-twitter ------------- ")
+    console.log(" ------------- 01-deploy-twitter ------------- ")
     const { deploy, log, get } = deployments
     const { lucky, kiran } = await getNamedAccounts()
     const chainId = network.config.chainId

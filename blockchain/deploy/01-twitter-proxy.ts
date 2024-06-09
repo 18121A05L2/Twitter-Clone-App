@@ -36,7 +36,7 @@ const twitterProxy: DeployFunction = async ({
     const txtResponse = await TwitterProxyContract.updateImplementation(
         "0x3A236fd775A88aDf978d5b9Ad439dBaf9008Bba2",
     )
-    console.log(txtResponse)
+    // console.log(txtResponse)
 }
 
 export default twitterProxy

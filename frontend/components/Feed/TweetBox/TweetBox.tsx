@@ -10,6 +10,7 @@ import Link from "next/link";
 import axiosAPI from "../../../axios";
 import { RootState } from "../../../Redux/app/store";
 import {
+  localTestnetId,
   PINATA_GATEWAY_URL,
   sepoliaTestnetId,
   tokenDecimals,

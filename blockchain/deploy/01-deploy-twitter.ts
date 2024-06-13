@@ -29,8 +29,8 @@ const deployTwitter: DeployFunction = async ({
         args: [ethPriceFeedAddress],
         log: true,
         waitConfirmations: networkConfig[chainId].blockConfirmations,
-        // value: ethers.parseEther("0.01"),
-        value: 0,
+        value: ethers.parseEther("0.0001"),
+        // value: 0,
     })
     const twitterAddress = TwitterContract.address
     if (chainId !== 31337 && process.env.ETHER_SCAN_API) {

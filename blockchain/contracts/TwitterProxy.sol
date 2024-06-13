@@ -24,24 +24,30 @@ contract TwitterProxy {
 
     constructor(address _implementation) {
         i_owner = msg.sender;
+        contractAddress = _implementation;
         implementation = _implementation;
     }
 
     function updateImplementation(address _newImplementation) public {
+        require(msg.sender == i_owner, "Only owner can update implementation");
         implementation = _newImplementation;
     }
 
+    // Proxy fallback function using delegatecall
     fallback() external payable {
         address impl = implementation;
-        require(impl != address(0), "Implementation address is zero");
+        require(impl != address(0), "Implementation address is zero ");
 
         assembly {
             let ptr := mload(0x40)
+            // (1) copy incoming call data
             calldatacopy(ptr, 0, calldatasize())
+            // (2) forward call to logic contract
             let result := delegatecall(gas(), impl, ptr, calldatasize(), 0, 0)
+            // (3) retrieve return data
             let size := returndatasize()
             returndatacopy(ptr, 0, size)
-
+            // (4) forward return data back to caller
             switch result
             case 0 {
                 revert(ptr, size)

@@ -57,12 +57,12 @@ function Wallet() {
   async function onFaucetClick() {
     setIsLoading(true);
     const transactionResponse = await twitterContract?.faucet();
-    const balance = await twitterContract?.balanceOf();
+    await transactionResponse.wait(1);
+    const userBalance = await twitterContract?.balanceOf();
     const tokenBalance = Number(
-      ethers.formatUnits(Number(balance).toString(), tokenDecimals)
+      ethers.formatUnits(Number(userBalance).toString(), tokenDecimals)
     );
     setData((prev) => ({ ...prev, tokenBalance }));
-    await transactionResponse.wait(1);
     setIsLoading(false);
   }
 

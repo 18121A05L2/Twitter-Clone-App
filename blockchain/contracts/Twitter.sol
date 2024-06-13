@@ -14,6 +14,7 @@ error Twitter_NotOwner();
  */
 
 contract Twitter is TwitterToken {
+    address public implementation;
     address public contractAddress;
     TwitterToken public TwitterTokenInstance;
     using FundMe for uint256;
@@ -107,6 +108,10 @@ contract Twitter is TwitterToken {
         );
         (bool success, ) = payable(msg.sender).call{value: amount}("");
         require(success, " Failed to send 0.01 ETH");
+    }
+
+    function destroy() public onlyOwner {
+        selfdestruct(payable(i_owner));
     }
 
     // A fallback function to accept ETH

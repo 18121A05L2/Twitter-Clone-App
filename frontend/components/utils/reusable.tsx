@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { sepoliaTestnetId } from "../../constants/frontend";
+import { localTestnetId, sepoliaTestnetId } from "../../constants/frontend";
 import { setWalletAddress } from "../../Redux/features/BlockchainSlice";
 import { toast } from "react-toastify";
 

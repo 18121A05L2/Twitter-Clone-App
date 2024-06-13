@@ -33,9 +33,9 @@ const twitterProxy: DeployFunction = async ({
     )
 
     // TODO: this is for temporarily
-    const txtResponse = await TwitterProxyContract.updateImplementation(
-        "0x3A236fd775A88aDf978d5b9Ad439dBaf9008Bba2",
-    )
+    // const txtResponse = await TwitterProxyContract.updateImplementation(
+    //     "0x3A236fd775A88aDf978d5b9Ad439dBaf9008Bba2",
+    // )
     // console.log(txtResponse)
 }
 

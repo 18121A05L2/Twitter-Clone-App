@@ -70,7 +70,7 @@ const useContracts = () => {
             dispatch(setWalletAddress(fetchWalletAddress));
           }
         }
-      } catch (err) {
+      } catch (err : any) {
         console.log({ err });
         toast("Contracts : " + err.shortMessage, { type: "error" });
       } finally {

@@ -117,7 +117,7 @@ function SpecificTweetDisplay() {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context : any) {
   const ipfsHash = context?.params?.tweetId;
   console.log({ ipfsHash });
 

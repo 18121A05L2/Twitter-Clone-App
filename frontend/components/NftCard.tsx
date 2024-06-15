@@ -1,6 +1,7 @@
 import React from "react";
+// import { }
 
-function NftCard({ nft }) {
+function NftCard({ nft }: { nft: tokenUriType }) {
   return (
     <div className=" flex flex-col items-center  rounded-lg  ">
       <img className=" h-40 w-40" src={nft.avatar} />

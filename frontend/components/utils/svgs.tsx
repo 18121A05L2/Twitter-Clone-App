@@ -1,5 +1,5 @@
 import React from "react";
-export const NewTwitterLogo = ({ isDarkMode }) => (
+export const NewTwitterLogo = ({ isDarkMode }: { isDarkMode: Boolean }) => (
   <svg
     viewBox="0 0 24 24"
     aria-hidden="true"

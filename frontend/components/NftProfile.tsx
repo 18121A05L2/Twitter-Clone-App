@@ -140,7 +140,7 @@ function NftProfile() {
       const profileRes = await fetch(nftUri).then((res) => res.json());
       dispatch(setProfile(profileRes));
       dispatch(setIsSettingProfile(false));
-    } catch (err) {
+    } catch (err : any) {
       toast(err.shortMessage, { type: "error" });
     }
   };

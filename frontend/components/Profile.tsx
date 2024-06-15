@@ -16,7 +16,7 @@ import { RootState } from "../Redux/app/store";
 
 function Profile() {
   const [profilePosts, setProfilePosts] = useState([]);
-  const [profileData, setProfileData] = useState<profileType | tokenUriType>();
+  const [profileData, setProfileData] = useState<tokenUriType>();
   const router = useRouter();
   const { profileDataChanged, dataChanged } = useSelector(
     (state: RootState) => state.global
@@ -68,7 +68,7 @@ function Profile() {
         </Link>
 
         <section>
-          <p>{profileData?.name}</p>
+          <p>{profileData?.userId}</p>
           <p>{profilePosts?.length} Tweets</p>
         </section>
       </div>
@@ -78,7 +78,7 @@ function Profile() {
           height="200"
           width="700"
           src={
-            profileData?.backgroundImage ||
+            // profileData?.backgroundImage ||
             "https://thumbs.dreamstime.com/b/technology-banner-background-old-new-using-computer-circuits-old-machine-cogs-37036025.jpg"
           }
         />
@@ -109,7 +109,7 @@ function Profile() {
           newUserId && userId !== newUserId && " pt-12  "
         }`}
       >
-        <p>{profileData?.name}</p>
+        {/* <p>{profileData?.name}</p> */}
         <p>{profileData?.userId}</p>
         <p>{profileData?.bio}</p>
 
@@ -128,11 +128,11 @@ function Profile() {
           <div className="flex items-center gap-2">
             <AiOutlineLink />
             <a
-              href={profileData?.website}
+              // href={profileData?.website}
               target="_blank"
               className=" text-twitter "
             >
-              {profileData?.website?.slice(0, 20) + "..."}
+              {/* {profileData?.website?.slice(0, 20) + "..."} */}
             </a>
           </div>
         </div>
@@ -147,9 +147,9 @@ function Profile() {
           </div>
         </div>
       </div>
-      {profilePosts?.map((post: postType) => (
+      {/* {profilePosts?.map((post: postType) => (
         <DisplayTweets key={post?._id} post={post} />
-      ))}
+      ))} */}
     </div>
   );
 }

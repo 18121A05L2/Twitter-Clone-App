@@ -15,7 +15,7 @@ import { RootState } from "../../Redux/app/store";
 function Messages() {
   const [input, setInput] = useState("");
   const socket = useRef<Socket>();
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef() as React.MutableRefObject<HTMLInputElement>;
   const dispatch = useDispatch();
   const router = useRouter();
@@ -134,7 +134,7 @@ function Messages() {
               ></Image>
             </div>
 
-            <p>{receiverProfile?.name}</p>
+            {/* <p>{receiverProfile?.name}</p> */}
             <p>{receiverProfile?.userId}</p>
             <p>{receiverProfile?.bio}</p>
           </div>

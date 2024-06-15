@@ -22,7 +22,8 @@ function ViewProfile({
   }
 
   const router = useRouter();
-  const isMessagesPage = router?.query?.component[0] === "messages";
+  const isMessagesPage =
+    router?.query?.component && router?.query?.component[0] === "messages";
 
   return (
     <Link
@@ -64,11 +65,11 @@ function ViewProfile({
               ? profile?.userId
               : profile?.userId.slice(0, 15) + "..."}
           </p>
-          <p className="text-gray-500">
+          {/* <p className="text-gray-500">
             {profile?.bio?.length < 15
               ? profile?.bio
               : profile?.bio?.slice(0, 15) + "..."}
-          </p>
+          </p> */}
         </div>
       </div>
     </Link>

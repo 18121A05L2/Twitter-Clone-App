@@ -9,7 +9,7 @@ type initialStateType = {
   nftContract: ethers.Contract | null;
   profile: tokenUriType;
   isSettingProfile: boolean;
-  currentNftView: Object;
+  currentNftView: tokenUriType;
 };
 
 const initialState: initialStateType = {
@@ -20,7 +20,7 @@ const initialState: initialStateType = {
   nftContract: null,
   profile: { userId: "", avatar: "", nftName: "" },
   isSettingProfile: false,
-  currentNftView: {},
+  currentNftView: { userId: "", avatar: "", nftName: "" },
 };
 
 const blockchainSlice = createSlice({

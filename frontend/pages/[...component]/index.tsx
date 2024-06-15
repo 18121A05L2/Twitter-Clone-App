@@ -47,6 +47,8 @@ function All() {
     if (path?.split("/")?.length > 2) {
       if (path?.includes("home/status")) {
         return <SpecificTweetDisplay />;
+      } else if (path?.includes("messages/")) {
+        return <Messages />;
       }
     }
     switch (path) {

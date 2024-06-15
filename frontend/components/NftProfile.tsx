@@ -14,6 +14,7 @@ import {
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { PINATA_GATEWAY_URL } from "../constants/frontend";
+import { tokenUriType } from "../Types/blockchain.types";
 
 function NftProfile() {
   const [avatar, setAvatar] = useState("");

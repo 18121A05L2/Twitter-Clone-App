@@ -13,6 +13,7 @@ import { AiOutlineLink } from "react-icons/ai";
 import axiosAPI from "../axios";
 import { postType, profileType } from "../Types/Feed.types";
 import { RootState } from "../Redux/app/store";
+import { tokenUriType } from "../Types/blockchain.types";
 
 function Profile() {
   const [profilePosts, setProfilePosts] = useState([]);

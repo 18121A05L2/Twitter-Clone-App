@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
+import { tokenUriType } from "../../Types/blockchain.types";
 
 type initialStateType = {
   twitterContract: ethers.Contract | null;

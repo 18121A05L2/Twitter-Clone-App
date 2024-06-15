@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { tokenUriType } from "../../Types/blockchain.types";
 
 type initialState = {
   tweetAdded: number;

@@ -1,6 +1,6 @@
-import toast from "react-hot-toast";
 
-type tokenUriType = {
+
+export type tokenUriType = {
   userId: string;
   avatar: string;
   nftName: string;

@@ -1,4 +1,5 @@
 import React from "react";
+import { tokenUriType } from "../Types/blockchain.types";
 // import { }
 
 function NftCard({ nft }: { nft: tokenUriType }) {

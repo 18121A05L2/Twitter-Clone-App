@@ -8,6 +8,7 @@ import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import MessageSearch from "../Messages/MessageSearch";
 import useUniqueAddresses from "../hooks/useUniqueAddresses";
+import { tokenUriType } from "../../Types/blockchain.types";
 
 function Widgets() {
   const [search, setSearch] = useState<string>("");

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../Redux/app/store";
 import { setWalletAddress } from "../Redux/features/BlockchainSlice";
 import { useRouter } from "next/router";
+import useContracts from "../components/hooks/useContracts";
 
 function IndexPage() {
   const walletAddress = useSelector(
@@ -19,26 +20,6 @@ function IndexPage() {
       dispatch(setWalletAddress(walletAddressFromSession));
     }
   }, []);
-  useEffect(() => {
-    if (window.ethereum && walletAddress) {
-      (async () => {
-        const { ethereum } = window;
-        window.ethereum.on("accountsChanged", () => {
-          console.log("accountsChanged");
-          window.sessionStorage.removeItem("walletAddress");
-          window.location.reload();
-        });
-
-        window.ethereum.on("chainChanged", () => {
-          console.log("chainChanged");
-          window.location.reload();
-        });
-        window.ethereum.on("disconnect", () => {
-          console.log("disconnect");
-        });
-      })();
-    }
-  }, [walletAddress]);
 
   return (
     <div>

@@ -11,6 +11,8 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import useContracts from "../hooks/useContracts";
 import DarkMode from "../utils/darkMode";
+import { ConnectWallet } from "../utils/reusable";
+import axiosAPI from "../../axios";
 
 export default function SignIn() {
   useContracts();
@@ -24,24 +26,8 @@ export default function SignIn() {
   function connectWallet() {
     if (window.ethereum) {
       (async () => {
-        const { ethereum } = window;
-        const connectedAccounts = (await ethereum.request({
-          method: "eth_requestAccounts",
-        })) as Array<string>;
-
-        await window.ethereum.request({
-          method: "wallet_switchEthereumChain",
-          params: [
-            {
-              chainId: `0x${sepoliaTestnetId.toString(16)}`,
-            },
-          ],
-        });
-        console.log(connectedAccounts);
-        const walletAddress = connectedAccounts[0]; // it can rerturn the multiple conntected accounts
-        dispatch(setWalletAddress(walletAddress));
-        window.sessionStorage.setItem("walletAddress", walletAddress);
-        toast("Wallet connected successfully");
+        const fetchWalletAddress = await ConnectWallet();
+        dispatch(setWalletAddress(fetchWalletAddress));
       })();
     }
   }
@@ -56,10 +42,22 @@ export default function SignIn() {
       if (walletAddress) {
         router.push("/home");
       }
-    } catch (err) {
+    } catch (err : any) {
       // console.log({ err });
       toast(err.shortMessage, { type: "error" });
     }
+    setIsLoading(false);
+  }
+
+  async function handleSenbdEth() {
+    setIsLoading(true);
+
+    const res = await axiosAPI.post(
+      "/sendEth",
+      JSON.stringify({ address: walletAddress })
+    );
+    console.log({ res });
+
     setIsLoading(false);
   }
 
@@ -92,6 +90,13 @@ export default function SignIn() {
         onClick={handleFreeEth}
       >
         {isLoading ? <Spinner /> : " Get 0.01 testnet eth to play with"}
+      </div>
+
+      <div
+        className=" min-w-16 cursor-pointer rounded-full bg-orange-200 p-3 px-5 "
+        onClick={handleSenbdEth}
+      >
+        {isLoading ? <Spinner /> : " send eth without interacting"}
       </div>
     </div>
   );

@@ -12,13 +12,16 @@ function Feed({ profileExists }: { profileExists: string }) {
   const { tweetAdded, dataChanged } = useSelector(
     (state: RootState) => state.global
   );
-  const { twitterContract, profile } = useSelector(
+  const { twitterContract, profile, walletAddress } = useSelector(
     (state: RootState) => state.blockchain
   );
 
   useEffect(() => {
     (async () => {
-      const tweetUrls = await twitterContract?.retriveTweets();
+      const tweetUrls = await twitterContract
+        ?.queryFilter("Tweet", 0, "latest")
+        .then((events) => events.map((event: any) => event?.args[1]));
+
       Promise.all(
         (await tweetUrls?.map(async (tokenUri: string): Promise<postType> => {
           const metadata = (await fetch(tokenUri).then((res) =>
@@ -40,7 +43,7 @@ function Feed({ profileExists }: { profileExists: string }) {
   }, [tweetAdded, dataChanged]);
 
   return (
-    <div className="  col-span-7  max-h-screen overflow-scroll border-x-[0.1rem] lg:col-span-5 ">
+    <div className="  col-span-7  max-h-screen overflow-scroll border-x-[0.1rem] no-scrollbar lg:col-span-5 ">
       <div className="flex justify-between p-2 ">
         <h2>Home</h2>
         <HiOutlineRefresh />

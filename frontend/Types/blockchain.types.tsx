@@ -1,4 +1,6 @@
-type tokenUriType = {
+
+
+export type tokenUriType = {
   userId: string;
   avatar: string;
   nftName: string;

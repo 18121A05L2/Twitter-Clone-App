@@ -5,18 +5,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { tweetBoxModal } from "../../../Redux/features/GlobalSlice";
 import { RootState } from "../../../Redux/app/store";
 import MintNft from "../../Nfts/MintNft";
+import { useRouter } from "next/router";
 
-function TweetBoxModal({ profileExists }) {
+function TweetBoxModal({ profileExists }: { profileExists: string }) {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const isNftProfilePage = router.asPath.includes("nftprofile");
   const { tweetBoxModalState } = useSelector(
     (state: RootState) => state.global
   );
 
-
   return (
     <div
       className={` absolute inset-0 flex justify-center bg-black/30  ${
-        tweetBoxModalState ? "inline" : "hidden"
+        (tweetBoxModalState || !profileExists) && !isNftProfilePage
+          ? "inline"
+          : "hidden"
       } `}
     >
       <div className="mt-8 flex h-[20rem] min-w-[35rem] flex-col rounded-lg bg-white p-4">

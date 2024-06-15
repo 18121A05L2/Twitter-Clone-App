@@ -8,15 +8,15 @@ function Nft() {
   const { currentNftView, nftContract, walletAddress } = useSelector(
     (state: RootState) => state.blockchain
   );
-  const { avatar, id, nftName } = currentNftView;
+  const { avatar, nftId, nftName } = currentNftView;
 
   const handleApprove = async () => {
-    await nftContract?.approve(receiverAddress, id);
+    await nftContract?.approve(receiverAddress, nftId);
     setIsApproved(true);
     setReceiverAddress("");
   };
   const handleTransfer = async () => {
-    await nftContract?.transferFrom(walletAddress, receiverAddress, id);
+    await nftContract?.transferFrom(walletAddress, receiverAddress, nftId);
   };
 
   const operatorAccess = async () => {

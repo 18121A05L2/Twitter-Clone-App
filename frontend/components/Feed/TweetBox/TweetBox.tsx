@@ -9,15 +9,20 @@ import { useSelector } from "react-redux";
 import Link from "next/link";
 import axiosAPI from "../../../axios";
 import { RootState } from "../../../Redux/app/store";
-import { PINATA_GATEWAY_URL, tokenDecimals } from "../../../constants/frontend";
+import {
+  PINATA_GATEWAY_URL,
+  sepoliaTestnetId,
+  tokenDecimals,
+} from "../../../constants/frontend";
 import { ethers } from "ethers";
 import { postType } from "../../../Types/Feed.types";
 import { useRouter } from "next/router";
 import { Spinner } from "../../utils/svgs";
+import { contractAddresses } from "../../../constants/exportJsons";
 
 function TweetBox() {
   const [isLoading, setIsLoading] = useState(false);
-  const { profile, twitterContract } = useSelector(
+  const { profile, twitterContract, walletAddress } = useSelector(
     (state: RootState) => state.blockchain
   );
   const router = useRouter();
@@ -37,8 +42,6 @@ function TweetBox() {
       userId: profile.userId,
       userImage: profile.avatar,
     };
-    // console.log({ data });
-    // console.log({ profile });
 
     const userOwnedTokens = await twitterContract?.balanceOf();
     const userBalance = ethers.formatUnits(
@@ -46,7 +49,7 @@ function TweetBox() {
       tokenDecimals
     );
     const contractOwnedTokens = await twitterContract?.s_balanceOf(
-      "0xcEe7d09ec201295232D0131AF4e2A75EC9A13125"
+      contractAddresses[sepoliaTestnetId].Twitter
     );
 
     console.log(" user Token balance : ", userBalance);
@@ -65,10 +68,11 @@ function TweetBox() {
         .then(async (res) => {
           const tweetUrl = `${PINATA_GATEWAY_URL}/${res.data.IpfsHash}`;
 
-          await twitterContract?.tweet(tweetUrl, {
+          const txtResponse = await twitterContract?.tweet(tweetUrl, {
             value: ethers.parseUnits("1", tokenDecimals),
           });
-          console.log(await twitterContract?.retriveTweets());
+          await txtResponse.wait();
+          // console.log(await twitterContract?.retriveTweets(walletAddress));
           setInput("");
           dispatch(tweetAdded());
           tweetBoxModalState && dispatch(tweetBoxModal());

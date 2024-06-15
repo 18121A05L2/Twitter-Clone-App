@@ -7,6 +7,7 @@ import pinataSDK from "@pinata/sdk";
 import { twitterbackend } from "./utils.js";
 import { Readable } from "stream";
 import "dotenv/config";
+import { ethers } from "ethers";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -31,6 +32,10 @@ pinata
 
 const PORT = process.env.PORT || 8001;
 
+const provider = new ethers.JsonRpcProvider(process.env.SEPOLIA_URL);
+const privateKey = process.env.ACCOUNT2_PRIVATE_KEY;
+const wallet = new ethers.Wallet(privateKey, provider);
+
 async function main() {
   // -----------------------------------   Mongo DB ---------------------------------------
 
@@ -46,6 +51,8 @@ async function main() {
     });
 
   twitterbackend();
+
+  app.get("/", (req, res) => res.send("Express on Vercel"));
 
   // ------------------ PINATA SDK -------------------------
 
@@ -65,6 +72,27 @@ async function main() {
       const readableStream = Readable.from(fileBuffer);
       res.send(await pinata.pinFileToIPFS(readableStream, options));
     });
+
+  app.route("/sendEth").post(async function (req, res) {
+    // console.log(req.body)
+    const { address } = req.body;
+    const amount = 0.01;
+
+    try {
+      const tx = {
+        to: address,
+        value: ethers.parseEther(amount.toString()),
+      };
+
+      const transaction = await wallet.sendTransaction(tx);
+      await transaction.wait();
+
+      res.status(200).send({ txHash: transaction.hash });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: "Transaction failed" });
+    }
+  });
 }
 main().catch((err) => console.log(err));
 

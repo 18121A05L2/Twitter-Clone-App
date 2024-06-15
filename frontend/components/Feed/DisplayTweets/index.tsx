@@ -5,6 +5,7 @@ import Link from "next/link";
 import Actions from "./Actions";
 import Image from "next/image";
 import { postType } from "../../../Types/Feed.types";
+import { tokenUriType } from "../../../Types/blockchain.types";
 
 function DisplayTweets({
   post,
@@ -14,13 +15,13 @@ function DisplayTweets({
   profile: tokenUriType;
 }) {
   return (
-    <Link passHref href={`/${post.userId?.slice(1)}/status/${post.ipfsHash}`}>
+    <Link passHref href={`home/status/${post?.userId}/${post.ipfsHash}`}>
       <div className="flex border-t-[0.1rem] p-2 hover:bg-gray-100">
         <div className="relative h-[3rem] w-[3.2rem] ">
           <Image
             layout="fill"
             className=" rounded-full "
-            src={profile.avatar || "https://links.papareact.com/gll"}
+            src={post.userImage || "https://links.papareact.com/gll"}
             alt="poat"
           ></Image>
         </div>

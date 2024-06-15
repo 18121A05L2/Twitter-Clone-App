@@ -37,11 +37,12 @@ function Wallet() {
       );
 
       setToken((prev) => ({ ...prev, name, symbolName, totalSupply }));
-
-      let account = await signer?.getAddress();
-      account && setData((prev) => ({ ...prev, walletAddress: account }));
-      let ethBalance = Number(await provider?.getBalance(account!)) / 1e18;
-      setData({ ...data, tokenBalance, ethBalance });
+      if (signer) {
+        let account: string = await signer.getAddress();
+        account && setData((prev) => ({ ...prev, walletAddress: account }));
+        let ethBalance = Number(await provider?.getBalance(account!)) / 1e18;
+        setData({ ...data, tokenBalance, ethBalance });
+      }
     };
     execute();
   }, [twitterContract]);
@@ -57,6 +58,11 @@ function Wallet() {
   async function onFaucetClick() {
     setIsLoading(true);
     const transactionResponse = await twitterContract?.faucet();
+    const balance = await twitterContract?.balanceOf();
+    const tokenBalance = Number(
+      ethers.formatUnits(Number(balance).toString(), tokenDecimals)
+    );
+    setData((prev) => ({ ...prev, tokenBalance }));
     await transactionResponse.wait(1);
     setIsLoading(false);
   }
@@ -103,6 +109,13 @@ function Wallet() {
 
         {isLoading ? "Loading" : "Faucet"}
       </button>
+
+      {!data.tokenBalance && (
+        <p className="text-red-500">
+          {" "}
+          You don't have any tokens , get it from faucet
+        </p>
+      )}
 
       <p> current User Balance : {data.tokenBalance}</p>
       <p> current Eth Balance : {data.ethBalance}</p>

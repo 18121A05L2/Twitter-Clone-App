@@ -13,7 +13,7 @@ module.exports = {
     },
   },
   plugins: [
-    function ({ addeUtilities }) {
+    function ({ addUtilities }) {
       const newUtilities = {
         ".no-scrollbar::-webkit-scrollbar": {
           display: "none",
@@ -23,6 +23,7 @@ module.exports = {
           "scrollbar-width": "none",
         },
       };
+      addUtilities(newUtilities);
     },
   ],
 };

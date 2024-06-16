@@ -1,7 +1,7 @@
 import axios from "axios";
 
-let liveURL;
-// = "https://twitter-zlij.onrender.com";
+
+let liveURL = process.env.NEXT_PUBLIC_BACKEND_URL
 const localhost = "http://localhost:8001";
 
 const axiosAPI = axios.create({

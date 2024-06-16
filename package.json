@@ -25,7 +25,6 @@
   },
   "homepage": "https://github.com/LakshmiSanikommu/Twitter-Clone#readme",
   "dependencies": {
-    "concurrently": "^7.6.0",
-    "fs": "^0.0.1-security"
+    "concurrently": "^8.2.2"
   }
 }

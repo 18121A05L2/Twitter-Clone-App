@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import multer from "multer";
 import pinataSDK from "@pinata/sdk";
-import { twitterbackend } from "./utils.js";
+import { twitterbackend } from "../utils.js";
 import { Readable } from "stream";
 import "dotenv/config";
 import { ethers } from "ethers";
@@ -99,3 +99,5 @@ main().catch((err) => console.log(err));
 app.listen(PORT, () => {
   console.log("listening on port 8001 ");
 });
+
+export default app;

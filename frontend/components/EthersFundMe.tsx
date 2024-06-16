@@ -45,7 +45,7 @@ function FundMe() {
       // console.log({ allFunders });
       if (allFunders) {
         let temp1 = await Promise.all(
-          allFunders.map(async (funder) => {
+          allFunders.map(async (funder: string) => {
             let fundedAmt = await twitterContract?.s_addressToAmountFunded(
               funder
             );
@@ -66,7 +66,7 @@ function FundMe() {
       await transactionResponse.wait(1);
       const newbalance = Number(await provider?.getBalance(contractAddress));
       setData((prev) => ({ ...prev, contractBalance: newbalance }));
-    } catch (err) {
+    } catch (err: any) {
       console.log({ err });
       alert(err.shortMessage);
       // if (err.shortMessage.inclues("coavlence")) {
@@ -110,9 +110,8 @@ function FundMe() {
         </div>
       </div>
       <div>
-        {" "}
         <h1>Funders History</h1> <p></p>
-        {addressToAmtFunded?.forEach((obj) => (
+        {addressToAmtFunded?.map((obj) => (
           <p> {Object.keys(obj)[0]}</p>
         ))}
       </div>

@@ -44,9 +44,11 @@ function All() {
   }, []);
 
   const switchComponent = (path: string | undefined) => {
-    if (path?.split("/")?.length > 2) {
+    if (path && path?.split("/")?.length > 2) {
       if (path?.includes("home/status")) {
         return <SpecificTweetDisplay />;
+      } else if (path?.includes("messages/")) {
+        return <Messages />;
       }
     }
     switch (path) {

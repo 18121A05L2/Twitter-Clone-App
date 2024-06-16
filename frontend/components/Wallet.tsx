@@ -37,11 +37,12 @@ function Wallet() {
       );
 
       setToken((prev) => ({ ...prev, name, symbolName, totalSupply }));
-
-      let account = await signer?.getAddress();
-      account && setData((prev) => ({ ...prev, walletAddress: account }));
-      let ethBalance = Number(await provider?.getBalance(account!)) / 1e18;
-      setData({ ...data, tokenBalance, ethBalance });
+      if (signer) {
+        let account: string = await signer.getAddress();
+        account && setData((prev) => ({ ...prev, walletAddress: account }));
+        let ethBalance = Number(await provider?.getBalance(account!)) / 1e18;
+        setData({ ...data, tokenBalance, ethBalance });
+      }
     };
     execute();
   }, [twitterContract]);

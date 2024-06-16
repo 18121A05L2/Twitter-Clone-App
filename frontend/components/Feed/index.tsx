@@ -20,7 +20,7 @@ function Feed({ profileExists }: { profileExists: string }) {
     (async () => {
       const tweetUrls = await twitterContract
         ?.queryFilter("Tweet", 0, "latest")
-        .then((events) => events.map((event) => event?.args[1]));
+        .then((events) => events.map((event: any) => event?.args[1]));
 
       Promise.all(
         (await tweetUrls?.map(async (tokenUri: string): Promise<postType> => {
@@ -43,7 +43,7 @@ function Feed({ profileExists }: { profileExists: string }) {
   }, [tweetAdded, dataChanged]);
 
   return (
-    <div className="  col-span-7  max-h-screen overflow-scroll border-x-[0.1rem] lg:col-span-5 ">
+    <div className="  col-span-7  max-h-screen overflow-scroll border-x-[0.1rem] no-scrollbar lg:col-span-5 ">
       <div className="flex justify-between p-2 ">
         <h2>Home</h2>
         <HiOutlineRefresh />

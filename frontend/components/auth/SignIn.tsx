@@ -42,7 +42,7 @@ export default function SignIn() {
       if (walletAddress) {
         router.push("/home");
       }
-    } catch (err) {
+    } catch (err : any) {
       // console.log({ err });
       toast(err.shortMessage, { type: "error" });
     }

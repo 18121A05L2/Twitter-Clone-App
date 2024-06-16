@@ -4,6 +4,7 @@ import ProfileSection from "./ProfileSection";
 import { useSelector } from "react-redux";
 import { profileType } from "../../Types/Feed.types";
 import { RootState } from "../../Redux/app/store";
+import { tokenUriType } from "../../Types/blockchain.types";
 
 type onlineUserType = {
   userId: string;

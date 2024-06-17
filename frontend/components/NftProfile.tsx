@@ -13,7 +13,7 @@ import {
 } from "../Redux/features/BlockchainSlice";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import { PINATA_GATEWAY_URL } from "../constants/frontend";
+import { PINATA_GATEWAY_URL } from "../utils/constants";
 import { tokenUriType } from "../Types/blockchain.types";
 
 function NftProfile() {
@@ -141,7 +141,7 @@ function NftProfile() {
       const profileRes = await fetch(nftUri).then((res) => res.json());
       dispatch(setProfile(profileRes));
       dispatch(setIsSettingProfile(false));
-    } catch (err : any) {
+    } catch (err: any) {
       toast(err.shortMessage, { type: "error" });
     }
   };

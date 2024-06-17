@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import axiosAPI from "../axios";
 import { postType } from "../Types/Feed.types";
 import { RootState } from "../Redux/app/store";
-import { PINATA_GATEWAY_URL } from "../constants/frontend";
+import { PINATA_GATEWAY_URL } from "../utils/constants";
 
 function SpecificTweetDisplay() {
   const [replyInput, setReplyInput] = useState("");
@@ -117,7 +117,7 @@ function SpecificTweetDisplay() {
   );
 }
 
-export async function getServerSideProps(context : any) {
+export async function getServerSideProps(context: any) {
   const ipfsHash = context?.params?.tweetId;
   console.log({ ipfsHash });
 

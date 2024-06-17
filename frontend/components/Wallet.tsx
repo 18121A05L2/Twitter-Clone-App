@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../Redux/app/store";
 import { ethers } from "ethers";
-import { tokenDecimals } from "../constants/frontend";
+import { tokenDecimals } from "../utils/constants";
 import { Spinner } from "./utils/svgs";
 
 function Wallet() {

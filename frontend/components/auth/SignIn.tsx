@@ -2,12 +2,7 @@ import Image from "next/image";
 import { ConnectButton } from "web3uikit";
 import { useDispatch, useSelector } from "react-redux";
 import { setWalletAddress } from "../../Redux/features/BlockchainSlice";
-import {
-  sepoliaTestnetId,
-  localTestnetId,
-  sepoliaExplorer,
-  explorerPaths,
-} from "../../constants/frontend";
+import { sepoliaExplorer, explorerPaths } from "../../utils/constants";
 import { NewTwitterLogo, Spinner } from "../utils/svgs";
 import { RootState } from "../../Redux/app/store";
 import { ethers } from "ethers";

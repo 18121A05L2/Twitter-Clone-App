@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 type initialState = {
   modalState: boolean;
   post: {
-    createdAt: Date;
+    createdAt: string;
     userEmail: string;
     userId: string;
     userImage: string;
@@ -15,7 +15,7 @@ type initialState = {
 const initialState: initialState = {
   modalState: false,
   post: {
-    createdAt: new Date(),
+    createdAt: new Date().toISOString(),
     userEmail: "",
     userId: "",
     userImage: "",

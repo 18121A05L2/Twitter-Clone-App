@@ -6,7 +6,7 @@ import {
   contractAddresses,
   TwitterAbi,
   TwitterNftsAbi,
-} from "../../constants/exportJsons";
+} from "../../utils/exportJsons";
 import {
   setNftContract,
   setProfile,
@@ -70,7 +70,7 @@ const useContracts = () => {
             dispatch(setWalletAddress(fetchWalletAddress));
           }
         }
-      } catch (err : any) {
+      } catch (err: any) {
         console.log({ err });
         toast("Contracts : " + err.shortMessage, { type: "error" });
       } finally {

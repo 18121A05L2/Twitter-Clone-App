@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ethers, TransactionResponse } from "ethers";
-import TwitterAbi from "../constants/TwitterAbi.json";
-import contractAddresses from "../constants/contractAddresses.json";
+import TwitterAbi from "../utils/TwitterAbi.json";
+import contractAddresses from "../utils/contractAddresses.json";
 import { useSelector } from "react-redux";
 import { RootState } from "../Redux/app/store";
 
@@ -46,9 +46,8 @@ function FundMe() {
       if (allFunders) {
         let temp1 = await Promise.all(
           allFunders.map(async (funder: string) => {
-            let fundedAmt = await twitterContract?.s_addressToAmountFunded(
-              funder
-            );
+            let fundedAmt =
+              await twitterContract?.s_addressToAmountFunded(funder);
             return { [funder]: fundedAmt };
           })
         );
@@ -111,9 +110,7 @@ function FundMe() {
       </div>
       <div>
         <h1>Funders History</h1> <p></p>
-        {addressToAmtFunded?.map((obj) => (
-          <p> {Object.keys(obj)[0]}</p>
-        ))}
+        {addressToAmtFunded?.map((obj) => <p> {Object.keys(obj)[0]}</p>)}
       </div>
     </div>
   );

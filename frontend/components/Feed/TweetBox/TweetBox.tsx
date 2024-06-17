@@ -4,25 +4,25 @@ import { useDispatch } from "react-redux";
 import { tweetAdded } from "../../../Redux/features/GlobalSlice";
 import { tweetBoxModal } from "../../../Redux/features/GlobalSlice";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 import { useSelector } from "react-redux";
 import Link from "next/link";
 import axiosAPI from "../../../axios";
 import { RootState } from "../../../Redux/app/store";
 import {
+  localTestnetId,
   PINATA_GATEWAY_URL,
   sepoliaTestnetId,
   tokenDecimals,
-} from "../../../constants/frontend";
+} from "../../../utils/constants";
 import { ethers } from "ethers";
 import { postType } from "../../../Types/Feed.types";
 import { useRouter } from "next/router";
-import { Spinner } from "../../utils/svgs";
-import { contractAddresses } from "../../../constants/exportJsons";
+import { contractAddresses } from "../../../utils/exportJsons";
 
 function TweetBox() {
   const [isLoading, setIsLoading] = useState(false);
-  const { profile, twitterContract, walletAddress } = useSelector(
+  const useLocalBlocakchain = process.env.NEXT_PUBLIC_USE_LOCAL_BLOCKCHAIN;
+  const { profile, twitterContract } = useSelector(
     (state: RootState) => state.blockchain
   );
   const router = useRouter();
@@ -49,7 +49,8 @@ function TweetBox() {
       tokenDecimals
     );
     const contractOwnedTokens = await twitterContract?.s_balanceOf(
-      contractAddresses[sepoliaTestnetId].Twitter
+      contractAddresses[useLocalBlocakchain ? localTestnetId : sepoliaTestnetId]
+        .Twitter
     );
 
     console.log(" user Token balance : ", userBalance);
@@ -86,7 +87,9 @@ function TweetBox() {
   }
 
   return (
-    <div className={`relative m-2 flex ${isLoading && " opacity-30"} `}>
+    <div
+      className={`relative m-2 flex ${isLoading && " opacity-30"} dark:bg-black `}
+    >
       {isLoading && (
         <div className=" absolute flex h-full w-full">
           <svg

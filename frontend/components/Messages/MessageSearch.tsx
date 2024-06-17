@@ -24,11 +24,11 @@ function MessageSearch({ profiles }: { profiles: tokenUriType[] }) {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-[10rem] text-[0.8rem] outline-none "
+          className="w-[10rem] text-[0.8rem] outline-none dark:bg-black "
           placeholder="Search Profile To Message"
         ></input>
       </div>
-      <div className="flex flex-col gap-2 bg-gray-50 ">
+      <div className="flex flex-col gap-2 bg-gray-50 dark:bg-black ">
         {profiles
           ?.filter(
             (profile) =>

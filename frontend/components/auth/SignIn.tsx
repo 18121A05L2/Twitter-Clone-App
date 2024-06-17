@@ -2,7 +2,12 @@ import Image from "next/image";
 import { ConnectButton } from "web3uikit";
 import { useDispatch, useSelector } from "react-redux";
 import { setWalletAddress } from "../../Redux/features/BlockchainSlice";
-import { sepoliaTestnetId, localTestnetId } from "../../constants/frontend";
+import {
+  sepoliaTestnetId,
+  localTestnetId,
+  sepoliaExplorer,
+  explorerPaths,
+} from "../../constants/frontend";
 import { NewTwitterLogo, Spinner } from "../utils/svgs";
 import { RootState } from "../../Redux/app/store";
 import { ethers } from "ethers";
@@ -16,7 +21,9 @@ import axiosAPI from "../../axios";
 
 export default function SignIn() {
   useContracts();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isEthWithGas, setIsEthWithGas] = useState(false);
+  const [isFreeEth, setIsFreeEth] = useState(false);
+  const [transaction, setTransaction] = useState("");
   const dispatch = useDispatch();
   const router = useRouter();
   const { twitterContract, walletAddress } = useSelector(
@@ -32,50 +39,64 @@ export default function SignIn() {
     }
   }
 
-  async function handleFreeEth() {
-    setIsLoading(true);
+  async function getEthWithGas() {
+    setTransaction("");
+    if (!walletAddress) {
+      toast("Please connect your wallet", { type: "error" });
+      return;
+    }
+    setIsEthWithGas(true);
     const freeEth = 0.01;
     try {
-      const isFreeEthSuccess = await twitterContract?.freeEth(
+      const ContractTransactionResponse = await twitterContract?.freeEth(
         ethers.parseEther(freeEth.toString())
       );
-      if (walletAddress) {
-        router.push("/home");
-      }
-    } catch (err : any) {
+      setTransaction(
+        `${sepoliaExplorer}/${explorerPaths.transaction}/${ContractTransactionResponse.hash}`
+      );
+    } catch (err: any) {
       // console.log({ err });
       toast(err.shortMessage, { type: "error" });
+    } finally {
+      setIsEthWithGas(false);
     }
-    setIsLoading(false);
   }
 
-  async function handleSenbdEth() {
-    setIsLoading(true);
-
-    const res = await axiosAPI.post(
-      "/sendEth",
-      JSON.stringify({ address: walletAddress })
-    );
-    console.log({ res });
-
-    setIsLoading(false);
+  async function getFreeEth() {
+    setTransaction("");
+    if (!walletAddress) {
+      toast("Please connect your wallet", { type: "error" });
+      return;
+    }
+    setIsFreeEth(true);
+    try {
+      const res = (await axiosAPI.post(
+        "/sendEth",
+        JSON.stringify({ address: walletAddress })
+      )) as { data: { txHash: string } };
+      setTransaction(
+        `${sepoliaExplorer}/${explorerPaths.transaction}/${res.data.txHash}`
+      );
+      console.log({ res });
+    } catch (err: any) {
+      toast(err.shortMessage, { type: "error" });
+    } finally {
+      setIsFreeEth(false);
+    }
   }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-10 dark:bg-black dark:text-white">
       <DarkMode />
       <div className="flex max-w-xl flex-col items-center gap-5 rounded-[3rem] border p-6 ">
-        <div
-          className=" w-[4rem] cursor-pointer "
-          onClick={() => router.push("/home")}
-        >
+        <a className=" w-[4rem] cursor-pointer " href="/home">
           {/* <Image
             layout="fill"
             src="https://links.papareact.com/gll"
             alt="twitter"
           ></Image> */}
           <NewTwitterLogo isDarkMode={isDarkMode} />
-        </div>
+        </a>
         <h1 className="text-[4rem] font-bold">Happening now</h1>
         <h2 className="text-[2rem] font-bold">Join Twitter today</h2>
         <div
@@ -86,18 +107,37 @@ export default function SignIn() {
         </div>
       </div>
       <div
-        className=" min-w-16 cursor-pointer rounded-full bg-orange-200 p-3 px-5 "
-        onClick={handleFreeEth}
+        className=" min-w-16 cursor-pointer rounded-full bg-orange-200 p-3 px-5 dark:bg-green-400 "
+        onClick={getEthWithGas}
       >
-        {isLoading ? <Spinner /> : " Get 0.01 testnet eth to play with"}
+        {isEthWithGas ? (
+          <Spinner />
+        ) : (
+          "Get 0.01 testnet eth by bearing gas cost "
+        )}
       </div>
 
       <div
-        className=" min-w-16 cursor-pointer rounded-full bg-orange-200 p-3 px-5 "
-        onClick={handleSenbdEth}
+        className=" min-w-16 cursor-pointer rounded-full bg-orange-200 p-3 px-5 dark:bg-green-400  "
+        onClick={getFreeEth}
       >
-        {isLoading ? <Spinner /> : " send eth without interacting"}
+        {isFreeEth ? <Spinner /> : "Get free eth without any gas cont "}
       </div>
+      {transaction ? (
+        <p>
+          <a className=" underline" href={transaction} target="_blank">
+            click here
+          </a>
+          to check the transaction or{" "}
+          <a className=" underline " href="/home">
+            Go to Home page
+          </a>
+        </p>
+      ) : (
+        <a className=" underline " href="/home">
+          Go to Home page
+        </a>
+      )}
     </div>
   );
 }

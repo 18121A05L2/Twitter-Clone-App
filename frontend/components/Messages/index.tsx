@@ -138,7 +138,7 @@ function Messages() {
             <p>{receiverProfile?.userId}</p>
             <p>{receiverProfile?.bio}</p>
           </div>
-          <div className="  flex h-full flex-col overflow-y-scroll p-2 py-3 ">
+          <div className="  flex h-full flex-col overflow-y-scroll p-2 py-3 no-scrollbar ">
             {allMessages &&
               allMessages?.map((msg: messageType) => {
                 return (
@@ -151,7 +151,7 @@ function Messages() {
                 );
               })}
           </div>
-          <div className="sticky bottom-0 m-1  mx-2 mt-auto flex items-center gap-4 rounded-3xl bg-gray-100 p-4 py-2 text-[1.5rem] text-twitter ">
+          <div className="sticky bottom-0 m-1  mx-2 mt-auto flex items-center gap-4 rounded-3xl bg-gray-100 p-4 py-2 text-[1.5rem] text-twitter mb-2 ">
             <BsCardImage />
             <AiOutlineFileGif />
             <BsEmojiSmile />

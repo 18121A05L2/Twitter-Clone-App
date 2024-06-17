@@ -36,7 +36,7 @@ function ProfileSection({ profile, online }: propsType) {
     <Link passHref href={`/messages/${conversationId}`}>
       <div
         onClick={conversationCreation}
-        className=" relative  flex h-[5rem]  cursor-pointer items-center gap-2 rounded-xl border-[0.1rem] px-2 hover:bg-gray-200"
+        className=" relative  flex h-[5rem]  cursor-pointer items-center gap-2 rounded-xl border-[0.1rem] px-2 hover:bg-gray-200 dark:border-lime-100"
       >
         {online && (
           <span className="absolute left-0 top-0 flex h-[1rem] w-[1rem] rounded-full bg-twitter  ">

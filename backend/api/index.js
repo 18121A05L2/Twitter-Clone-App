@@ -76,7 +76,8 @@ async function main() {
   app.route("/sendEth").post(async function (req, res) {
     // console.log(req.body)
     const { address } = req.body;
-    const amount = 0.01;
+    //TODO : revert to 0.01
+    const amount = 0.0001;
 
     try {
       const tx = {

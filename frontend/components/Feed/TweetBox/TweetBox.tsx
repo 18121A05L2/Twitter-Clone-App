@@ -18,6 +18,7 @@ import { ethers } from "ethers";
 import { postType } from "../../../Types/Feed.types";
 import { useRouter } from "next/router";
 import { contractAddresses } from "../../../utils/exportJsons";
+import { toast } from "react-toastify";
 
 function TweetBox() {
   const [isLoading, setIsLoading] = useState(false);
@@ -58,32 +59,37 @@ function TweetBox() {
       " contract Token Balance : ",
       ethers.formatUnits(contractOwnedTokens.toString(), tokenDecimals)
     );
+    try {
+      if (Number(userBalance) <= 0) {
+        router.push("/wallet");
+        return;
+      }
+      if (profile.avatar) {
+        await axiosAPI
+          .post("/uploadJsonToIpfs", JSON.stringify(data))
+          .then(async (res) => {
+            const tweetUrl = `${PINATA_GATEWAY_URL}/${res.data.IpfsHash}`;
 
-    if (Number(userBalance) <= 0) {
-      router.push("/wallet");
-      return;
-    }
-    if (profile.avatar) {
-      await axiosAPI
-        .post("/uploadJsonToIpfs", JSON.stringify(data))
-        .then(async (res) => {
-          const tweetUrl = `${PINATA_GATEWAY_URL}/${res.data.IpfsHash}`;
-
-          const txtResponse = await twitterContract?.tweet(tweetUrl, {
-            value: ethers.parseUnits("1", tokenDecimals),
+            const txtResponse = await twitterContract?.tweet(tweetUrl, {
+              value: ethers.parseUnits("1", tokenDecimals),
+            });
+            await txtResponse.wait();
+            // console.log(await twitterContract?.retriveTweets(walletAddress));
+            setInput("");
+            dispatch(tweetAdded());
+            tweetBoxModalState && dispatch(tweetBoxModal());
+            console.log("tweet added successfully");
           });
-          await txtResponse.wait();
-          // console.log(await twitterContract?.retriveTweets(walletAddress));
-          setInput("");
-          dispatch(tweetAdded());
-          tweetBoxModalState && dispatch(tweetBoxModal());
-          console.log("tweet added successfully");
-        });
-    } else {
-      console.log({ profile });
-      console.error(" profiled does not exits , add avatar and name ");
+      } else {
+        console.log({ profile });
+        console.error(" profiled does not exits , add avatar and name ");
+      }
+    } catch (err: any) {
+      console.log(err);
+      toast(err.shortMessage, { type: "error" });
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }
 
   return (

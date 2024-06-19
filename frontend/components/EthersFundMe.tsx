@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ethers, TransactionResponse } from "ethers";
-import TwitterAbi from "../utils/TwitterAbi.json";
-import contractAddresses from "../utils/contractAddresses.json";
+import { TwitterAbi } from "../utils/exportJsons";
+import { contractAddresses } from "../utils/exportJsons";
 import { useSelector } from "react-redux";
 import { RootState } from "../Redux/app/store";
 

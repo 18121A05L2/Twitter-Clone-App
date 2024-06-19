@@ -19,16 +19,17 @@ import { tokenUriType } from "../Types/blockchain.types";
 function NftProfile() {
   const [avatar, setAvatar] = useState("");
   const [nftName, setNftName] = useState("");
-  const [userId, setUserId] = useState("");
+
   const [isMinting, setIsMinting] = useState(false);
   const [tempImg, setTempImg] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [errMsg, setErrMsg] = useState("");
-  const [myNfts, setMyNfts] = useState<tokenUriType[]>();
+  const [myNfts, setMyNfts] = useState<tokenUriType[]>([]);
   const dispatch = useDispatch();
   const { walletAddress, nftContract, profile, isSettingProfile } = useSelector(
     (state: RootState) => state.blockchain
   );
+  const [userId, setUserId] = useState(profile.userId);
   // const nftContract = useSelector(
   //   (state: RootState) => state.blockchain.nftContract
   // );
@@ -175,7 +176,7 @@ function NftProfile() {
   };
 
   return (
-    <div className=" no-scrollbar no-scrollbar flex max-h-screen flex-col gap-5 overflow-y-scroll">
+    <div className=" no-scrollbar flex max-h-screen flex-col gap-5 overflow-y-scroll">
       <div className=" flex flex-col gap-3 ">
         <div className=" flex flex-row">
           <div className=" flex flex-col gap-3 ">
@@ -187,20 +188,20 @@ function NftProfile() {
               accept="image/*"
             ></input>
             <input
-              className=" rounded-md border-2 p-1 outline-none  "
+              className=" rounded-md border-2 p-1 outline-none dark:bg-black "
               type="text"
               placeholder="NFT name "
               onChange={(e) => setNftName(e.target.value)}
             ></input>
             <input
-              className=" rounded-md border-2 p-1 outline-none  "
+              className=" rounded-md border-2 p-1 outline-none dark:bg-black "
               type="text"
               placeholder="user id "
               onChange={(e) => setUserId(e.target.value)}
             ></input>
             <div
               onClick={MintNft}
-              className=" max-w-40  cursor-pointer rounded-md bg-blue-200 px-4 "
+              className=" max-w-40 py-2  cursor-pointer rounded-md bg-blue-200 px-4 dark:text-black "
             >
               {isMinting ? "Minting...." : "Mint NFT Profile"}
             </div>
@@ -216,9 +217,9 @@ function NftProfile() {
             </div>
           ) : (
             <img
-              className=" ml-auto mr-auto h-24 w-24 self-center rounded-full border-2 border-blue-500  "
+              className=" ml-auto mr-auto h-24 w-24 self-center rounded-full border-2 border-blue-500   "
               src={profile?.avatar}
-              alt={profile?.nftName}
+              alt="Mint an NFT"
             ></img>
           )}
         </div>
@@ -235,32 +236,46 @@ function NftProfile() {
         <h1 className=" text-center "> Owned NFTS</h1>
         <section className=" grid grid-cols-3 gap-3 ">
           {/* NFT cards */}
-          {myNfts?.map((nft, i) => {
-            return (
-              <Link className=" cursor-pointer " passHref href={`/nft`}>
-                <div
+          {myNfts.length > 0 ? (
+            myNfts.map((nft, i) => {
+              return (
+                <Link
+                  className=" cursor-pointer "
+                  passHref
+                  href={`/nft`}
                   key={i}
-                  className=" flex cursor-pointer flex-col  items-center rounded-lg  "
-                  onClick={() => nftOnclick(nft)}
                 >
-                  <img className=" h-40 w-40" src={nft.avatar} />
-                  <p>
-                    {" "}
-                    {nft.nftId && `#${nft.nftId} - `} {nft.nftName}
-                  </p>
                   <div
-                    onClick={(event) => switchProfile(event, nft)}
-                    className=" cursor-pointer rounded-lg bg-slate-500 px-2"
+                    key={i}
+                    className=" flex cursor-pointer flex-col  items-center rounded-lg  "
+                    onClick={() => nftOnclick(nft)}
                   >
-                    Set as NFT profile
+                    <img className=" h-40 w-40" src={nft.avatar} />
+                    <p>
+                      {" "}
+                      {nft.nftId && `#${nft.nftId} - `} {nft.nftName}
+                    </p>
+                    <div
+                      onClick={(event) => switchProfile(event, nft)}
+                      className=" cursor-pointer rounded-lg bg-slate-500 px-2"
+                    >
+                      Set as NFT profile
+                    </div>
                   </div>
-                </div>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            })
+          ) : (
+            <p className=" text-center w-full">Nothing</p>
+          )}
         </section>
       </div>
-      <div className=""> Go to MarketPlace </div>
+      <Link href="/marketplace">
+        <div className=" bg-yellow-300 p-3 rounded-xl w-fit cursor-pointer dark:text-black">
+          {" "}
+          Go to MarketPlace{" "}
+        </div>
+      </Link>
     </div>
   );
 }

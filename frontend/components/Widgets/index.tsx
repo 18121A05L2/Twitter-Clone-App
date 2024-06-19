@@ -52,12 +52,12 @@ function Widgets() {
         <MessageSearch profiles={profiles} />
       ) : (
         <div className=" col-span-2 m-2 hidden pt-2 lg:inline ">
-          <div className="flex  rounded-full bg-gray-200 p-2 text-gray-500">
+          <div className="flex  rounded-full bg-gray-200 p-2 text-gray-500 dark:bg-black dark:border-2">
             <IoSearch className="h-[2rem] w-[2rem]   " />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="bg-gray-200 outline-none  "
+              className="bg-gray-200 outline-none  dark:bg-black "
               type="text"
               placeholder="Search Twitter"
             />

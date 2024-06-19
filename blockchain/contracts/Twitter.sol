@@ -23,7 +23,7 @@ contract Twitter is TwitterToken {
     address[] public s_funders;
     mapping(address => uint256) public s_addressToAmountFunded;
     mapping(address => string[]) public s_addressToTweets;
-    event Tweet(address indexed _from, string indexed _tweetUrl);
+    event Tweet(address indexed _from, string _tweetUrl);
 
     // string[] public s_msgStore;
 

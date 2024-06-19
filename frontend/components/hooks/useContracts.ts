@@ -62,8 +62,10 @@ const useContracts = () => {
 
           // setting the profile if user already exists
           const nftUri = await nftContract?.getProfile(walletAddress);
-          const profileRes = await fetch(nftUri).then((res) => res.json());
-          dispatch(setProfile(profileRes));
+          if (nftUri) {
+            const profileRes = await fetch(nftUri).then((res) => res.json());
+            dispatch(setProfile(profileRes));
+          }
         } else {
           if (!isRootPath) {
             const fetchWalletAddress = await ConnectWallet();

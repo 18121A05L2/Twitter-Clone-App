@@ -102,7 +102,9 @@ function SideBar() {
               ></Image>
             )}
           </div>
-          <p>@{profile?.userId.split(" ")[0].toLowerCase()}</p>
+          {profile?.userId && (
+            <p>@{profile?.userId.split(" ")[0].toLowerCase()}</p>
+          )}
         </div>
 
         {walletAddress && (

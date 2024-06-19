@@ -26,7 +26,7 @@ function Nft() {
   return (
     <div className=" flex flex-col items-center  gap-2 rounded-lg ">
       <h1> Nft Full details</h1>
-      <img className=" h-40 w-40" src={avatar} />
+      <img className=" h-40 w-40" src={avatar} alt="nft image" />
       <p> {nftName}</p>
       <div className=" flex flex-row gap-3">
         <input

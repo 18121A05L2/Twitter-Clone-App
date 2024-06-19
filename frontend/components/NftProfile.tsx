@@ -37,12 +37,10 @@ function NftProfile() {
 
   const loadMyNfts = async () => {
     const nftIds = await twitterContract?.getMyNfts();
-    console.log(nftIds);
     if (nftIds) {
       const nfts = await Promise.all(
         nftIds.map(async (nftNumber: number) => {
           const uri = await twitterContract?.tokenURI(Number(nftNumber));
-          console.log({ uri });
           const metadata = await axiosAPI
             .get(uri)
             .then((res) => res.data)
@@ -123,7 +121,8 @@ function NftProfile() {
     event.stopPropagation();
     dispatch(setIsSettingProfile(true));
     try {
-      (await twitterContract?.setProfile(nft.nftId)).wait();
+      const tokenURI = await twitterContract?.tokenURI(nft.nftId);
+      (await twitterContract?.setProfile(tokenURI, nft.nftId)).wait();
       const nftUri = await twitterContract?.getProfile(walletAddress);
       const profileRes = await fetch(nftUri).then((res) => res.json());
       dispatch(setProfile({ ...profileRes, address: walletAddress }));

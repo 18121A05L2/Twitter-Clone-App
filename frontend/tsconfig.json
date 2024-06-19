@@ -23,7 +23,7 @@
     "components/SideBar/SideBar.tsx",
     "pages/api/auth/[...nextauth].ts",
     "Firebase.ts",
-    "components/Feed/DisplayTweets/index.tsx",
+    "components/Feed/DisplayTweets/DisplayTweets.tsx",
     "components/Feed/Feed.tsx",
     "pages/auth/signin.jsx",
     "Redux/features/DataSlice.js",
@@ -32,7 +32,7 @@
     "components/Feed/DisplayTweets/Actions.tsx",
     "components/Feed/DisplayTweets/Like.tsx",
     "components/Feed/Icons.tsx",
-    "components/Widgets/index.tsx",
+    "components/Widgets/Widgets.tsx",
     "axios.ts",
     "components/Nfts/MarketPlace"
   ],

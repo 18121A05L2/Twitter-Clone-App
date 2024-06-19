@@ -6,7 +6,7 @@ export const twitterbackend = async () => {
     {
       postId: String,
       replyData: String,
-      userImage: String,
+      avatar: String,
       userId: String,
       tweetUserId: String,
       userName: String,
@@ -17,7 +17,7 @@ export const twitterbackend = async () => {
     {
       userEmail: String,
       userId: String,
-      userImage: String,
+      avatar: String,
       userName: String,
       userInput: String,
       postimage: String,
@@ -38,7 +38,7 @@ export const twitterbackend = async () => {
       const tweet = new Tweet({
         userEmail: req.body.userEmail,
         userId: req.body.userId,
-        userImage: req.body.userImage,
+        avatar: req.body.avatar,
         userName: req.body.userName,
         userInput: req.body.userInput,
         comments: [],
@@ -127,7 +127,7 @@ export const twitterbackend = async () => {
     {
       backgroundImage: String,
       userId: String,
-      userImage: String,
+      avatar: String,
       name: String,
       bio: String,
       location: String,
@@ -146,7 +146,7 @@ export const twitterbackend = async () => {
         const profile = new Profile({
           backgroundImage: "",
           userId: req.body.userId,
-          userImage: req.body.userImage,
+          avatar: req.body.avatar,
           name: req.body.name,
           bio: "",
           location: "",
@@ -171,7 +171,7 @@ export const twitterbackend = async () => {
         {
           userId: body.newUserId,
           backgroundImage: body.backgroundImage,
-          userImage: body.userImage,
+          avatar: body.avatar,
           name: body.name,
           bio: body.bio,
           location: body.location,

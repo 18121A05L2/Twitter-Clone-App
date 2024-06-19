@@ -1,5 +1,5 @@
 import { HiOutlineRefresh } from "react-icons/hi";
-import DisplayTweets from "./DisplayTweets";
+import DisplayTweets from "./DisplayTweets/DisplayTweets";
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import TweetBox from "./TweetBox/TweetBox";

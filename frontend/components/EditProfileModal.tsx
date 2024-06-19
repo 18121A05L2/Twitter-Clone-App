@@ -31,9 +31,8 @@ function EditProfileModal() {
     website: "",
     userId: userId,
     birthDate: new Date(),
-    userImage: avatar,
+    avatar: avatar,
     backgroundImage: "",
-    avatar: profile.avatar,
   });
   useEffect(() => {
     profile &&
@@ -44,9 +43,8 @@ function EditProfileModal() {
         website: profile.website,
         userId: userId,
         birthDate: new Date(),
-        userImage: avatar,
+        avatar: avatar,
         backgroundImage: profile.backgroundImage,
-        avatar: profile.avatar,
       });
   }, [profile, profile]);
   const editProfileModalState = useSelector(

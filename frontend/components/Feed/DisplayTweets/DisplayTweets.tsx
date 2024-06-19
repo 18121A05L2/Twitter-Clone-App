@@ -21,7 +21,7 @@ function DisplayTweets({
           <Image
             layout="fill"
             className=" rounded-full "
-            src={post.userImage || "https://links.papareact.com/gll"}
+            src={post.avatar || "https://links.papareact.com/gll"}
             alt="poat"
           ></Image>
         </div>

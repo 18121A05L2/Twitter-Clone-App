@@ -6,7 +6,7 @@ type initialState = {
     createdAt: string;
     userEmail: string;
     userId: string;
-    userImage: string;
+    avatar: string;
     userName: string;
     userInput: string;
   };
@@ -18,7 +18,7 @@ const initialState: initialState = {
     createdAt: new Date().toISOString(),
     userEmail: "",
     userId: "",
-    userImage: "",
+    avatar: "",
     userName: "",
     userInput: "",
   },

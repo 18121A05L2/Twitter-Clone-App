@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import SideBar from "../../components/SideBar/SideBar";
 import Profile from "../../components/Profile";
-import Widgets from "../../components/Widgets";
+import Widgets from "../../components/Widgets/Widgets";
 import TweetBoxModal from "../../components/Feed/TweetBox/TweetBoxModal";
 import CommentModal from "../../components/Feed/DisplayTweets/CommentModal";
 import Bookmarks from "../../components/unused/Bookmarks";
 import Lists from "../../components/unused/Lists";
 import Explore from "../../components/unused/Explore";
-import Messages from "../../components/Messages";
+import Messages from "../../components/Messages/MessagesPage";
 import Notifications from "../../components/unused/Notifications";
 import Search from "../../components/unused/Search";
 import Feed from "../../components/Feed/Feed";

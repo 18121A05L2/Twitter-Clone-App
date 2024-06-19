@@ -12,7 +12,7 @@ import axiosAPI from "../../axios";
 import { messageType, profileType } from "../../Types/Feed.types";
 import { RootState } from "../../Redux/app/store";
 
-function Messages() {
+function MessagesPage() {
   const [input, setInput] = useState("");
   const socket = useRef<Socket>();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -184,4 +184,4 @@ function Messages() {
   );
 }
 
-export default Messages;
+export default MessagesPage;

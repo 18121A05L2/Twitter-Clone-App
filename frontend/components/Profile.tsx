@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { MdOutlineBusinessCenter } from "react-icons/md";
 import { GoCalendar } from "react-icons/go";
-import DisplayTweets from "./Feed/DisplayTweets";
+import DisplayTweets from "./Feed/DisplayTweets/DisplayTweets";
 import { useDispatch, useSelector } from "react-redux";
 import { editProfileModal } from "../Redux/features/GlobalSlice";
 import { useRouter } from "next/router";
@@ -34,7 +34,7 @@ function Profile() {
     // async function profile() {
     //   const data = {
     //     userId: userId,
-    //     userImage: profile.avatar,
+    //     avatar: profile.avatar,
     //     name: session?.user?.name,
     //   };
     //   const response = await axiosAPI.post("/profile", JSON.stringify(data));

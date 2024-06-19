@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "./FundMe.sol";
 import "./TwitterToken.sol";
 import "./TwitterNfts.sol";
+import "./Marketplace.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 error Twitter_NotOwner();
@@ -14,7 +15,7 @@ error Twitter_NotOwner();
  * @notice This a smaple testing project
  */
 
-contract Twitter is TwitterToken, TwitterNfts {
+contract Twitter is TwitterToken, TwitterNfts, Marketplace {
     address public contractAddress;
     TwitterToken public TwitterTokenInstance;
     TwitterNfts public TwitterNftsInstance;
@@ -41,7 +42,7 @@ contract Twitter is TwitterToken, TwitterNfts {
         address priceFeedAddress,
         string memory nftName,
         string memory nftSymbol
-    ) payable TwitterNfts(nftName, nftSymbol) {
+    ) payable TwitterNfts(nftName, nftSymbol) Marketplace(msg.sender) {
         require(msg.value > 0, "Must send ETH to deploy");
         i_owner = msg.sender;
         s_priceFeed = AggregatorV3Interface(priceFeedAddress);

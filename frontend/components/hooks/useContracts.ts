@@ -62,11 +62,9 @@ const useContracts = () => {
 
           // setting the profile if user already exists
           const nftUri = await twitterContract?.getProfile(walletAddress);
-          console.log(nftUri);
 
           if (nftUri) {
             const profileRes = await fetch(nftUri).then((res) => res.json());
-            console.log({ profileRes });
             dispatch(setProfile({ ...profileRes, address: walletAddress }));
           }
         } else {

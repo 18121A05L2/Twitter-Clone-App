@@ -35,7 +35,7 @@ function SpecificTweetDisplay() {
   const data = {
     postId: post?._id,
     replyData: replyInput,
-    userImage: profile.avatar,
+    avatar: profile.avatar,
     userId: profile.userId?.split(" ")[0].toLocaleLowerCase(),
     tweetUserId: post?.userId,
     // userName: post?.userName,
@@ -70,7 +70,7 @@ function SpecificTweetDisplay() {
           className="rounded-full"
           height={50}
           width={50}
-          src={post?.userImage || "https://links.papareact.com/gll"}
+          src={post?.avatar || "https://links.papareact.com/gll"}
           alt="user image"
         ></Image>
         <div>

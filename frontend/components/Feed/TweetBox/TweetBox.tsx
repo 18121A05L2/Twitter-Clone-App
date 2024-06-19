@@ -42,7 +42,7 @@ function TweetBox() {
       timeStamp: new Date(),
       userInput: input,
       userId: profile.userId,
-      userImage: profile.avatar,
+      avatar: profile.avatar,
     };
 
     const userOwnedTokens = await twitterContract?.balanceOf();

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import SideBar from "../../components/SideBar";
+import SideBar from "../../components/SideBar/SideBar";
 import Profile from "../../components/Profile";
 import Widgets from "../../components/Widgets";
 import TweetBoxModal from "../../components/Feed/TweetBox/TweetBoxModal";
@@ -27,13 +27,14 @@ import useContracts from "../../components/hooks/useContracts";
 import DarkMode from "../../components/utils/darkMode";
 import SpecificTweetDisplay from "../../components/SpecificTweetDisplay";
 import MarketPlace from "../../components/Nfts/MarketPlace/MarketPlace";
+import { NewTwitterLogo } from "../../components/utils/svgs";
 
 function All() {
   const { isContractsLoading } = useContracts();
   const router = useRouter();
 
   const { profile } = useSelector((state: RootState) => state.blockchain);
-  const { editProfileModalState, tweetBoxModalState } = useSelector(
+  const { editProfileModalState, tweetBoxModalState, isDarkMode } = useSelector(
     (state: RootState) => state.global
   );
 
@@ -88,8 +89,10 @@ function All() {
   if (isContractsLoading)
     return (
       <div className=" flex h-screen w-screen items-center justify-center">
-        <p>Loading</p>
-        {/* <div> naviage to SignIn</div> */}
+        {/* <p>Loading</p> */}
+        <div className="relative ml-4 h-[7rem] w-[7rem] rounded-full p-[0.3rem] hover:bg-blue-200 ">
+          <NewTwitterLogo isDarkMode={isDarkMode} />
+        </div>
       </div>
     );
 

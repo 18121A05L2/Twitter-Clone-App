@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
-import { tokenUriType } from "../../Types/blockchain.types";
+import { nftPostType } from "../../Types/blockchain.types";
+import { profileType } from "../../Types/Feed.types";
 
 type initialStateType = {
   twitterContract: ethers.Contract | null;
@@ -8,9 +9,9 @@ type initialStateType = {
   provider: ethers.Provider | null;
   walletAddress: String;
   nftContract: ethers.Contract | null;
-  profile: tokenUriType;
+  profile: profileType;
   isSettingProfile: boolean;
-  currentNftView: tokenUriType;
+  currentNftView: nftPostType;
 };
 
 const initialState: initialStateType = {

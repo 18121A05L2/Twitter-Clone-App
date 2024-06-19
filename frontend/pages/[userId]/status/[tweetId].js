@@ -1,6 +1,6 @@
 import React from "react";
 
-import SideBar from "../../../components/SideBar";
+import SideBar from "../../../components/SideBar/SideBar";
 import Widgets from "../../../components/Widgets";
 import CommentModal from "../../../components/Feed/DisplayTweets/CommentModal";
 import TweetBoxModal from "../../../components/Feed/TweetBox/TweetBoxModal";

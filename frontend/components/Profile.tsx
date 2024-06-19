@@ -13,16 +13,19 @@ import { AiOutlineLink } from "react-icons/ai";
 import axiosAPI from "../axios";
 import { postType, profileType } from "../Types/Feed.types";
 import { RootState } from "../Redux/app/store";
-import { tokenUriType } from "../Types/blockchain.types";
+import { nftPostType } from "../Types/blockchain.types";
+import Moment from "react-moment";
 
 function Profile() {
-  const [profilePosts, setProfilePosts] = useState([]);
-  const [profileData, setProfileData] = useState<tokenUriType>();
+  const [profilePosts, setProfilePosts] = useState<postType[]>([]);
+  // const [profileData, setProfileData] = useState<profileType | nftPostType>();
   const router = useRouter();
   const { profileDataChanged, dataChanged } = useSelector(
     (state: RootState) => state.global
   );
-  const { profile } = useSelector((state: RootState) => state.blockchain);
+  const { profile, twitterContract } = useSelector(
+    (state: RootState) => state.blockchain
+  );
   const newUserId = router?.query?.component && router?.query?.component[1];
   const userId = profile.userId;
   const dispatch = useDispatch();
@@ -45,17 +48,30 @@ function Profile() {
     //   setProfileData(profileData);
     // }
     // fetchProfileData();
-    setProfileData(profile);
+    // setProfileData(profile);
   }, [router.query.component, profile, profileDataChanged]);
 
   useEffect(() => {
-    async function fetchingProfilePosts() {
-      const profilePosts = await axiosAPI
-        .post("/profileposts", JSON.stringify({ userId: userId }))
-        .then((res) => res.data);
-      setProfilePosts(profilePosts);
-    }
-    fetchingProfilePosts();
+    (async () => {
+      const tweetUrls = await twitterContract?.retriveTweets(profile.address);
+      Promise.all(
+        (await tweetUrls?.map(async (tokenUri: string): Promise<postType> => {
+          const metadata = (await fetch(tokenUri).then((res) =>
+            res.json()
+          )) as postType;
+          let a = tokenUri.split("/");
+          return { ...metadata, ipfsHash: a[a.length - 1] };
+        })) as Promise<postType>[]
+      )
+        .then((results) => {
+          console.log("All data fetched successfully:");
+          let temArr = results.reverse();
+          setProfilePosts(temArr);
+        })
+        .catch((error) => {
+          console.error("One of the fetches failed:", error);
+        });
+    })();
   }, [dataChanged, router.query.component]);
 
   return (
@@ -70,7 +86,7 @@ function Profile() {
         />
 
         <section>
-          <p>{profileData?.userId}</p>
+          <p>{profile?.bio}</p>
           <p>{profilePosts?.length} Tweets</p>
         </section>
       </div>
@@ -88,7 +104,7 @@ function Profile() {
           <Image
             className="rounded-full"
             layout="fill"
-            src={profileData?.avatar || "https://links.papareact.com/gll"}
+            src={profile?.avatar || "https://links.papareact.com/gll"}
             alt="profile image"
           ></Image>
         </div>
@@ -111,9 +127,9 @@ function Profile() {
           newUserId && userId !== newUserId && " pt-12  "
         }`}
       >
-        {/* <p>{profileData?.name}</p> */}
-        <p>{profileData?.userId}</p>
-        <p>{profileData?.bio}</p>
+        <p>{profile?.name}</p>
+        <p>{profile?.userId}</p>
+        <p>{profile?.bio}</p>
 
         <div className="flex gap-4   ">
           <div className="flex items-center gap-2  ">
@@ -124,17 +140,17 @@ function Profile() {
             <GoCalendar />
             <p>
               Joined
-              {/* <Moment fromNow>{profileData.createdAt}</Moment> */}
+              <Moment fromNow>{profile.createdAt}</Moment>
             </p>
           </div>
           <div className="flex items-center gap-2">
             <AiOutlineLink />
             <a
-              // href={profileData?.website}
+              href={profile?.website}
               target="_blank"
               className=" text-twitter "
             >
-              {/* {profileData?.website?.slice(0, 20) + "..."} */}
+              {profile?.website?.slice(0, 20) + "..."}
             </a>
           </div>
         </div>
@@ -149,9 +165,16 @@ function Profile() {
           </div>
         </div>
       </div>
-      {/* {profilePosts?.map((post: postType) => (
-        <DisplayTweets key={post?._id} post={post} />
-      ))} */}
+      <div className=" border-b-[0.1rem]">
+        {/* <div>Tweets</div> */}
+        {profilePosts ? (
+          profilePosts.map((post: postType, i) => (
+            <DisplayTweets key={i} post={post} profile={profile} />
+          ))
+        ) : (
+          <div>Loading</div>
+        )}
+      </div>
     </div>
   );
 }

@@ -22,7 +22,7 @@ const deployTwitterNfts: DeployFunction = async ({
         "TwitterNfts",
         deployedContract.address,
     )
-    console.log(await nftContract.symbol())
+    console.log(await nftContract.nftSymbol())
     const nftContractAddress = deployedContract.address
     if (chainId !== 31337 && process.env.ETHER_SCAN_API) {
         await verify(nftContractAddress, ["TwitterNfts", "TNFT"])
@@ -30,4 +30,4 @@ const deployTwitterNfts: DeployFunction = async ({
 }
 
 export default deployTwitterNfts
-deployTwitterNfts.tags = ["all", "deployTwitterNfts"]
+// deployTwitterNfts.tags = ["all", "deployTwitterNfts"]

@@ -8,12 +8,14 @@ import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import MessageSearch from "../Messages/MessageSearch";
 import useUniqueAddresses from "../hooks/useUniqueAddresses";
-import { tokenUriType } from "../../Types/blockchain.types";
+import { nftPostType } from "../../Types/blockchain.types";
 
 function Widgets() {
   const [search, setSearch] = useState<string>("");
-  const [profiles, setProfiles] = useState<tokenUriType[]>([]);
-  const { nftContract } = useSelector((state: RootState) => state.blockchain);
+  const [profiles, setProfiles] = useState<nftPostType[]>([]);
+  const { nftContract, twitterContract } = useSelector(
+    (state: RootState) => state.blockchain
+  );
   const router = useRouter();
   const { uniqueAddresses, isLoading: isAdressesLoading } =
     useUniqueAddresses();
@@ -25,15 +27,15 @@ function Widgets() {
   }
   useEffect(() => {
     const getEventsData = async () => {
-      await nftContract
-        ?.queryFilter("Transfer", 0, "latest")
+      await twitterContract
+        ?.queryFilter("TransferNft", 0, "latest")
         .then((events) => {
           Promise.all(
-            uniqueAddresses.map(async (address): Promise<tokenUriType> => {
-              const profileUrl = await nftContract.getProfile(address);
+            uniqueAddresses.map(async (address): Promise<nftPostType> => {
+              const profileUrl = await twitterContract.getProfile(address);
               const profileData = (await fetch(profileUrl).then((res) =>
                 res.json()
-              )) as tokenUriType;
+              )) as nftPostType;
               return { ...profileData, address };
             })
           ).then((results) => setProfiles(results));

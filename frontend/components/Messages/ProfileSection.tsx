@@ -5,10 +5,10 @@ import axiosAPI from "../../axios";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/app/store";
 import { setReceiverProfile } from "../../Redux/features/GlobalSlice";
-import { tokenUriType } from "../../Types/blockchain.types";
+import { nftPostType } from "../../Types/blockchain.types";
 
 type propsType = {
-  profile: tokenUriType;
+  profile: nftPostType;
   online: Boolean;
 };
 

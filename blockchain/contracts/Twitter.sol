@@ -3,6 +3,7 @@
 pragma solidity ^0.8.0;
 import "./FundMe.sol";
 import "./TwitterToken.sol";
+import "./TwitterNfts.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 error Twitter_NotOwner();
@@ -13,9 +14,10 @@ error Twitter_NotOwner();
  * @notice This a smaple testing project
  */
 
-contract Twitter is TwitterToken {
+contract Twitter is TwitterToken, TwitterNfts {
     address public contractAddress;
     TwitterToken public TwitterTokenInstance;
+    TwitterNfts public TwitterNftsInstance;
     using FundMe for uint256;
     address public immutable i_owner;
     // uint256 public constant PER_TWEET = 10 * 10 ** 18; // per tweet 10 dollars
@@ -24,6 +26,9 @@ contract Twitter is TwitterToken {
     mapping(address => uint256) public s_addressToAmountFunded;
     mapping(address => string[]) public s_addressToTweets;
     event Tweet(address indexed _from, string _tweetUrl);
+    // ( owner address => tokenuri ) nft profile image
+    // NOTE: token uri is the ipfs API which contains id , avatar and nft name
+    mapping(address => string) public profiles;
 
     // string[] public s_msgStore;
 
@@ -32,11 +37,16 @@ contract Twitter is TwitterToken {
         _;
     }
 
-    constructor(address priceFeedAddress) payable {
+    constructor(
+        address priceFeedAddress,
+        string memory nftName,
+        string memory nftSymbol
+    ) payable TwitterNfts(nftName, nftSymbol) {
         require(msg.value > 0, "Must send ETH to deploy");
         i_owner = msg.sender;
         s_priceFeed = AggregatorV3Interface(priceFeedAddress);
         TwitterTokenInstance = new TwitterToken();
+        TwitterNftsInstance = new TwitterNfts(nftName, nftSymbol);
         contractAddress = address(this);
     }
 
@@ -107,6 +117,22 @@ contract Twitter is TwitterToken {
         );
         (bool success, ) = payable(msg.sender).call{value: amount}("");
         require(success, " Failed to send 0.01 ETH");
+    }
+
+    function setProfile(
+        string memory _tokenUri,
+        uint256 _id
+    ) public returns (bool) {
+        require(
+            TwitterNfts.ownerOf(_id) == msg.sender,
+            "Must own the nft you want to select as your profile"
+        );
+        profiles[msg.sender] = _tokenUri;
+        return true;
+    }
+
+    function getProfile(address _address) public view returns (string memory) {
+        return profiles[_address];
     }
 
     // A fallback function to accept ETH

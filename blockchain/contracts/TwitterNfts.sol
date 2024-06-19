@@ -4,8 +4,8 @@ pragma solidity ^0.8.9;
 import "./interfaces/IERC721Receiver.sol";
 
 contract TwitterNfts {
-    string public name;
-    string public symbol;
+    string public nftName;
+    string public nftSymbol;
 
     uint256 public nextTokenIdToMint; // token ID numberr
     address public contractOwner;
@@ -20,31 +20,28 @@ contract TwitterNfts {
     mapping(address => mapping(address => bool)) internal _operatorApprovals;
     // token id => token uri
     mapping(uint256 => string) _tokenUris;
-    // ( owner address => tokenuri ) nft profile image
-    // NOTE: token uri is the ipfs API which contains id , avatar and nft name
-    mapping(address => string) public profiles;
 
-    event Transfer(
+    event TransferNft(
         address indexed _from,
         address indexed _to,
         uint256 indexed _tokenId
     );
 
-    event Approval(
+    event ApprovalForNft(
         address indexed _owner,
         address indexed _approved,
         uint256 indexed _tokenId
     );
 
-    event ApprovalForAll(
+    event ApprovalForAllNfts(
         address indexed _owner,
         address indexed _operator,
         bool _approved
     );
 
     constructor(string memory _name, string memory _symbol) {
-        name = _name;
-        symbol = _symbol;
+        nftName = _name;
+        nftSymbol = _symbol;
         nextTokenIdToMint = 0;
         contractOwner = msg.sender;
     }
@@ -83,10 +80,10 @@ contract TwitterNfts {
             _checkOnERC721Received(_from, _to, _tokenId, _data),
             "!ERC721Implementer"
         );
-        _transfer(_from, _to, _tokenId);
+        _transferNft(_from, _to, _tokenId);
     }
 
-    function transferFrom(
+    function transferNftFrom(
         address _from,
         address _to,
         uint256 _tokenId
@@ -98,18 +95,18 @@ contract TwitterNfts {
                 _operatorApprovals[ownerOf(_tokenId)][msg.sender],
             "!Auth"
         );
-        _transfer(_from, _to, _tokenId);
+        _transferNft(_from, _to, _tokenId);
     }
 
-    function approve(address _approved, uint256 _tokenId) public payable {
+    function approveNft(address _approved, uint256 _tokenId) public payable {
         require(ownerOf(_tokenId) == msg.sender, "!Owner");
         _tokenApprovals[_tokenId] = _approved;
-        emit Approval(ownerOf(_tokenId), _approved, _tokenId);
+        emit ApprovalForNft(ownerOf(_tokenId), _approved, _tokenId);
     }
 
     function setApprovalForAll(address _operator, bool _approved) public {
         _operatorApprovals[msg.sender][_operator] = _approved;
-        emit ApprovalForAll(msg.sender, _operator, _approved);
+        emit ApprovalForAllNfts(msg.sender, _operator, _approved);
     }
 
     function getApproved(uint256 _tokenId) public view returns (address) {
@@ -128,8 +125,8 @@ contract TwitterNfts {
         _owners[nextTokenIdToMint] = msg.sender;
         _balances[msg.sender] += 1;
         _tokenUris[nextTokenIdToMint] = _uri;
-        profiles[msg.sender] = _uri;
-        emit Transfer(address(0), msg.sender, nextTokenIdToMint);
+        // profiles[msg.sender] = _uri;
+        emit TransferNft(address(0), msg.sender, nextTokenIdToMint);
         nextTokenIdToMint += 1;
     }
 
@@ -137,7 +134,7 @@ contract TwitterNfts {
         return _tokenUris[_tokenId];
     }
 
-    function totalSupply() public view returns (uint256) {
+    function totalNftSupply() public view returns (uint256) {
         return nextTokenIdToMint;
     }
 
@@ -177,22 +174,26 @@ contract TwitterNfts {
     }
 
     // unsafe transfer
-    function _transfer(address _from, address _to, uint256 _tokenId) internal {
+    function _transferNft(
+        address _from,
+        address _to,
+        uint256 _tokenId
+    ) internal {
         require(ownerOf(_tokenId) == _from, "!Owner");
         require(_to != address(0), "!ToAdd0");
 
         delete _tokenApprovals[_tokenId];
-        if (
-            keccak256(abi.encodePacked(profiles[_from])) ==
-            keccak256(abi.encodePacked(_tokenUris[_tokenId]))
-        ) {
-            delete profiles[_from];
-        }
+        // if (
+        //     keccak256(abi.encodePacked(profiles[_from])) ==
+        //     keccak256(abi.encodePacked(_tokenUris[_tokenId]))
+        // ) {
+        //     delete profiles[_from];
+        // }
         _balances[_from] -= 1;
         _balances[_to] += 1;
         _owners[_tokenId] = _to;
 
-        emit Transfer(_from, _to, _tokenId);
+        emit TransferNft(_from, _to, _tokenId);
     }
 
     // fetch all the nfts owned
@@ -209,16 +210,7 @@ contract TwitterNfts {
         return _ids;
     }
 
-    function setProfile(uint256 _id) public returns (bool) {
-        require(
-            ownerOf(_id) == msg.sender,
-            "Must own the nft you want to select as your profile"
-        );
-        profiles[msg.sender] = _tokenUris[_id];
-        return true;
-    }
-
-    function getProfile(address _address) public view returns (string memory) {
-        return profiles[_address];
+    function getNftSymbol() public view returns (string memory) {
+        return nftSymbol;
     }
 }

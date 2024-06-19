@@ -8,6 +8,7 @@ import {
 import axiosAPI, { localhost } from "../axios";
 import { profileType } from "../Types/Feed.types";
 import { RootState } from "../Redux/app/store";
+import { PINATA_GATEWAY_URL } from "../utils/constants";
 
 const styles = {
   div: " border m-2 rounded-md p-1  ",
@@ -17,20 +18,11 @@ const styles = {
 
 function EditProfileModal() {
   const dispatch = useDispatch();
-  const [profileData, setProfileData] = useState({} as profileType);
-  const { profile } = useSelector((state: RootState) => state.blockchain);
+  const { profile, twitterContract } = useSelector(
+    (state: RootState) => state.blockchain
+  );
+  console.log({ profile });
   const { userId, avatar } = profile;
-
-  useEffect(() => {
-    // -------------------------------------------- fetching Profile Data --------------------
-    async function fetchProfileData() {
-      const profileData = await axiosAPI
-        .post("/profiledata", JSON.stringify({ userId: userId }))
-        .then((res) => res.data);
-      setProfileData(profileData);
-    }
-    fetchProfileData();
-  }, []);
 
   const [data, setData] = useState<profileType>({
     name: "",
@@ -41,32 +33,36 @@ function EditProfileModal() {
     birthDate: new Date(),
     userImage: avatar,
     backgroundImage: "",
+    avatar: profile.avatar,
   });
   useEffect(() => {
-    profileData &&
+    profile &&
       setData({
-        name: profileData.name,
-        bio: profileData.bio,
-        location: profileData.location,
-        website: profileData.website,
+        name: profile.name,
+        bio: profile.bio,
+        location: profile.location,
+        website: profile.website,
         userId: userId,
         birthDate: new Date(),
         userImage: avatar,
-        backgroundImage: profileData.backgroundImage,
+        backgroundImage: profile.backgroundImage,
+        avatar: profile.avatar,
       });
-  }, [profileData, profile]);
+  }, [profile, profile]);
   const editProfileModalState = useSelector(
     (state: any) => state.global.editProfileModalState
   );
 
   async function handleSave() {
-    const res = await fetch(`${localhost}/profile`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    let updatingData = { ...profile, ...data };
+    const jsonRes = await axiosAPI
+      .post("/uploadJsonToIpfs", JSON.stringify(updatingData))
+      .then((res) => res.data);
+    let tokenUri = `${PINATA_GATEWAY_URL}/${jsonRes.IpfsHash}`;
+    const profilUrl = await twitterContract?.setProfile(
+      tokenUri,
+      profile.nftId
+    );
     dispatch(editProfileModal());
     dispatch(profileDataChainging());
   }

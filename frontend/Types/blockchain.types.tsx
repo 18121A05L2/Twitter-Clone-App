@@ -1,6 +1,4 @@
-
-
-export type tokenUriType = {
+export type nftPostType = {
   userId: string;
   avatar: string;
   nftName: string;

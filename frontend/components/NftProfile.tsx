@@ -14,7 +14,7 @@ import {
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { PINATA_GATEWAY_URL } from "../utils/constants";
-import { tokenUriType } from "../Types/blockchain.types";
+import { nftPostType } from "../Types/blockchain.types";
 
 function NftProfile() {
   const [nftName, setNftName] = useState("");
@@ -22,27 +22,27 @@ function NftProfile() {
   const [tempImg, setTempImg] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [errMsg, setErrMsg] = useState("");
-  const [myNfts, setMyNfts] = useState<tokenUriType[]>([]);
+  const [myNfts, setMyNfts] = useState<nftPostType[]>([]);
   const dispatch = useDispatch();
-  const { walletAddress, nftContract, profile, isSettingProfile } = useSelector(
-    (state: RootState) => state.blockchain
-  );
+  const { walletAddress, twitterContract, profile, isSettingProfile } =
+    useSelector((state: RootState) => state.blockchain);
   const [userId, setUserId] = useState(profile.userId);
-  const [isUserIdEditable, setIsUserIdEditable] = useState(false);
-  const toggleEdit = () => {
-    setIsUserIdEditable(!isUserIdEditable);
-  };
+  const [isUserIdEditable, setIsUserIdEditable] = useState(
+    profile.userId ? false : true
+  );
 
   useEffect(() => {
     loadMyNfts();
-  }, [nftContract, isMinting]);
+  }, [twitterContract, isMinting]);
 
   const loadMyNfts = async () => {
-    const nftIds = await nftContract?.getMyNfts();
+    const nftIds = await twitterContract?.getMyNfts();
+    console.log(nftIds);
     if (nftIds) {
       const nfts = await Promise.all(
         nftIds.map(async (nftNumber: number) => {
-          const uri = await nftContract?.tokenURI(Number(nftNumber));
+          const uri = await twitterContract?.tokenURI(Number(nftNumber));
+          console.log({ uri });
           const metadata = await axiosAPI
             .get(uri)
             .then((res) => res.data)
@@ -86,7 +86,7 @@ function NftProfile() {
           },
         })
         .then((res) => res.data);
-      let nftId = Number(await nftContract?.nextTokenIdToMint());
+      let nextNftId = Number(await twitterContract?.nextTokenIdToMint());
 
       const jsonRes = await axiosAPI
         .post(
@@ -95,13 +95,13 @@ function NftProfile() {
             avatar: `${PINATA_GATEWAY_URL}/${imgUploadRes.IpfsHash}`,
             nftName,
             userId,
-            nftId,
+            nftId: nextNftId,
           })
         )
         .then((res) => res.data);
       let tokenUri = `${PINATA_GATEWAY_URL}/${jsonRes.IpfsHash}`;
-      await (await nftContract?.mintTo(tokenUri)).wait();
-      // await nftContract?.setProfile(tokenIdCount);
+      await (await twitterContract?.mintTo(tokenUri)).wait();
+      await twitterContract?.setProfile(tokenUri, nextNftId);
     } catch (error) {
       console.log(error);
     }
@@ -119,14 +119,14 @@ function NftProfile() {
     }
   };
 
-  const switchProfile = async (event: any, nft: tokenUriType) => {
+  const switchProfile = async (event: any, nft: nftPostType) => {
     event.stopPropagation();
     dispatch(setIsSettingProfile(true));
     try {
-      (await nftContract?.setProfile(nft.nftId)).wait();
-      const nftUri = await nftContract?.getProfile(walletAddress);
+      (await twitterContract?.setProfile(nft.nftId)).wait();
+      const nftUri = await twitterContract?.getProfile(walletAddress);
       const profileRes = await fetch(nftUri).then((res) => res.json());
-      dispatch(setProfile(profileRes));
+      dispatch(setProfile({ ...profileRes, address: walletAddress }));
       dispatch(setIsSettingProfile(false));
     } catch (err: any) {
       toast(err.shortMessage, { type: "error" });
@@ -134,32 +134,19 @@ function NftProfile() {
       dispatch(setIsSettingProfile(false));
     }
   };
-  const getEventsData = async () => {
-    await nftContract
-      ?.queryFilter("Transfer", 0, "latest")
-      .then((events) => {
-        console.log({ events });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-  getEventsData();
+  // const getEventsData = async () => {
+  //   await twitterContract
+  //     ?.queryFilter("TransferNft", 0, "latest")
+  //     .then((events) => {
+  //       console.log({ events });
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
+  // getEventsData();
 
-  // nftContract
-  //   ?.on("Transfer", (event) => {
-  //     console.log(" received " + event);
-  //   })
-  //   .then((events) => {
-  //     console.log(" event in real time ");
-  //     console.log(events);
-  //   })
-  //   .catch((error) => {
-  //     console.error(error);
-  //   });
-  // console.log(profile);
-
-  const nftOnclick = async (nft: tokenUriType) => {
+  const nftOnclick = async (nft: nftPostType) => {
     dispatch(setCurrentNftView(nft));
   };
 

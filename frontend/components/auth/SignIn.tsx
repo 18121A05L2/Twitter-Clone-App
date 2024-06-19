@@ -121,7 +121,7 @@ export default function SignIn() {
       {transaction ? (
         <p>
           <a className=" underline" href={transaction} target="_blank">
-            click here
+            click here {"  "}
           </a>
           to check the transaction or{" "}
           <a className=" underline " href="/home">

@@ -4,14 +4,14 @@ import ProfileSection from "./ProfileSection";
 import { useSelector } from "react-redux";
 import { profileType } from "../../Types/Feed.types";
 import { RootState } from "../../Redux/app/store";
-import { tokenUriType } from "../../Types/blockchain.types";
+import { nftPostType } from "../../Types/blockchain.types";
 
 type onlineUserType = {
   userId: string;
   socketId: string;
 };
 
-function MessageSearch({ profiles }: { profiles: tokenUriType[] }) {
+function MessageSearch({ profiles }: { profiles: nftPostType[] }) {
   const [search, setSearch] = useState("");
   const onlineUsers = useSelector((state: any) => state.global.onlineUsers);
   const { profile } = useSelector((state: RootState) => state.blockchain);

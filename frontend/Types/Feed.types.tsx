@@ -27,18 +27,21 @@ type postType = {
 };
 
 type profileType = {
-  _id?: string;
-  backgroundImage: string;
+  // _id?: string;
+  backgroundImage?: string;
   userId: string;
-  // newUserId? : string;
-  userImage: string | null | undefined;
-  name: string;
-  bio: string;
-  location: string;
-  website: string;
-  birthDate: Date;
+  userImage?: string | null | undefined;
+  name?: string;
+  bio?: string;
+  location?: string;
+  website?: string;
+  birthDate?: Date;
   createdAt?: Date;
   updatedAt?: Date;
+  avatar?: string;
+  nftName?: string;
+  address?: string;
+  nftId?: number;
 };
 
 type messageType = {

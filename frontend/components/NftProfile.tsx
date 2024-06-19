@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "dotenv/config";
 import { RootState } from "../Redux/app/store";
 
-import axiosAPI from "../axios";
+import axiosAPI, { localhost } from "../axios";
 import {
   setCurrentNftView,
   setIsSettingProfile,
@@ -17,9 +17,7 @@ import { PINATA_GATEWAY_URL } from "../utils/constants";
 import { tokenUriType } from "../Types/blockchain.types";
 
 function NftProfile() {
-  const [avatar, setAvatar] = useState("");
   const [nftName, setNftName] = useState("");
-
   const [isMinting, setIsMinting] = useState(false);
   const [tempImg, setTempImg] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
@@ -30,29 +28,21 @@ function NftProfile() {
     (state: RootState) => state.blockchain
   );
   const [userId, setUserId] = useState(profile.userId);
-  // const nftContract = useSelector(
-  //   (state: RootState) => state.blockchain.nftContract
-  // );
-  // const profile = useSelector((state: RootState) => state.blockchain.profile);
+  const [isUserIdEditable, setIsUserIdEditable] = useState(false);
+  const toggleEdit = () => {
+    setIsUserIdEditable(!isUserIdEditable);
+  };
 
   useEffect(() => {
     loadMyNfts();
   }, [nftContract, isMinting]);
 
-  useEffect(() => {
-    (async () => {
-      // const nftUri = await nftContract?.getProfile(walletAddress);
-      // const profileRes = await fetch(nftUri).then((res) => res.json());
-      // setProfile(profileRes);
-    })();
-  }, [nftContract]);
-
   const loadMyNfts = async () => {
     const nftIds = await nftContract?.getMyNfts();
     if (nftIds) {
       const nfts = await Promise.all(
-        nftIds.map(async (i: number) => {
-          const uri = await nftContract?.tokenURI(Number(i));
+        nftIds.map(async (nftNumber: number) => {
+          const uri = await nftContract?.tokenURI(Number(nftNumber));
           const metadata = await axiosAPI
             .get(uri)
             .then((res) => res.data)
@@ -83,9 +73,6 @@ function NftProfile() {
       } else if (!userId) {
         setErrMsg("Please enter userId");
       }
-
-      // console.log({ tempImg, nftName });
-      // console.log(" add avatar and name ")
       return;
     }
     setIsMinting(true);
@@ -93,13 +80,12 @@ function NftProfile() {
       const formData = new FormData();
       formData.append("image", tempImg);
       const imgUploadRes = await axios
-        .post("http://localhost:8001/uploadImageToIpfs", formData, {
+        .post(`${localhost}/uploadImageToIpfs`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         })
         .then((res) => res.data);
-      setAvatar(`${PINATA_GATEWAY_URL}/${imgUploadRes.IpfsHash}`);
       let nftId = Number(await nftContract?.nextTokenIdToMint());
 
       const jsonRes = await axiosAPI
@@ -144,6 +130,8 @@ function NftProfile() {
       dispatch(setIsSettingProfile(false));
     } catch (err: any) {
       toast(err.shortMessage, { type: "error" });
+    } finally {
+      dispatch(setIsSettingProfile(false));
     }
   };
   const getEventsData = async () => {
@@ -191,14 +179,28 @@ function NftProfile() {
               className=" rounded-md border-2 p-1 outline-none dark:bg-black "
               type="text"
               placeholder="NFT name "
+              value={nftName}
               onChange={(e) => setNftName(e.target.value)}
             ></input>
-            <input
-              className=" rounded-md border-2 p-1 outline-none dark:bg-black "
-              type="text"
-              placeholder="user id "
-              onChange={(e) => setUserId(e.target.value)}
-            ></input>
+            <div className=" flex items-center gap-5 ">
+              <input
+                className={` rounded-md border-2 p-1 w-max outline-none dark:bg-black ${!isUserIdEditable && " cursor-not-allowed opacity-30"} `}
+                type="text"
+                placeholder="user id "
+                value={userId}
+                readOnly={!isUserIdEditable}
+                onChange={(e) => setUserId(e.target.value)}
+              ></input>
+              <div
+                className={` bg-red-300 p-1 rounded-md cursor-pointer ${isUserIdEditable && " opacity-30"}`}
+                onClick={() => {
+                  if (!isUserIdEditable) setIsUserIdEditable(!isUserIdEditable);
+                }}
+              >
+                Edit userId
+              </div>
+            </div>
+
             <div
               onClick={MintNft}
               className=" max-w-40 py-2  cursor-pointer rounded-md bg-blue-200 px-4 dark:text-black "
@@ -251,13 +253,13 @@ function NftProfile() {
                     onClick={() => nftOnclick(nft)}
                   >
                     <img className=" h-40 w-40" src={nft.avatar} />
-                    <p>
-                      {" "}
-                      {nft.nftId && `#${nft.nftId} - `} {nft.nftName}
+                    <p className=" py-2">
+                      <a href="">{`#${nft.nftId}`}</a>
+                      {` - `} {nft.nftName}
                     </p>
                     <div
                       onClick={(event) => switchProfile(event, nft)}
-                      className=" cursor-pointer rounded-lg bg-slate-500 px-2"
+                      className=" cursor-pointer rounded-lg bg-slate-400 px-2"
                     >
                       Set as NFT profile
                     </div>

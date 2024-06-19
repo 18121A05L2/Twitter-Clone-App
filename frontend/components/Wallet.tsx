@@ -94,11 +94,10 @@ function Wallet() {
           }
         ></input>
         <div
-          className=" w-20 bg-blue-300 p-1 text-center "
+          className=" w-20 bg-blue-300 p-1 text-center rounded-md cursor-pointer hover:bg-blue-400"
           onClick={sendTokens}
         >
-          {" "}
-          Enter{" "}
+          Send
         </div>
       </div>
       <button

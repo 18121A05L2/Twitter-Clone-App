@@ -61,12 +61,13 @@ function Profile() {
   return (
     <div className="flex flex-col">
       <div className="flex gap-3">
-        <Link passHref href={"/"}>
-          <IoArrowBackSharp
-            title="back"
-            className="cursor-pointer rounded-full p-1 text-[2.3rem] hover:bg-gray-300"
-          />
-        </Link>
+        <IoArrowBackSharp
+          title="back"
+          onClick={() => {
+            router.back();
+          }}
+          className="cursor-pointer rounded-full p-1 text-[2.3rem] hover:bg-gray-300"
+        />
 
         <section>
           <p>{profileData?.userId}</p>

@@ -36,7 +36,6 @@ function MessageSearch({ profiles }: { profiles: tokenUriType[] }) {
               profile?.userId != sessionUserId
           )
           .map((profile) => {
-            // console.log({ profile });
             let online: Boolean = false;
             onlineUsers.map((user: onlineUserType) => {
               if (user.userId === profile.userId) {

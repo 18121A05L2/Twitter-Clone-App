@@ -2,7 +2,8 @@ import { localTestnetId, sepoliaTestnetId } from "../../utils/constants";
 import { toast } from "react-toastify";
 
 export const ConnectWallet = () => {
-  const useLocalBlocakchain = process.env.NEXT_PUBLIC_USE_LOCAL_BLOCKCHAIN;
+  const useLocalBlocakchain =
+    process.env.NEXT_PUBLIC_USE_LOCAL_BLOCKCHAIN === "true";
   return new Promise((resolve, reject) => {
     if (window.ethereum) {
       (async () => {

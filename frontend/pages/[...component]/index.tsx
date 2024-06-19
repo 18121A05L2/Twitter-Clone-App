@@ -10,7 +10,7 @@ import Explore from "../../components/unused/Explore";
 import Messages from "../../components/Messages";
 import Notifications from "../../components/unused/Notifications";
 import Search from "../../components/unused/Search";
-import Feed from "../../components/Feed";
+import Feed from "../../components/Feed/Feed";
 import FundMe from "../../components/EthersFundMe";
 import Wallet from "../../components/Wallet";
 import { useRouter } from "next/router";
@@ -26,6 +26,7 @@ import { setProfile } from "../../Redux/features/BlockchainSlice";
 import useContracts from "../../components/hooks/useContracts";
 import DarkMode from "../../components/utils/darkMode";
 import SpecificTweetDisplay from "../../components/SpecificTweetDisplay";
+import MarketPlace from "../../components/Nfts/MarketPlace/MarketPlace";
 
 function All() {
   const { isContractsLoading } = useContracts();
@@ -76,6 +77,9 @@ function All() {
         return <NftProfile />;
       case "nft":
         return <Nft />;
+      case "marketplace":
+        return <MarketPlace />;
+
       default:
         return <div>Not Found</div>;
     }

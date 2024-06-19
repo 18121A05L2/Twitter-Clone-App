@@ -22,7 +22,8 @@ import { toast } from "react-toastify";
 
 function TweetBox() {
   const [isLoading, setIsLoading] = useState(false);
-  const useLocalBlocakchain = process.env.NEXT_PUBLIC_USE_LOCAL_BLOCKCHAIN;
+  const useLocalBlocakchain =
+    process.env.NEXT_PUBLIC_USE_LOCAL_BLOCKCHAIN === "true";
   const { profile, twitterContract } = useSelector(
     (state: RootState) => state.blockchain
   );

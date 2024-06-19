@@ -5,7 +5,7 @@ import {
   editProfileModal,
   profileDataChainging,
 } from "../Redux/features/GlobalSlice";
-import axiosAPI from "../axios";
+import axiosAPI, { localhost } from "../axios";
 import { profileType } from "../Types/Feed.types";
 import { RootState } from "../Redux/app/store";
 
@@ -60,7 +60,7 @@ function EditProfileModal() {
   );
 
   async function handleSave() {
-    const res = await fetch("http://localhost:8001/profile", {
+    const res = await fetch(`${localhost}/profile`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

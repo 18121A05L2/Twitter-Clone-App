@@ -99,9 +99,20 @@ function NftProfile() {
         .then((res) => res.data);
       let tokenUri = `${PINATA_GATEWAY_URL}/${jsonRes.IpfsHash}`;
       await (await twitterContract?.mintTo(tokenUri)).wait();
-      await twitterContract?.setProfile(tokenUri, nextNftId);
+      const profileData = {
+        ...profile,
+        nftName,
+        userId,
+        nftId: nextNftId,
+      };
+      const profileTokenRes = await axiosAPI
+        .post("/uploadJsonToIpfs", JSON.stringify(profileData))
+        .then((res) => res.data);
+      let profileTokenUri = `${PINATA_GATEWAY_URL}/${profileTokenRes.IpfsHash}`;
+      await twitterContract?.setProfile(profileTokenUri, nextNftId);
     } catch (error) {
       console.log(error);
+      toast("Mint Failed", { type: "error" });
     }
     await loadMyNfts();
     setIsMinting(false);
@@ -121,8 +132,19 @@ function NftProfile() {
     event.stopPropagation();
     dispatch(setIsSettingProfile(true));
     try {
-      const tokenURI = await twitterContract?.tokenURI(nft.nftId);
-      (await twitterContract?.setProfile(tokenURI, nft.nftId)).wait();
+      const newTokenURI = await twitterContract?.tokenURI(nft.nftId);
+      const newProfileData = await fetch(newTokenURI).then((res) => res.json());
+      const newData = {
+        ...profile,
+        ...newProfileData,
+        userId: profile.userId,
+      };
+      const jsonRes = await axiosAPI
+        .post("/uploadJsonToIpfs", JSON.stringify(newData))
+        .then((res) => res.data);
+      let tokenUri = `${PINATA_GATEWAY_URL}/${jsonRes.IpfsHash}`;
+
+      await (await twitterContract?.setProfile(tokenUri, nft.nftId)).wait();
       const nftUri = await twitterContract?.getProfile(walletAddress);
       const profileRes = await fetch(nftUri).then((res) => res.json());
       dispatch(setProfile({ ...profileRes, address: walletAddress }));

@@ -96,7 +96,7 @@ function Profile() {
           height="200"
           width="700"
           src={
-            // profileData?.backgroundImage ||
+            profile?.backgroundImage ||
             "https://thumbs.dreamstime.com/b/technology-banner-background-old-new-using-computer-circuits-old-machine-cogs-37036025.jpg"
           }
         />
@@ -134,7 +134,7 @@ function Profile() {
         <div className="flex gap-4   ">
           <div className="flex items-center gap-2  ">
             <MdOutlineBusinessCenter />
-            <p>Community</p>
+            <p>{profile.location}</p>
           </div>
           <div className=" flex items-center gap-2  ">
             <GoCalendar />
@@ -166,7 +166,7 @@ function Profile() {
         </div>
       </div>
       <div className=" border-b-[0.1rem]">
-        {/* <div>Tweets</div> */}
+        <div className="p-2">Tweets</div>
         {profilePosts ? (
           profilePosts.map((post: postType, i) => (
             <DisplayTweets key={i} post={post} profile={profile} />

@@ -6,5 +6,5 @@ export const tokenDecimals = 8;
 export const sepoliaExplorer = "https://sepolia.etherscan.io";
 export const explorerPaths = {
   address: "address",
-  transaction : "tx"
-}
+  transaction: "tx",
+};

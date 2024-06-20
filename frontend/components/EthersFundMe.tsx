@@ -4,6 +4,7 @@ import { TwitterAbi } from "../utils/exportJsons";
 import { contractAddresses } from "../utils/exportJsons";
 import { useSelector } from "react-redux";
 import { RootState } from "../Redux/app/store";
+import { toast } from "react-toastify";
 
 type DataType = {
   contractBalance: number;
@@ -35,14 +36,25 @@ function FundMe() {
     data;
 
   useEffect(() => {
-    (async function () {})();
+    (async function () {
+      const networkConfig = await provider?.getNetwork();
+      const chainId = Number(networkConfig?.chainId) ?? 31337;
+      const contractAddress = contractAddresses[chainId].Twitter;
+      const balance = Number(await provider?.getBalance(contractAddress));
+      const owner = await twitterContract?.getOwner();
+      setData((prev) => ({
+        ...prev,
+        contractBalance: Number(ethers.formatEther(balance.toString())),
+        contractAddress,
+        contractOwner: owner,
+      }));
+    })();
   }, [twitterContract]);
 
   // need to add more features to it
   useEffect(() => {
     (async () => {
       let allFunders = await twitterContract?.getAllFunders();
-      // console.log({ allFunders });
       if (allFunders) {
         let temp1 = await Promise.all(
           allFunders.map(async (funder: string) => {
@@ -51,26 +63,24 @@ function FundMe() {
             return { [funder]: fundedAmt };
           })
         );
-        // console.log({ temp1 });
       }
     })();
   }, [update, twitterContract]);
 
   async function Fund() {
     try {
+      console.log(typeof fundAmt);
+      let finalAmount = Number(fundAmt) / 3500;
       const transactionResponse: TransactionResponse =
         await twitterContract?.fund({
-          value: ethers.parseEther(fundAmt),
+          value: ethers.parseEther(finalAmount.toString()),
         });
       await transactionResponse.wait(1);
       const newbalance = Number(await provider?.getBalance(contractAddress));
       setData((prev) => ({ ...prev, contractBalance: newbalance }));
     } catch (err: any) {
       console.log({ err });
-      alert(err.shortMessage);
-      // if (err.shortMessage.inclues("coavlence")) {
-      //   console.log(" delete activity data in the metamask advanced settings");
-      // }
+      toast(err.shortMessage, { type: "error" });
     }
     setUpdate(update + 1);
   }
@@ -85,8 +95,9 @@ function FundMe() {
     <div className=" flex flex-col gap-4">
       <p className=" text-end ">connectedAccount : {walletAddress}</p>
       <h1 className=" text-center font-bold text-green-600 "> FundMe </h1>
-      <p> contract Balance : {contractBalance}</p>
+      <p> contract Eth Balance : {contractBalance}</p>
       <p> contract Owner : {contractOwner}</p>
+      <p> contract Address : {contractAddress}</p>
       <div className="flex gap-3  align-middle">
         <input
           type="text"

@@ -28,6 +28,7 @@ import DarkMode from "../../components/utils/darkMode";
 import SpecificTweetDisplay from "../../components/SpecificTweetDisplay";
 import MarketPlace from "../../components/Nfts/MarketPlace/MarketPlace";
 import { NewTwitterLogo } from "../../components/utils/svgs";
+import { AiTwotoneThunderbolt } from "react-icons/ai";
 
 function All() {
   const { isContractsLoading } = useContracts();
@@ -89,9 +90,12 @@ function All() {
   if (isContractsLoading)
     return (
       <div className=" flex h-screen w-screen items-center justify-center">
-        {/* <p>Loading</p> */}
         <div className="relative ml-4 h-[7rem] w-[7rem] rounded-full p-[0.3rem] hover:bg-blue-200 ">
-          <NewTwitterLogo isDarkMode={isDarkMode} />
+          <NewTwitterLogo
+            isDarkMode={isDarkMode}
+            className=" animate-bounce "
+          />
+          {/* <AiTwotoneThunderbolt className=" w-40 h-40 animate-bounce" /> */}
         </div>
       </div>
     );

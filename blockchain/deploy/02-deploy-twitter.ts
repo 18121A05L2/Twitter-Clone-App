@@ -11,6 +11,7 @@ const deployTwitter: DeployFunction = async ({
     console.log(" ------------- 02-deploy-twitter ------------- ")
     const { deploy, log, get } = deployments
     const { lucky, kiran } = await getNamedAccounts()
+    const [deployer] = await ethers.getSigners()
     const chainId = network.config.chainId
     let ethPriceFeedAddress
     console.log(" chainId : " + chainId)
@@ -38,6 +39,20 @@ const deployTwitter: DeployFunction = async ({
         twitterAddress,
     )
     console.log(" Nft Symbol :  ", await twitterContract.getNftSymbol())
+    // FUND ME
+    // let amount = "0.03"
+
+    // console.log(
+    //     " Fund me  ",
+    //     await twitterContract.fund({ value: ethers.parseEther(amount) }),
+    // )
+    // console.log(" amount : " + Number(amount) * 34000)
+    // console.log(
+    //     " Contract Balance " +
+    //         ethers.formatEther(
+    //             (await ethers.provider.getBalance(twitterAddress)).toString(),
+    //         ),
+    // )
     if (chainId !== 31337 && process.env.ETHER_SCAN_API) {
         await verify(twitterAddress, [
             ethPriceFeedAddress,

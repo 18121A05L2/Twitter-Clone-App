@@ -4,9 +4,11 @@ import { RootState } from "../Redux/app/store";
 import { ethers } from "ethers";
 import { tokenDecimals } from "../utils/constants";
 import { Spinner } from "./utils/svgs";
+import { toast } from "react-toastify";
 
 function Wallet() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isTokensSending, setIsTokensSending] = useState(false);
   const [inputs, setInputs] = useState({
     senderAddress: "",
     amount: "",
@@ -25,33 +27,50 @@ function Wallet() {
   const { provider, signer, twitterContract } = useSelector(
     (state: RootState) => state.blockchain
   );
+  // update balance
+  useEffect(() => {
+    const execute = async () => {
+      const balance = await twitterContract?.balanceOf();
+      const tokenBalance = Number(
+        ethers.formatUnits(Number(balance).toString(), tokenDecimals)
+      );
+      setData((prev) => ({ ...prev, tokenBalance }));
+    };
+    execute();
+  }, [isTokensSending]);
 
   useEffect(() => {
     const execute = async () => {
       let name = await twitterContract?.s_name();
       let symbolName = await twitterContract?.s_symbol();
       let totalSupply = Number(await twitterContract?.TOTAL_SUPPLY());
-      const balance = await twitterContract?.balanceOf();
-      const tokenBalance = Number(
-        ethers.formatUnits(Number(balance).toString(), tokenDecimals)
-      );
 
       setToken((prev) => ({ ...prev, name, symbolName, totalSupply }));
       if (signer) {
         let account: string = await signer.getAddress();
         account && setData((prev) => ({ ...prev, walletAddress: account }));
         let ethBalance = Number(await provider?.getBalance(account!)) / 1e18;
-        setData({ ...data, tokenBalance, ethBalance });
+        setData((prev) => ({ ...prev, ethBalance }));
       }
     };
     execute();
   }, [twitterContract]);
 
   async function sendTokens() {
-    let transactionResponse = await twitterContract?.transfer({
-      to: senderAddress,
-      value: ethers.parseEther(amount),
-    });
+    setIsTokensSending(true);
+    try {
+      let transactionResponse = await twitterContract?.transfer(
+        senderAddress,
+        ethers.parseUnits(amount, tokenDecimals)
+      );
+      await transactionResponse.wait();
+      toast.success("tokens sent successfully");
+    } catch (err: any) {
+      console.error({ err });
+      toast.error(err.message);
+    } finally {
+      setIsTokensSending(false);
+    }
   }
   console.log(inputs);
 
@@ -94,10 +113,10 @@ function Wallet() {
           }
         ></input>
         <div
-          className=" w-20 bg-blue-300 p-1 text-center rounded-md cursor-pointer hover:bg-blue-400"
+          className=" w-20 bg-blue-300 p-1 text-center rounded-md cursor-pointer hover:bg-blue-400 flex items-center justify-center "
           onClick={sendTokens}
         >
-          Send
+          {isTokensSending ? <Spinner /> : "Send"}
         </div>
       </div>
       <button

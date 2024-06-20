@@ -7,7 +7,7 @@ import { RootState } from "../../Redux/app/store";
 import { nftPostType } from "../../Types/blockchain.types";
 
 type onlineUserType = {
-  userId: string;
+  address: string;
   socketId: string;
 };
 
@@ -15,7 +15,7 @@ function MessageSearch({ profiles }: { profiles: nftPostType[] }) {
   const [search, setSearch] = useState("");
   const onlineUsers = useSelector((state: any) => state.global.onlineUsers);
   const { profile } = useSelector((state: RootState) => state.blockchain);
-  const sessionUserId = profile.userId;
+  const sessionUserAddress = profile.address;
   return (
     <div className=" col-span-2 m-2 flex flex-col gap-2  ">
       <h1 className="text-[1.4rem] font-bold ">Messages</h1>
@@ -32,13 +32,13 @@ function MessageSearch({ profiles }: { profiles: nftPostType[] }) {
         {profiles
           ?.filter(
             (profile) =>
-              (search ? profile?.userId?.includes(search) : true) &&
-              profile?.userId != sessionUserId
+              (search ? profile?.address?.includes(search) : true) &&
+              profile?.address?.toLowerCase() != sessionUserAddress.toLowerCase()
           )
           .map((profile) => {
             let online: Boolean = false;
             onlineUsers.map((user: onlineUserType) => {
-              if (user.userId === profile.userId) {
+              if (user.address === profile.address) {
                 online = true;
               }
             });

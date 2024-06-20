@@ -52,10 +52,12 @@ function EditProfileModal() {
     birthDate: new Date(),
     avatar: avatar,
     backgroundImage: "",
+    address: walletAddress,
   });
   useEffect(() => {
     profile &&
-      setData({
+      setData((prev) => ({
+        ...prev,
         name: profile.name,
         bio: profile.bio,
         location: profile.location,
@@ -64,7 +66,7 @@ function EditProfileModal() {
         birthDate: new Date(),
         avatar: avatar,
         backgroundImage: profile.backgroundImage,
-      });
+      }));
   }, [profile, profile]);
 
   async function handleSave() {

@@ -7,7 +7,7 @@ type initialStateType = {
   twitterContract: ethers.Contract | null;
   signer: ethers.Signer | null;
   provider: ethers.Provider | null;
-  walletAddress: String;
+  walletAddress: string;
   nftContract: ethers.Contract | null;
   profile: profileType;
   isSettingProfile: boolean;
@@ -20,7 +20,7 @@ const initialState: initialStateType = {
   provider: null,
   walletAddress: "",
   nftContract: null,
-  profile: { userId: "", avatar: "", nftName: "" },
+  profile: { userId: "", avatar: "", nftName: "", address: "" },
   isSettingProfile: false,
   currentNftView: { userId: "", avatar: "", nftName: "" },
 };

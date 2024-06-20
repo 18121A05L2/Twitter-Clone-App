@@ -26,17 +26,17 @@ function MessagesPage() {
     router?.query?.component && router.query?.component[1]?.split("-");
   const { profile } = useSelector((state: RootState) => state.blockchain);
   const { receiverProfile } = useSelector((state: RootState) => state.global);
-  let receiverId: string = "";
-  const senderId = profile.userId;
+  let receiverAddress: string = "";
+  const senderAddress = profile.address;
 
-  if (router?.query.component && routerArr && senderId !== routerArr[0]) {
-    receiverId = routerArr[0];
+  if (router?.query.component && routerArr && senderAddress !== routerArr[0]) {
+    receiverAddress = routerArr[0];
   } else if (
     router?.query.component &&
     routerArr &&
-    senderId !== routerArr[1]
+    senderAddress !== routerArr[1]
   ) {
-    receiverId = routerArr[1];
+    receiverAddress = routerArr[1];
   }
   // -------------------------------------- socket.io implementation ---------------------
 
@@ -44,8 +44,8 @@ function MessagesPage() {
     socket.current = io("ws://localhost:8900");
     socket.current.on("getMessage", (msg) => {
       setArrivalMessage({
-        receiverId,
-        senderId: msg.senderId.toLowerCase(),
+        receiverAddress,
+        senderAddress: msg.senderAddress,
         msg: msg.msg,
       });
     });
@@ -54,7 +54,7 @@ function MessagesPage() {
   useEffect(() => {
     arrivalMessage &&
       routerArr &&
-      routerArr.includes(arrivalMessage.senderId) &&
+      routerArr.includes(arrivalMessage.senderAddress) &&
       setAllMessages((prev: messageType[]) => [...prev, arrivalMessage]);
   }, [arrivalMessage]);
 
@@ -63,11 +63,11 @@ function MessagesPage() {
   }, [allMessages]);
 
   useEffect(() => {
-    socket.current?.emit("addUser", senderId);
+    socket.current?.emit("addUser", senderAddress);
     socket.current?.on("getUsers", (users) => {
       users && dispatch(settingOnlineUsers(users));
     });
-  }, [senderId, socket, router?.query?.component]);
+  }, [senderAddress, socket, router?.query?.component]);
 
   useEffect(() => {
     async function fetchingAllMessages() {
@@ -103,16 +103,16 @@ function MessagesPage() {
   async function handleSend() {
     const data = {
       conversationId: conversationId,
-      receiverId,
-      senderId,
+      receiverAddress,
+      senderAddress,
       msg: input,
     };
     await axiosAPI.post("/message", JSON.stringify(data)).then(async (res) => {
       const data = await res.data;
     });
     socket.current?.emit("sendMessage", {
-      senderId: senderId,
-      receiverId: receiverId,
+      senderAddress,
+      receiverAddress,
       msg: input,
     });
     console.log("cleared input");
@@ -121,7 +121,7 @@ function MessagesPage() {
 
   return (
     <div className="flex">
-      {receiverId.length ? (
+      {receiverAddress.length ? (
         <div className="flex h-screen w-full flex-col  bg-red-100">
           <div className="flex flex-col items-center bg-red-200 hover:bg-red-300 ">
             <div className="relative h-[5rem] w-[5rem] ">
@@ -146,7 +146,7 @@ function MessagesPage() {
                     msg={msg}
                     key={msg._id + msg.msg}
                     scrollRef={scrollRef}
-                    userId={profile?.userId}
+                    address={profile?.address}
                   />
                 );
               })}

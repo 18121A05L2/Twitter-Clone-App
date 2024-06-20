@@ -4,7 +4,7 @@ import { RootState } from "../../Redux/app/store";
 import { ethers } from "ethers";
 
 function useUniqueAddresses() {
-  const { nftContract, twitterContract } = useSelector(
+  const { twitterContract } = useSelector(
     (state: RootState) => state.blockchain
   );
   const [isLoading, setIsLoading] = useState(true);
@@ -18,7 +18,9 @@ function useUniqueAddresses() {
         .then((events) => {
           events.map((event) => {
             let paddedAddress = event.topics[2];
-            const address = ethers.getAddress(paddedAddress.slice(26));
+            const address = ethers
+              .getAddress(paddedAddress.slice(26))
+              .toLowerCase();
             setUniqueAddresses((prev) => {
               if (!prev.includes(address)) {
                 return [...prev, address];

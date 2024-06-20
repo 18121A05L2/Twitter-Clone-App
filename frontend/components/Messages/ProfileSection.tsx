@@ -17,10 +17,7 @@ function ProfileSection({ profile, online }: propsType) {
     (state: RootState) => state.blockchain
   );
   const dispatch = useDispatch();
-  const arr = [
-    profile?.userId.toLowerCase(),
-    currentProfile?.userId?.toLocaleLowerCase(),
-  ].sort();
+  const arr = [profile?.address, currentProfile?.address].sort();
   const conversationId = arr[0] + "-" + arr[1];
 
   async function conversationCreation() {

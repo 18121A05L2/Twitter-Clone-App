@@ -194,8 +194,8 @@ export const twitterbackend = async () => {
   // ---------------------------------------------- chat or conversation -----------------------------
   const messageSchema = mongoose.Schema(
     {
-      senderId: String,
-      receiverId: String,
+      senderAddress: String,
+      receiverAddress: String,
       msg: String,
     },
     { timestamps: true }
@@ -247,8 +247,8 @@ export const twitterbackend = async () => {
   app.route("/message").post(async ({ body }, res) => {
     let allMessages = [];
     let newMsg = {
-      receiverId: body.receiverId,
-      senderId: body.senderId,
+      receiverAddress: body.receiverAddress,
+      senderAddress: body.senderAddress,
       msg: body.msg,
     };
     await Conversation.findOne({

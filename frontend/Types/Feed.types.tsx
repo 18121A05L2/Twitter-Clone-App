@@ -39,14 +39,14 @@ type profileType = {
   createdAt?: Date;
   updatedAt?: Date;
   nftName?: string;
-  address?: string;
+  address: string;
   nftId?: number;
 };
 
 type messageType = {
   _id?: string;
-  senderId: string;
-  receiverId: string;
+  senderAddress: string;
+  receiverAddress: string;
   msg: string;
   createdAt?: Date;
   updatedAt?: Date;

@@ -101,6 +101,7 @@ function NftProfile() {
       await (await twitterContract?.mintTo(tokenUri)).wait();
       const profileData = {
         ...profile,
+        avatar: `${PINATA_GATEWAY_URL}/${imgUploadRes.IpfsHash}`,
         nftName,
         userId,
         nftId: nextNftId,
@@ -109,7 +110,16 @@ function NftProfile() {
         .post("/uploadJsonToIpfs", JSON.stringify(profileData))
         .then((res) => res.data);
       let profileTokenUri = `${PINATA_GATEWAY_URL}/${profileTokenRes.IpfsHash}`;
-      await twitterContract?.setProfile(profileTokenUri, nextNftId);
+      await (
+        await twitterContract?.setProfile(profileTokenUri, nextNftId)
+      ).wait();
+      const nftUri = await twitterContract?.getProfile(walletAddress);
+      const profileRes = await fetch(nftUri).then((res) => res.json());
+      console.log({ profileRes });
+      dispatch(setProfile({ ...profileRes, address: walletAddress }));
+      setTempImg(null);
+      setNftName("");
+      setImageUrl("");
     } catch (error) {
       console.log(error);
       toast("Mint Failed", { type: "error" });

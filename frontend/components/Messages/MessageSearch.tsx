@@ -32,7 +32,7 @@ function MessageSearch({ profiles }: { profiles: nftPostType[] }) {
         {profiles
           ?.filter(
             (profile) =>
-              (search ? profile?.address?.includes(search) : true) &&
+              (search ? profile?.address?.includes(search.toLowerCase()) : true) &&
               profile?.address?.toLowerCase() != sessionUserAddress.toLowerCase()
           )
           .map((profile) => {

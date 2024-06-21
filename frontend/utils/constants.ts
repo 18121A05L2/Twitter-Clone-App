@@ -8,3 +8,4 @@ export const explorerPaths = {
   address: "address",
   transaction: "tx",
 };
+export const zeroAddress = "0x0000000000000000000000000000000000000000";

@@ -8,6 +8,7 @@ import "hardhat-gas-reporter"
 import "solidity-coverage"
 import "hardhat-deploy"
 import "hardhat-ethernal"
+import "hardhat-contract-sizer"
 
 task("accounts", "prints the list of the accounts ", async (taskargs, hre) => {
     const accounts = await hre.ethers.getSigners()
@@ -59,6 +60,12 @@ const config: HardhatUserConfig = {
             { version: "0.6.6" },
             { version: "0.4.19" },
         ],
+        settings: {
+            optimizer: {
+                enabled: true,
+                runs: 200,
+            },
+        },
     },
     etherscan: {
         apiKey: ETHER_SCAN_API,
@@ -92,6 +99,11 @@ const config: HardhatUserConfig = {
         serverSync: false, // Only available on public explorer plans - If set to true, blocks & txs will be synced by the server. For this to work, your chain needs to be accessible from the internet. Also, trace won't be synced for now when this is enabled.
         skipFirstBlock: false, // If set to true, the first block will be skipped. This is mostly useful to avoid having the first block synced with its tx when starting a mainnet fork
         verbose: false, // If set to true, will display this config object on start and the full error object
+    },
+    contractSizer: {
+        alphaSort: true,
+        runOnCompile: true,
+        disambiguatePaths: false,
     },
 }
 

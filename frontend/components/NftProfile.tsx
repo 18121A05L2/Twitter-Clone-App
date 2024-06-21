@@ -15,6 +15,7 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { PINATA_GATEWAY_URL } from "../utils/constants";
 import { nftPostType } from "../Types/blockchain.types";
+import { AiTwotoneThunderbolt } from "react-icons/ai";
 
 function NftProfile() {
   const [nftName, setNftName] = useState("");
@@ -85,17 +86,16 @@ function NftProfile() {
         })
         .then((res) => res.data);
       let nextNftId = Number(await twitterContract?.nextTokenIdToMint());
+      const nftData: nftPostType = {
+        avatar: `${PINATA_GATEWAY_URL}/${imgUploadRes.IpfsHash}`,
+        nftName,
+        userId,
+        nftId: nextNftId,
+        address: walletAddress,
+      };
 
       const jsonRes = await axiosAPI
-        .post(
-          "/uploadJsonToIpfs",
-          JSON.stringify({
-            avatar: `${PINATA_GATEWAY_URL}/${imgUploadRes.IpfsHash}`,
-            nftName,
-            userId,
-            nftId: nextNftId,
-          })
-        )
+        .post("/uploadJsonToIpfs", JSON.stringify(nftData))
         .then((res) => res.data);
       let tokenUri = `${PINATA_GATEWAY_URL}/${jsonRes.IpfsHash}`;
       await (await twitterContract?.mintTo(tokenUri)).wait();
@@ -165,17 +165,6 @@ function NftProfile() {
       dispatch(setIsSettingProfile(false));
     }
   };
-  // const getEventsData = async () => {
-  //   await twitterContract
-  //     ?.queryFilter("TransferNft", 0, "latest")
-  //     .then((events) => {
-  //       console.log({ events });
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // };
-  // getEventsData();
 
   const nftOnclick = async (nft: nftPostType) => {
     dispatch(setCurrentNftView(nft));
@@ -253,7 +242,7 @@ function NftProfile() {
         )}
       </div>
       <div className=" flex flex-col border-2 py-3 ">
-        <h1 className=" text-center "> Owned NFTS</h1>
+        <h1 className=" text-center pb-2 "> Owned NFTS</h1>
         <section className=" grid grid-cols-3 gap-3 ">
           {/* NFT cards */}
           {myNfts.length > 0 ? (
@@ -286,12 +275,14 @@ function NftProfile() {
               );
             })
           ) : (
-            <p className=" text-center w-full">Nothing</p>
+            <div className=" w-full flex justify-center h-40 items-center ">
+              <AiTwotoneThunderbolt className=" w-24 h-24 animate-bounce ml-auto" />
+            </div>
           )}
         </section>
       </div>
       <Link href="/marketplace">
-        <div className=" bg-yellow-300 p-3 rounded-xl w-fit cursor-pointer dark:text-black">
+        <div className=" bg-yellow-300 p-3 rounded-xl w-fit cursor-pointer dark:text-black mb-6 ">
           {" "}
           Go to MarketPlace{" "}
         </div>

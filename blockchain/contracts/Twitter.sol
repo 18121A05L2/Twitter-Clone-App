@@ -52,13 +52,14 @@ contract Twitter is TwitterToken, TwitterNfts, Marketplace {
     }
 
     function tweet(string memory tweetUrl) public payable {
+        // U need to pay 1 Twitter token for Tweet
         require(
             uint256(msg.value) >= uint256(1 * 10 ** s_decimals),
-            " U need to pay 1 Twitter token for Tweet"
+            "need 1 TWT token"
         );
         require(
             s_balanceOf[msg.sender] >= msg.value,
-            " Not enough Twitter token balance"
+            " Not enough TWT token balance"
         );
         s_balanceOf[msg.sender] -= msg.value;
         s_balanceOf[contractAddress] += msg.value;
@@ -98,10 +99,6 @@ contract Twitter is TwitterToken, TwitterNfts, Marketplace {
         return s_funders;
     }
 
-    function getTotalSupply() public pure returns (uint256 location) {
-        return TOTAL_SUPPLY;
-    }
-
     function faucet() public payable {
         require(
             s_balanceOf[contractAddress] >= 10 * 10 ** s_decimals,
@@ -114,7 +111,7 @@ contract Twitter is TwitterToken, TwitterNfts, Marketplace {
     function freeEth(uint256 amount) public payable {
         require(
             contractAddress.balance >= amount,
-            " Contract does not have the required balance of 0.01 ETH"
+            " Contract not have 0.01 ETH"
         );
         (bool success, ) = payable(msg.sender).call{value: amount}("");
         require(success, " Failed to send 0.01 ETH");
@@ -126,7 +123,7 @@ contract Twitter is TwitterToken, TwitterNfts, Marketplace {
     ) public returns (bool) {
         require(
             TwitterNfts.ownerOf(_id) == msg.sender,
-            "Must own the nft you want to select as your profile"
+            "Must own the nft"
         );
         profiles[msg.sender] = _tokenUri;
         return true;

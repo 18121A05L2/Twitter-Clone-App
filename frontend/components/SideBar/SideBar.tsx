@@ -18,6 +18,7 @@ import { RootState } from "../../Redux/app/store";
 import { setWalletAddress } from "../../Redux/features/BlockchainSlice";
 import { NewTwitterLogo } from "../utils/svgs";
 import { useRouter } from "next/router";
+import { MdOutlineSell } from "react-icons/md";
 
 function SideBar() {
   const dispatch = useDispatch();
@@ -63,6 +64,7 @@ function SideBar() {
         <SideBarItem Icon={FaDonate} text="FundMe" />
         <SideBarItem Icon={CiWallet} text="Wallet" />
         <SideBarItem Icon={FcSafe} text="NFTProfile" />
+        <SideBarItem Icon={MdOutlineSell} text="Marketplace" />
         <div
           onClick={() => dispatch(tweetBoxModal())}
           className=" tweetButton mt-5 "

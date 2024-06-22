@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
-// import ProfileSection from "./ProfileSection.jsx";
 import ViewProfile from "./ViewProfile";
 import { RootState } from "../../Redux/app/store";
 import { useSelector } from "react-redux";
-import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import MessageSearch from "../Messages/MessageSearch";
 import useUniqueAddresses from "../hooks/useUniqueAddresses";
@@ -46,7 +44,6 @@ function Widgets() {
     };
     getEventsData();
   }, [nftContract, isAdressesLoading]);
-  // console.log({ profiles });
 
   return (
     <>
@@ -55,7 +52,7 @@ function Widgets() {
       ) : (
         <div className=" col-span-2 m-2 hidden pt-2 lg:inline ">
           <div className="flex  rounded-full bg-gray-200 p-2 text-gray-500 dark:bg-black dark:border-2">
-            <IoSearch className="h-[2rem] w-[2rem]   " />
+            <IoSearch className="h-[1.5rem] w-[1.5rem]   " />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -71,7 +68,6 @@ function Widgets() {
                 profiles
                   ?.filter((profile) => profile.userId?.includes(search))
                   .map((profile) => (
-                    // <ProfileSection key={profile._id} profile={profile} />
                     <ViewProfile
                       key={profile.address}
                       profile={profile}

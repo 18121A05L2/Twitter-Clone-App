@@ -1,8 +1,6 @@
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { IoArrowBackSharp } from "react-icons/io5";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 import { MdOutlineBusinessCenter } from "react-icons/md";
 import { GoCalendar } from "react-icons/go";
 import DisplayTweets from "./Feed/DisplayTweets/DisplayTweets";
@@ -10,15 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { editProfileModal } from "../Redux/features/GlobalSlice";
 import { useRouter } from "next/router";
 import { AiOutlineLink } from "react-icons/ai";
-import axiosAPI from "../axios";
-import { postType, profileType } from "../Types/Feed.types";
+import { postType } from "../Types/Feed.types";
 import { RootState } from "../Redux/app/store";
-import { nftPostType } from "../Types/blockchain.types";
 import Moment from "react-moment";
 
 function Profile() {
   const [profilePosts, setProfilePosts] = useState<postType[]>([]);
-  // const [profileData, setProfileData] = useState<profileType | nftPostType>();
   const router = useRouter();
   const { profileDataChanged, dataChanged } = useSelector(
     (state: RootState) => state.global
@@ -29,27 +24,6 @@ function Profile() {
   const newUserId = router?.query?.component && router?.query?.component[1];
   const userId = profile.userId;
   const dispatch = useDispatch();
-  useEffect(() => {
-    // ----------------------   profile creation if not exists ------------------------------------
-    // async function profile() {
-    //   const data = {
-    //     userId: userId,
-    //     avatar: profile.avatar,
-    //     name: session?.user?.name,
-    //   };
-    //   const response = await axiosAPI.post("/profile", JSON.stringify(data));
-    // }
-    // profile();
-    // -------------------------------------------- fetching Profile Data --------------------
-    // async function fetchProfileData() {
-    //   const profileData = await axiosAPI
-    //     .post("/profiledata", JSON.stringify({ userId: userId }))
-    //     .then(async (res) => await res.data);
-    //   setProfileData(profileData);
-    // }
-    // fetchProfileData();
-    // setProfileData(profile);
-  }, [router.query.component, profile, profileDataChanged]);
 
   useEffect(() => {
     (async () => {
@@ -132,27 +106,31 @@ function Profile() {
         <p>{profile?.bio}</p>
 
         <div className="flex gap-4   ">
-          <div className="flex items-center gap-2  ">
-            <MdOutlineBusinessCenter />
-            <p>{profile.location}</p>
-          </div>
+          {profile.location && (
+            <div className="flex items-center gap-2  ">
+              <MdOutlineBusinessCenter />
+              <p>{profile.location}</p>
+            </div>
+          )}
+
           <div className=" flex items-center gap-2  ">
             <GoCalendar />
             <p>
-              Joined
-              <Moment fromNow>{profile.createdAt}</Moment>
+              Joined <Moment fromNow>{profile.createdAt}</Moment>
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <AiOutlineLink />
-            <a
-              href={profile?.website}
-              target="_blank"
-              className=" text-twitter "
-            >
-              {profile?.website?.slice(0, 20) + "..."}
-            </a>
-          </div>
+          {profile?.website && (
+            <div className="flex items-center gap-2">
+              <AiOutlineLink />
+              <a
+                href={profile?.website}
+                target="_blank"
+                className=" text-twitter "
+              >
+                {profile?.website?.slice(0, 20) + "..."}
+              </a>
+            </div>
+          )}
         </div>
         <div className="mb-2 flex gap-4 pb-2">
           <div className="flex gap-2">

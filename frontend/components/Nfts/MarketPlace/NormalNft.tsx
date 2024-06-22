@@ -37,7 +37,7 @@ function NormalNft({ nft }: { nft: nftPostType }) {
       className=" flex cursor-pointer flex-col  items-center rounded-lg  border-slate-400 py-4 gap-3 "
       // onClick={() => nftOnclick(nft)}
     >
-      <img className=" h-40 w-40" src={nft.avatar} />
+      <img className=" h-40 w-40 rounded " src={nft.avatar} />
       <p className="">
         <a href="">{`#${nft.nftId}`}</a>
         {` - `} {nft.nftName}

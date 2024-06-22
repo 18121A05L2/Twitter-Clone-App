@@ -54,23 +54,25 @@ function NftProfile() {
       setMyNfts(nfts);
     }
   };
+
   const MintNft = async () => {
     if (!tempImg || !nftName || !userId) {
-      setIsMinting(false);
       if (!tempImg && !nftName && !userId) {
-        setErrMsg("Please select an image , enter nft name and userId");
+        toast("Please select an image , enter nft name and userId", {
+          type: "error",
+        });
       } else if (!tempImg && !nftName) {
-        setErrMsg("Please select an image , enter nft name ");
+        toast("Please select an image , enter nft name ", { type: "error" });
       } else if (!tempImg && !userId) {
-        setErrMsg("Please select an image , enter userId");
+        toast("Please select an image , enter userId", { type: "error" });
       } else if (!nftName && !userId) {
-        setErrMsg("Please enter nft name and userId");
+        toast("Please enter nft name and userId", { type: "error" });
       } else if (!tempImg) {
-        setErrMsg("Please select an image");
+        toast("Please select an image", { type: "error" });
       } else if (!nftName) {
-        setErrMsg("Please enter nft name");
+        toast("Please enter nft name", { type: "error" });
       } else if (!userId) {
-        setErrMsg("Please enter userId");
+        toast("Please enter userId", { type: "error" });
       }
       return;
     }
@@ -121,6 +123,7 @@ function NftProfile() {
       setTempImg(null);
       setNftName("");
       setImageUrl("");
+      toast("Minted Successfully", { type: "success" });
     } catch (error) {
       console.log(error);
       toast("Mint Failed", { type: "error" });
@@ -237,7 +240,7 @@ function NftProfile() {
         {imageUrl && (
           <img
             alt="profile"
-            className=" h-80 w-80 align-middle "
+            className={`h-80 w-80 align-middle ${isMinting && "animate-pulse"} `}
             src={imageUrl}
           ></img>
         )}
@@ -260,7 +263,7 @@ function NftProfile() {
                     className=" flex cursor-pointer flex-col  items-center rounded-lg  "
                     onClick={() => nftOnclick(nft)}
                   >
-                    <img className=" h-40 w-40" src={nft.avatar} />
+                    <img className=" h-40 w-40 rounded" src={nft.avatar} />
                     <p className=" py-2">
                       <a href="">{`#${nft.nftId}`}</a>
                       {` - `} {nft.nftName}

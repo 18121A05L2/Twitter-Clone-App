@@ -22,7 +22,13 @@ const initialState: initialStateType = {
   nftContract: null,
   profile: { userId: "", avatar: "", nftName: "", address: "" },
   isSettingProfile: false,
-  currentNftView: { userId: "", avatar: "", nftName: "" },
+  currentNftView: {
+    userId: "",
+    avatar: "",
+    nftName: "",
+    address: "",
+    nftId: 0,
+  },
 };
 
 const blockchainSlice = createSlice({

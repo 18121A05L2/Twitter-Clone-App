@@ -36,18 +36,18 @@ function MarketPlace() {
     })();
   }, [twitterContract]);
 
-  useEffect(() => {
-    (async () => {
-      const listedNfts = await twitterContract
-        ?.queryFilter("NFTListed", 0, "latest")
-        .then((events): nftPostType[] => {
-          console.log(events);
-          return events;
-        });
-      console.log({ listedNfts });
-      setListedNfts(listedNfts);
-    })();
-  }, [twitterContract]);
+  // useEffect(() => {
+  //   (async () => {
+  //     const listedNfts = await twitterContract
+  //       ?.queryFilter("NFTListed", 0, "latest")
+  //       .then((events): nftPostType[] => {
+  //         console.log(events);
+  //         return events;
+  //       });
+  //     console.log({ listedNfts });
+  //     setListedNfts(listedNfts);
+  //   })();
+  // }, [twitterContract]);
   console.log({ allNfts });
 
   return (

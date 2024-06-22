@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import axiosAPI from "../axios";
 import { postType } from "../Types/Feed.types";
 import { RootState } from "../Redux/app/store";
-import { PINATA_GATEWAY_URL } from "../constants/frontend";
+import { PINATA_GATEWAY_URL } from "../utils/constants";
 
 function SpecificTweetDisplay() {
   const [replyInput, setReplyInput] = useState("");
@@ -35,7 +35,7 @@ function SpecificTweetDisplay() {
   const data = {
     postId: post?._id,
     replyData: replyInput,
-    userImage: profile.avatar,
+    avatar: profile.avatar,
     userId: profile.userId?.split(" ")[0].toLocaleLowerCase(),
     tweetUserId: post?.userId,
     // userName: post?.userName,
@@ -70,7 +70,7 @@ function SpecificTweetDisplay() {
           className="rounded-full"
           height={50}
           width={50}
-          src={post?.userImage || "https://links.papareact.com/gll"}
+          src={post?.avatar || "https://links.papareact.com/gll"}
           alt="user image"
         ></Image>
         <div>
@@ -117,7 +117,7 @@ function SpecificTweetDisplay() {
   );
 }
 
-export async function getServerSideProps(context : any) {
+export async function getServerSideProps(context: any) {
   const ipfsHash = context?.params?.tweetId;
   console.log({ ipfsHash });
 

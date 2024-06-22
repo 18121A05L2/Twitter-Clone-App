@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { tweetAdded } from "../../../Redux/features/GlobalSlice";
 import { tweetBoxModal } from "../../../Redux/features/GlobalSlice";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 import { useSelector } from "react-redux";
 import Link from "next/link";
 import axiosAPI from "../../../axios";
@@ -14,16 +13,18 @@ import {
   PINATA_GATEWAY_URL,
   sepoliaTestnetId,
   tokenDecimals,
-} from "../../../constants/frontend";
+} from "../../../utils/constants";
 import { ethers } from "ethers";
 import { postType } from "../../../Types/Feed.types";
 import { useRouter } from "next/router";
-import { Spinner } from "../../utils/svgs";
-import { contractAddresses } from "../../../constants/exportJsons";
+import { contractAddresses } from "../../../utils/exportJsons";
+import { toast } from "react-toastify";
 
 function TweetBox() {
   const [isLoading, setIsLoading] = useState(false);
-  const { profile, twitterContract, walletAddress } = useSelector(
+  const useLocalBlocakchain =
+    process.env.NEXT_PUBLIC_USE_LOCAL_BLOCKCHAIN === "true";
+  const { profile, twitterContract } = useSelector(
     (state: RootState) => state.blockchain
   );
   const router = useRouter();
@@ -41,7 +42,7 @@ function TweetBox() {
       timeStamp: new Date(),
       userInput: input,
       userId: profile.userId,
-      userImage: profile.avatar,
+      avatar: profile.avatar,
     };
 
     const userOwnedTokens = await twitterContract?.balanceOf();
@@ -50,7 +51,8 @@ function TweetBox() {
       tokenDecimals
     );
     const contractOwnedTokens = await twitterContract?.s_balanceOf(
-      contractAddresses[sepoliaTestnetId].Twitter
+      contractAddresses[useLocalBlocakchain ? localTestnetId : sepoliaTestnetId]
+        .Twitter
     );
 
     console.log(" user Token balance : ", userBalance);
@@ -58,36 +60,43 @@ function TweetBox() {
       " contract Token Balance : ",
       ethers.formatUnits(contractOwnedTokens.toString(), tokenDecimals)
     );
+    try {
+      if (Number(userBalance) <= 0) {
+        router.push("/wallet");
+        return;
+      }
+      if (profile.avatar) {
+        await axiosAPI
+          .post("/uploadJsonToIpfs", JSON.stringify(data))
+          .then(async (res) => {
+            const tweetUrl = `${PINATA_GATEWAY_URL}/${res.data.IpfsHash}`;
 
-    if (Number(userBalance) <= 0) {
-      router.push("/wallet");
-      return;
-    }
-    if (profile.avatar) {
-      await axiosAPI
-        .post("/uploadJsonToIpfs", JSON.stringify(data))
-        .then(async (res) => {
-          const tweetUrl = `${PINATA_GATEWAY_URL}/${res.data.IpfsHash}`;
-
-          const txtResponse = await twitterContract?.tweet(tweetUrl, {
-            value: ethers.parseUnits("1", tokenDecimals),
+            const txtResponse = await twitterContract?.tweet(tweetUrl, {
+              value: ethers.parseUnits("1", tokenDecimals),
+            });
+            await txtResponse.wait();
+            // console.log(await twitterContract?.retriveTweets(walletAddress));
+            setInput("");
+            dispatch(tweetAdded());
+            tweetBoxModalState && dispatch(tweetBoxModal());
+            console.log("tweet added successfully");
           });
-          await txtResponse.wait();
-          // console.log(await twitterContract?.retriveTweets(walletAddress));
-          setInput("");
-          dispatch(tweetAdded());
-          tweetBoxModalState && dispatch(tweetBoxModal());
-          console.log("tweet added successfully");
-        });
-    } else {
-      console.log({ profile });
-      console.error(" profiled does not exits , add avatar and name ");
+      } else {
+        console.log({ profile });
+        console.error(" profiled does not exits , add avatar and name ");
+      }
+    } catch (err: any) {
+      console.log(err);
+      toast(err.shortMessage, { type: "error" });
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }
 
   return (
-    <div className={`relative m-2 flex ${isLoading && " opacity-30"} `}>
+    <div
+      className={`relative m-2 flex ${isLoading && " opacity-30"} dark:bg-black `}
+    >
       {isLoading && (
         <div className=" absolute flex h-full w-full">
           <svg

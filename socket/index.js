@@ -3,45 +3,45 @@ const io = require("socket.io")(8900, {
     origin: "http://localhost:3000",
   },
 });
-let users = [];    
+let users = [];
 
-function addUser(userId, socketId) {
-  !users.some((user) => user.userId === userId) &&
-    users.push({ userId, socketId });
+function addUser(address, socketId) {
+  !users.some((user) => user.address === address) &&
+    users.push({ address, socketId });
   console.log(users);
-  console.log("new users : " + userId);
+  console.log("new users : " + address);
 }
 
 // function removeUser(socketId) {
 //   users = users.filter((user) => user.socketId === socketId);
 // }
 
-function getUser(receiverId) {
-  return users.find((user) => user.userId === receiverId);
+function getUser(receiverAddress) {
+  return users.find((user) => user.address === receiverAddress);
 }
 
 io.on("connection", (socket) => {
   // when connects
   console.log(" a user connected ");
 
-  socket.on("addUser", (senderId) => {
-    addUser(senderId, socket.id);
+  socket.on("addUser", (senderAddress) => {
+    addUser(senderAddress, socket.id);
     io.emit("getUsers", users);
   });
   console.log(users);
 
   // send and get messages
-  socket.on("sendMessage", ({ senderId, receiverId, msg }) => {
+  socket.on("sendMessage", ({ senderAddress, receiverAddress, msg }) => {
     console.log("sender message : " + msg);
-    console.log("sender id  : " + senderId);
-    console.log("receiver id : " + receiverId);
+    console.log("sender id  : " + senderAddress);
+    console.log("receiver id : " + receiverAddress);
     console.log(users);
-    const receiver = getUser(receiverId);
+    const receiver = getUser(receiverAddress);
     console.log("sending message to ");
     console.log(receiver);
     console.log();
-    io.emit("getMessage", { senderId, msg });
-    io.to(receiver?.socketId).emit("getMessage", { senderId, msg });
+    io.emit("getMessage", { senderAddress, msg });
+    io.to(receiver?.socketId).emit("getMessage", { senderAddress, msg });
   });
 
   // when disconnects

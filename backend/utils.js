@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
-import { app } from "./index.js";
+import { app } from "./api/index.js";
 export const twitterbackend = async () => {
   // -------------------------------------   Tweets ----------------------------------
   const commentSchema = mongoose.Schema(
     {
       postId: String,
       replyData: String,
-      userImage: String,
+      avatar: String,
       userId: String,
       tweetUserId: String,
       userName: String,
@@ -17,7 +17,7 @@ export const twitterbackend = async () => {
     {
       userEmail: String,
       userId: String,
-      userImage: String,
+      avatar: String,
       userName: String,
       userInput: String,
       postimage: String,
@@ -38,7 +38,7 @@ export const twitterbackend = async () => {
       const tweet = new Tweet({
         userEmail: req.body.userEmail,
         userId: req.body.userId,
-        userImage: req.body.userImage,
+        avatar: req.body.avatar,
         userName: req.body.userName,
         userInput: req.body.userInput,
         comments: [],
@@ -127,7 +127,7 @@ export const twitterbackend = async () => {
     {
       backgroundImage: String,
       userId: String,
-      userImage: String,
+      avatar: String,
       name: String,
       bio: String,
       location: String,
@@ -146,7 +146,7 @@ export const twitterbackend = async () => {
         const profile = new Profile({
           backgroundImage: "",
           userId: req.body.userId,
-          userImage: req.body.userImage,
+          avatar: req.body.avatar,
           name: req.body.name,
           bio: "",
           location: "",
@@ -171,7 +171,7 @@ export const twitterbackend = async () => {
         {
           userId: body.newUserId,
           backgroundImage: body.backgroundImage,
-          userImage: body.userImage,
+          avatar: body.avatar,
           name: body.name,
           bio: body.bio,
           location: body.location,
@@ -194,8 +194,8 @@ export const twitterbackend = async () => {
   // ---------------------------------------------- chat or conversation -----------------------------
   const messageSchema = mongoose.Schema(
     {
-      senderId: String,
-      receiverId: String,
+      senderAddress: String,
+      receiverAddress: String,
       msg: String,
     },
     { timestamps: true }
@@ -247,8 +247,8 @@ export const twitterbackend = async () => {
   app.route("/message").post(async ({ body }, res) => {
     let allMessages = [];
     let newMsg = {
-      receiverId: body.receiverId,
-      senderId: body.senderId,
+      receiverAddress: body.receiverAddress,
+      senderAddress: body.senderAddress,
       msg: body.msg,
     };
     await Conversation.findOne({

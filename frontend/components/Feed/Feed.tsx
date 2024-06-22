@@ -1,5 +1,5 @@
 import { HiOutlineRefresh } from "react-icons/hi";
-import DisplayTweets from "./DisplayTweets";
+import DisplayTweets from "./DisplayTweets/DisplayTweets";
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import TweetBox from "./TweetBox/TweetBox";
@@ -20,7 +20,11 @@ function Feed({ profileExists }: { profileExists: string }) {
     (async () => {
       const tweetUrls = await twitterContract
         ?.queryFilter("Tweet", 0, "latest")
-        .then((events) => events.map((event: any) => event?.args[1]));
+        .then((events) =>
+          events.map((event: any) => {
+            if (event?.args) return event?.args[1];
+          })
+        );
 
       Promise.all(
         (await tweetUrls?.map(async (tokenUri: string): Promise<postType> => {
@@ -43,7 +47,7 @@ function Feed({ profileExists }: { profileExists: string }) {
   }, [tweetAdded, dataChanged]);
 
   return (
-    <div className="  col-span-7  max-h-screen overflow-scroll border-x-[0.1rem] no-scrollbar lg:col-span-5 ">
+    <div className="  col-span-7  max-h-screen overflow-scroll border-[0.1rem] no-scrollbar lg:col-span-5 dark:border-slate-500 ">
       <div className="flex justify-between p-2 ">
         <h2>Home</h2>
         <HiOutlineRefresh />

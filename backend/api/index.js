@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import multer from "multer";
 import pinataSDK from "@pinata/sdk";
-import { twitterbackend } from "./utils.js";
+import { twitterbackend } from "../utils.js";
 import { Readable } from "stream";
 import "dotenv/config";
 import { ethers } from "ethers";
@@ -76,7 +76,8 @@ async function main() {
   app.route("/sendEth").post(async function (req, res) {
     // console.log(req.body)
     const { address } = req.body;
-    const amount = 0.01;
+    //TODO : revert to 0.01
+    const amount = 0.0001;
 
     try {
       const tx = {
@@ -99,3 +100,5 @@ main().catch((err) => console.log(err));
 app.listen(PORT, () => {
   console.log("listening on port 8001 ");
 });
+
+export default app;

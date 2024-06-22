@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { tokenUriType } from "../../Types/blockchain.types";
+import { nftPostType } from "../../Types/blockchain.types";
 
 type initialState = {
   tweetAdded: number;
@@ -11,7 +11,7 @@ type initialState = {
   editProfileModalState: boolean;
   onlineUsers: [];
   isDarkMode: boolean;
-  receiverProfile: tokenUriType;
+  receiverProfile: nftPostType;
 };
 
 const initialState: initialState = {

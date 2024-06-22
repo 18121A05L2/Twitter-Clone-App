@@ -3,13 +3,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaRegCopy } from "react-icons/fa";
 import { useRouter } from "next/router";
-import { tokenUriType } from "../../Types/blockchain.types";
+import { nftPostType } from "../../Types/blockchain.types";
 
 function ViewProfile({
   profile,
   clearInput,
 }: {
-  profile: tokenUriType;
+  profile: nftPostType;
   clearInput: () => void;
 }) {
   function handleClick() {

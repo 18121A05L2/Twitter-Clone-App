@@ -12,7 +12,7 @@ import axiosAPI from "../../axios";
 import { messageType, profileType } from "../../Types/Feed.types";
 import { RootState } from "../../Redux/app/store";
 
-function Messages() {
+function MessagesPage() {
   const [input, setInput] = useState("");
   const socket = useRef<Socket>();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -26,17 +26,17 @@ function Messages() {
     router?.query?.component && router.query?.component[1]?.split("-");
   const { profile } = useSelector((state: RootState) => state.blockchain);
   const { receiverProfile } = useSelector((state: RootState) => state.global);
-  let receiverId: string = "";
-  const senderId = profile.userId;
+  let receiverAddress: string = "";
+  const senderAddress = profile.address;
 
-  if (router?.query.component && routerArr && senderId !== routerArr[0]) {
-    receiverId = routerArr[0];
+  if (router?.query.component && routerArr && senderAddress !== routerArr[0]) {
+    receiverAddress = routerArr[0];
   } else if (
     router?.query.component &&
     routerArr &&
-    senderId !== routerArr[1]
+    senderAddress !== routerArr[1]
   ) {
-    receiverId = routerArr[1];
+    receiverAddress = routerArr[1];
   }
   // -------------------------------------- socket.io implementation ---------------------
 
@@ -44,8 +44,8 @@ function Messages() {
     socket.current = io("ws://localhost:8900");
     socket.current.on("getMessage", (msg) => {
       setArrivalMessage({
-        receiverId,
-        senderId: msg.senderId.toLowerCase(),
+        receiverAddress,
+        senderAddress: msg.senderAddress,
         msg: msg.msg,
       });
     });
@@ -54,7 +54,7 @@ function Messages() {
   useEffect(() => {
     arrivalMessage &&
       routerArr &&
-      routerArr.includes(arrivalMessage.senderId) &&
+      routerArr.includes(arrivalMessage.senderAddress) &&
       setAllMessages((prev: messageType[]) => [...prev, arrivalMessage]);
   }, [arrivalMessage]);
 
@@ -63,11 +63,11 @@ function Messages() {
   }, [allMessages]);
 
   useEffect(() => {
-    socket.current?.emit("addUser", senderId);
+    socket.current?.emit("addUser", senderAddress);
     socket.current?.on("getUsers", (users) => {
       users && dispatch(settingOnlineUsers(users));
     });
-  }, [senderId, socket, router?.query?.component]);
+  }, [senderAddress, socket, router?.query?.component]);
 
   useEffect(() => {
     async function fetchingAllMessages() {
@@ -103,16 +103,16 @@ function Messages() {
   async function handleSend() {
     const data = {
       conversationId: conversationId,
-      receiverId,
-      senderId,
+      receiverAddress,
+      senderAddress,
       msg: input,
     };
     await axiosAPI.post("/message", JSON.stringify(data)).then(async (res) => {
       const data = await res.data;
     });
     socket.current?.emit("sendMessage", {
-      senderId: senderId,
-      receiverId: receiverId,
+      senderAddress,
+      receiverAddress,
       msg: input,
     });
     console.log("cleared input");
@@ -121,7 +121,7 @@ function Messages() {
 
   return (
     <div className="flex">
-      {receiverId.length ? (
+      {receiverAddress.length ? (
         <div className="flex h-screen w-full flex-col  bg-red-100">
           <div className="flex flex-col items-center bg-red-200 hover:bg-red-300 ">
             <div className="relative h-[5rem] w-[5rem] ">
@@ -138,7 +138,7 @@ function Messages() {
             <p>{receiverProfile?.userId}</p>
             <p>{receiverProfile?.bio}</p>
           </div>
-          <div className="  flex h-full flex-col overflow-y-scroll p-2 py-3 ">
+          <div className="  flex h-full flex-col overflow-y-scroll p-2 py-3 no-scrollbar ">
             {allMessages &&
               allMessages?.map((msg: messageType) => {
                 return (
@@ -146,12 +146,12 @@ function Messages() {
                     msg={msg}
                     key={msg._id + msg.msg}
                     scrollRef={scrollRef}
-                    userId={profile?.userId}
+                    address={profile?.address}
                   />
                 );
               })}
           </div>
-          <div className="sticky bottom-0 m-1  mx-2 mt-auto flex items-center gap-4 rounded-3xl bg-gray-100 p-4 py-2 text-[1.5rem] text-twitter ">
+          <div className="sticky bottom-0 m-1  mx-2 mt-auto flex items-center gap-4 rounded-3xl bg-gray-100 p-4 py-2 text-[1.5rem] text-twitter mb-2 ">
             <BsCardImage />
             <AiOutlineFileGif />
             <BsEmojiSmile />
@@ -184,4 +184,4 @@ function Messages() {
   );
 }
 
-export default Messages;
+export default MessagesPage;

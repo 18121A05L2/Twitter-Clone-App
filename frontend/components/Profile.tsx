@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { MdOutlineBusinessCenter } from "react-icons/md";
 import { GoCalendar } from "react-icons/go";
-import DisplayTweets from "./Feed/DisplayTweets";
+import DisplayTweets from "./Feed/DisplayTweets/DisplayTweets";
 import { useDispatch, useSelector } from "react-redux";
 import { editProfileModal } from "../Redux/features/GlobalSlice";
 import { useRouter } from "next/router";
@@ -13,16 +13,19 @@ import { AiOutlineLink } from "react-icons/ai";
 import axiosAPI from "../axios";
 import { postType, profileType } from "../Types/Feed.types";
 import { RootState } from "../Redux/app/store";
-import { tokenUriType } from "../Types/blockchain.types";
+import { nftPostType } from "../Types/blockchain.types";
+import Moment from "react-moment";
 
 function Profile() {
-  const [profilePosts, setProfilePosts] = useState([]);
-  const [profileData, setProfileData] = useState<tokenUriType>();
+  const [profilePosts, setProfilePosts] = useState<postType[]>([]);
+  // const [profileData, setProfileData] = useState<profileType | nftPostType>();
   const router = useRouter();
   const { profileDataChanged, dataChanged } = useSelector(
     (state: RootState) => state.global
   );
-  const { profile } = useSelector((state: RootState) => state.blockchain);
+  const { profile, twitterContract } = useSelector(
+    (state: RootState) => state.blockchain
+  );
   const newUserId = router?.query?.component && router?.query?.component[1];
   const userId = profile.userId;
   const dispatch = useDispatch();
@@ -31,7 +34,7 @@ function Profile() {
     // async function profile() {
     //   const data = {
     //     userId: userId,
-    //     userImage: profile.avatar,
+    //     avatar: profile.avatar,
     //     name: session?.user?.name,
     //   };
     //   const response = await axiosAPI.post("/profile", JSON.stringify(data));
@@ -45,31 +48,45 @@ function Profile() {
     //   setProfileData(profileData);
     // }
     // fetchProfileData();
-    setProfileData(profile);
+    // setProfileData(profile);
   }, [router.query.component, profile, profileDataChanged]);
 
   useEffect(() => {
-    async function fetchingProfilePosts() {
-      const profilePosts = await axiosAPI
-        .post("/profileposts", JSON.stringify({ userId: userId }))
-        .then((res) => res.data);
-      setProfilePosts(profilePosts);
-    }
-    fetchingProfilePosts();
+    (async () => {
+      const tweetUrls = await twitterContract?.retriveTweets(profile.address);
+      Promise.all(
+        (await tweetUrls?.map(async (tokenUri: string): Promise<postType> => {
+          const metadata = (await fetch(tokenUri).then((res) =>
+            res.json()
+          )) as postType;
+          let a = tokenUri.split("/");
+          return { ...metadata, ipfsHash: a[a.length - 1] };
+        })) as Promise<postType>[]
+      )
+        .then((results) => {
+          console.log("All data fetched successfully:");
+          let temArr = results.reverse();
+          setProfilePosts(temArr);
+        })
+        .catch((error) => {
+          console.error("One of the fetches failed:", error);
+        });
+    })();
   }, [dataChanged, router.query.component]);
 
   return (
     <div className="flex flex-col">
       <div className="flex gap-3">
-        <Link passHref href={"/"}>
-          <IoArrowBackSharp
-            title="back"
-            className="cursor-pointer rounded-full p-1 text-[2.3rem] hover:bg-gray-300"
-          />
-        </Link>
+        <IoArrowBackSharp
+          title="back"
+          onClick={() => {
+            router.back();
+          }}
+          className="cursor-pointer rounded-full p-1 text-[2.3rem] hover:bg-gray-300"
+        />
 
         <section>
-          <p>{profileData?.userId}</p>
+          <p>{profile?.bio}</p>
           <p>{profilePosts?.length} Tweets</p>
         </section>
       </div>
@@ -79,7 +96,7 @@ function Profile() {
           height="200"
           width="700"
           src={
-            // profileData?.backgroundImage ||
+            profile?.backgroundImage ||
             "https://thumbs.dreamstime.com/b/technology-banner-background-old-new-using-computer-circuits-old-machine-cogs-37036025.jpg"
           }
         />
@@ -87,7 +104,7 @@ function Profile() {
           <Image
             className="rounded-full"
             layout="fill"
-            src={profileData?.avatar || "https://links.papareact.com/gll"}
+            src={profile?.avatar || "https://links.papareact.com/gll"}
             alt="profile image"
           ></Image>
         </div>
@@ -110,30 +127,30 @@ function Profile() {
           newUserId && userId !== newUserId && " pt-12  "
         }`}
       >
-        {/* <p>{profileData?.name}</p> */}
-        <p>{profileData?.userId}</p>
-        <p>{profileData?.bio}</p>
+        <p>{profile?.name}</p>
+        <p>{profile?.userId}</p>
+        <p>{profile?.bio}</p>
 
         <div className="flex gap-4   ">
           <div className="flex items-center gap-2  ">
             <MdOutlineBusinessCenter />
-            <p>Community</p>
+            <p>{profile.location}</p>
           </div>
           <div className=" flex items-center gap-2  ">
             <GoCalendar />
             <p>
               Joined
-              {/* <Moment fromNow>{profileData.createdAt}</Moment> */}
+              <Moment fromNow>{profile.createdAt}</Moment>
             </p>
           </div>
           <div className="flex items-center gap-2">
             <AiOutlineLink />
             <a
-              // href={profileData?.website}
+              href={profile?.website}
               target="_blank"
               className=" text-twitter "
             >
-              {/* {profileData?.website?.slice(0, 20) + "..."} */}
+              {profile?.website?.slice(0, 20) + "..."}
             </a>
           </div>
         </div>
@@ -148,9 +165,16 @@ function Profile() {
           </div>
         </div>
       </div>
-      {/* {profilePosts?.map((post: postType) => (
-        <DisplayTweets key={post?._id} post={post} />
-      ))} */}
+      <div className=" border-b-[0.1rem]">
+        <div className="p-2">Tweets</div>
+        {profilePosts ? (
+          profilePosts.map((post: postType, i) => (
+            <DisplayTweets key={i} post={post} profile={profile} />
+          ))
+        ) : (
+          <div>Loading</div>
+        )}
+      </div>
     </div>
   );
 }

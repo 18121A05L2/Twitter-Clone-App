@@ -17,8 +17,6 @@ error Twitter_NotOwner();
 
 contract Twitter is TwitterToken, TwitterNfts, Marketplace {
     address public contractAddress;
-    TwitterToken public TwitterTokenInstance;
-    TwitterNfts public TwitterNftsInstance;
     using FundMe for uint256;
     address public immutable i_owner;
     // uint256 public constant PER_TWEET = 10 * 10 ** 18; // per tweet 10 dollars
@@ -46,8 +44,6 @@ contract Twitter is TwitterToken, TwitterNfts, Marketplace {
         require(msg.value > 0, "Must send ETH to deploy");
         i_owner = msg.sender;
         s_priceFeed = AggregatorV3Interface(priceFeedAddress);
-        TwitterTokenInstance = new TwitterToken();
-        TwitterNftsInstance = new TwitterNfts(nftName, nftSymbol);
         contractAddress = address(this);
     }
 

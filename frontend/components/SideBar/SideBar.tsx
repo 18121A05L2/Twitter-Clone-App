@@ -19,6 +19,7 @@ import { setWalletAddress } from "../../Redux/features/BlockchainSlice";
 import { NewTwitterLogo } from "../utils/svgs";
 import { useRouter } from "next/router";
 import { MdOutlineSell } from "react-icons/md";
+import { delay } from "../../utils/reusable";
 
 function SideBar() {
   const dispatch = useDispatch();
@@ -112,6 +113,7 @@ function SideBar() {
         {walletAddress && (
           <button
             onClick={async () => {
+              await router.push("/");
               await window.ethereum.request({
                 method: "wallet_revokePermissions",
                 params: [
@@ -120,7 +122,6 @@ function SideBar() {
                   },
                 ],
               });
-              router.push("/");
             }}
             className="rounded-full bg-twitter bg-opacity-60 p-1 px-2 transition hover:scale-125"
           >

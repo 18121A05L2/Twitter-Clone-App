@@ -40,6 +40,8 @@ const config: HardhatUserConfig = {
         },
         localhost: {
             url: "http://127.0.0.1:8545/",
+            gas: 6000000, // Adjust the gas limit here
+            blockGasLimit: 12000000, // Adjust the block gas limit if needed
             chainId: 31337, // same as hardhat node
             // accounts will be provided by harhat
         },
@@ -47,6 +49,8 @@ const config: HardhatUserConfig = {
             // forking: {
             //     url: FORKED_MAINNET_URL,
             // },
+            gas: 6000000, // Adjust the gas limit here
+            blockGasLimit: 12000000, // Adjust the block gas limit if needed
             chainId: 31337,
         },
     },

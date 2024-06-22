@@ -57,6 +57,10 @@ function Wallet() {
   }, [twitterContract]);
 
   async function sendTokens() {
+    if (!senderAddress || !amount) {
+      toast("Please enter sender address and amount", { type: "error" });
+      return;
+    }
     setIsTokensSending(true);
     try {
       let transactionResponse = await twitterContract?.transfer(
@@ -75,15 +79,21 @@ function Wallet() {
   console.log(inputs);
 
   async function onFaucetClick() {
-    setIsLoading(true);
-    const transactionResponse = await twitterContract?.faucet();
-    const balance = await twitterContract?.balanceOf();
-    const tokenBalance = Number(
-      ethers.formatUnits(Number(balance).toString(), tokenDecimals)
-    );
-    setData((prev) => ({ ...prev, tokenBalance }));
-    await transactionResponse.wait(1);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      await (await twitterContract?.faucet()).wait();
+      const userBalance = await twitterContract?.balanceOf();
+      console.log({ userBalance });
+      const tokenBalance = Number(
+        ethers.formatUnits(Number(userBalance).toString(), tokenDecimals)
+      );
+      setData((prev) => ({ ...prev, tokenBalance }));
+    } catch (err: any) {
+      console.error({ err });
+      toast.error(err.shortMessage, { type: "error" });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (

@@ -8,7 +8,6 @@ contract TwitterNfts {
     string public nftSymbol;
 
     uint256 public nextTokenIdToMint; // token ID numberr
-    address public contractOwner;
 
     // token id => owner
     mapping(uint256 => address) internal _owners;
@@ -43,7 +42,6 @@ contract TwitterNfts {
         nftName = _name;
         nftSymbol = _symbol;
         nextTokenIdToMint = 0;
-        contractOwner = msg.sender;
     }
 
     function balanceOf(address _owner) public view returns (uint256) {

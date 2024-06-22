@@ -20,6 +20,7 @@ function NormalNft({ nft }: { nft: nftPostType }) {
       return;
     }
     setIslisting(true);
+    console.log(nft.nftId, listingPrice);
     try {
       (await twitterContract?.listNFT(nft.nftId, listingPrice)).wait();
     } catch (error: any) {
@@ -59,7 +60,7 @@ function NormalNft({ nft }: { nft: nftPostType }) {
               className=" border-1 border-purple-500 outline-none bg-slate-300 w-20 rounded px-3 p-1 "
               placeholder="TWT"
               type="text"
-            //   value={listingPrice}
+              //   value={listingPrice}
               onChange={(e) => setListingPrice(Number(e.target.value))}
             />
           </div>

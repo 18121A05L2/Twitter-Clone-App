@@ -117,6 +117,7 @@ function NftProfile() {
       const profileRes = await fetch(nftUri).then((res) => res.json());
       console.log({ profileRes });
       dispatch(setProfile({ ...profileRes, address: walletAddress }));
+      setIsUserIdEditable(profile.userId ? false : true);
       setTempImg(null);
       setNftName("");
       setImageUrl("");

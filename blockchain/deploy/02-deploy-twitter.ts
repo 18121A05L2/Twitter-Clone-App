@@ -29,7 +29,7 @@ const deployTwitter: DeployFunction = async ({
         from: lucky,
         args: [ethPriceFeedAddress, "TwitterNfts", "TNFT"],
         log: true,
-        gasLimit: 5000000,
+        gasLimit: 6000000,
         waitConfirmations: networkConfig[chainId].blockConfirmations,
         value: ethers.parseEther("0.01"),
     })

@@ -16,6 +16,7 @@ error Twitter_NotOwner();
  */
 
 contract Twitter is TwitterToken, TwitterNfts, Marketplace {
+    address public implementation;
     address public contractAddress;
     using FundMe for uint256;
     address public immutable i_owner;
@@ -127,6 +128,10 @@ contract Twitter is TwitterToken, TwitterNfts, Marketplace {
 
     function getProfile(address _address) public view returns (string memory) {
         return profiles[_address];
+    }
+
+    function destroy() public onlyOwner {
+        selfdestruct(payable(i_owner));
     }
 
     // A fallback function to accept ETH

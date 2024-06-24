@@ -12,9 +12,17 @@ function Nft() {
   const [isTransfering, setIsTransfering] = useState(false);
   const [receiverAddress, setReceiverAddress] = useState("");
   const [approvedAddress, setApprovedAddress] = useState("");
+  const [ownerAddress, setOwnerAddress] = useState("");
   const { currentNftView, twitterContract, walletAddress } = useSelector(
     (state: RootState) => state.blockchain
   );
+
+  useEffect(() => {
+    (async () => {
+      const owner = await twitterContract?.ownerOf(currentNftView.nftId);
+      setOwnerAddress(owner.toLowerCase());
+    })();
+  }, [currentNftView.nftId, isTransfering]);
   const { avatar, nftId, nftName } = currentNftView;
   const router = useRouter();
 
@@ -44,13 +52,35 @@ function Nft() {
     }
   };
   const handleTransfer = async () => {
-    await twitterContract?.transferFrom(walletAddress, receiverAddress, nftId);
+    if (ownerAddress !== walletAddress) {
+      toast("Only owner can transfer nft", { type: "error" });
+      return;
+    }
+    setIsTransfering(true);
+    console.log({ receiverAddress, walletAddress, nftId });
+    try {
+      await (
+        await twitterContract?.safeTransferFrom(
+          walletAddress,
+          receiverAddress,
+          nftId
+        )
+      ).wait();
+      toast(`Nft transfered successfully to ${receiverAddress}`, {
+        type: "success",
+      });
+    } catch (error: any) {
+      console.error(error);
+      toast(error?.shortMessage, { type: "error" });
+    } finally {
+      setIsTransfering(false);
+    }
   };
 
   const operatorAccess = async () => {
     await twitterContract?.setApprovalForAll(receiverAddress, true);
   };
-  console.log({ approvedAddress });
+  console.log({ ownerAddress, walletAddress });
 
   return (
     <div className=" flex flex-col items-center  gap-2 rounded-lg ">
@@ -67,47 +97,52 @@ function Nft() {
 
       <img className=" h-40 w-40" src={avatar} alt="nft image" />
       <p> {nftName}</p>
-      <div className=" flex flex-row gap-3">
-        <input
-          className=" w-96 border-2 border-emerald-300 outline-none rounded px-2"
-          type="text"
-          value={receiverAddress}
-          placeholder="receive Address"
-          onChange={(e) => setReceiverAddress(e.target.value)}
-        ></input>
-      </div>
-      <div className=" flex gap-3 flex-col justify-center items-center ">
-        <div
-          onClick={handleApprove}
-          className={` rounded-lg p-2 px-4 w-min whitespace-nowrap text-center ${approvedAddress ? " bg-green-500 " : " bg-rose-400 cursor-pointer "} `}
-        >
-          {approvedAddress ? (
-            "Already approved"
-          ) : isApproving ? (
-            <Spinner />
-          ) : (
-            "Approve"
-          )}
-        </div>
-        {approvedAddress && (
-          <p className="  ">Approved Address: {approvedAddress}</p>
-        )}
-      </div>
+      <p>Owned by {ownerAddress}</p>
+      {ownerAddress == walletAddress && (
+        <div className="flex flex-col items-center  gap-2 rounded-lg">
+          <div className=" flex flex-row gap-3">
+            <input
+              className=" w-96 border-2 border-emerald-300 outline-none rounded px-2"
+              type="text"
+              value={receiverAddress}
+              placeholder="receive Address"
+              onChange={(e) => setReceiverAddress(e.target.value)}
+            ></input>
+          </div>
+          <div className=" flex gap-3 flex-col justify-center items-center ">
+            <div
+              onClick={handleApprove}
+              className={` rounded-lg p-2 px-4 w-min whitespace-nowrap text-center ${approvedAddress ? " bg-green-500 " : " bg-rose-400 cursor-pointer "} `}
+            >
+              {approvedAddress ? (
+                "Already approved"
+              ) : isApproving ? (
+                <Spinner />
+              ) : (
+                "Approve"
+              )}
+            </div>
+            {approvedAddress && (
+              <p className="  ">Approved Address: {approvedAddress}</p>
+            )}
+          </div>
 
-      <div
-        onClick={handleTransfer}
-        className=" rounded-lg bg-orange-400 p-2 px-4"
-      >
-        Transfer
-      </div>
-      <div className=" w-full border-2 border-stone-600"></div>
-      <h1> Admin Level Approvals </h1>
-      <div
-        onClick={operatorAccess}
-        className=" rounded-lg bg-yellow-400 p-2 px-4"
-      >
-        Operator Access for all NFTs
-      </div>
+          <div
+            onClick={handleTransfer}
+            className=" rounded-lg bg-orange-400 p-2 px-4"
+          >
+            {isTransfering ? <Spinner /> : "Transfer"}
+          </div>
+          <div className=" w-full border-2 border-stone-600"></div>
+          <h1> Admin Level Approvals </h1>
+          <div
+            onClick={operatorAccess}
+            className=" rounded-lg bg-yellow-400 p-2 px-4"
+          >
+            Operator Access for all NFTs
+          </div>
+        </div>
+      )}
     </div>
   );
 }

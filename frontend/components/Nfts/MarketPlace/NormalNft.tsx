@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { nftPostType } from "../../../Types/blockchain.types";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../Redux/app/store";
@@ -8,11 +8,18 @@ import { Spinner } from "../../utils/svgs";
 
 function NormalNft({ nft }: { nft: nftPostType }) {
   const [isListing, setIslisting] = useState(false);
+  const [owner, setOwner] = useState<string>();
   const [listingPrice, setListingPrice] = useState<number>();
   console.log({ listingPrice });
   const { twitterContract, walletAddress } = useSelector(
     (state: RootState) => state.blockchain
   );
+  useEffect(() => {
+    (async () => {
+      const owner = await twitterContract?.ownerOf(nft.nftId);
+      setOwner(owner.toLowerCase());
+    })();
+  }, [nft.nftId]);
 
   async function handleListing() {
     if (!listingPrice) {
@@ -43,16 +50,16 @@ function NormalNft({ nft }: { nft: nftPostType }) {
         {` - `} {nft.nftName}
       </p>
 
-      {nft.address && (
+      {owner && (
         <p className="">
           Owned by{" "}
-          {nft.address.slice(0, 5) +
+          {owner.slice(0, 5) +
             "......" +
-            nft.address.slice(nft.address.length - 5, nft.address.length)}
+            owner.slice(owner.length - 5, owner.length)}
         </p>
       )}
 
-      {nft.address == walletAddress && (
+      {owner == walletAddress && (
         <div className=" flex flex-col gap-3 text-center justify-center items-center ">
           <div>
             Enter Price -{" "}

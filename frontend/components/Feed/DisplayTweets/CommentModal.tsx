@@ -13,7 +13,7 @@ import { RootState } from "../../../Redux/app/store";
 type replyState = {
   postId: string;
   replyData: string;
-  userImage: string | null | undefined;
+  avatar: string | null | undefined;
   userId: string | null | undefined;
   tweetUserId: string;
   userName: string;
@@ -31,7 +31,7 @@ export default function CommentModal() {
   const data: replyState = {
     postId: post?._id,
     replyData: reply,
-    userImage: profile.avatar,
+    avatar: profile.avatar,
     userId: profile.userId,
     tweetUserId: post?.userId,
     userName: post?.userName,
@@ -63,10 +63,10 @@ export default function CommentModal() {
           <div className="flex w-[3rem] flex-col  items-center">
             <Image
               className="rounded-full"
-              src={post?.userImage || "https://links.papareact.com/gll"}
+              src={post?.avatar || "https://links.papareact.com/gll"}
               width="45"
               height="45"
-              alt="userImage"
+              alt="avatar"
             ></Image>
             <div className="my-2 h-[3rem] border-[0.1rem]"></div>
             <Image
@@ -74,7 +74,7 @@ export default function CommentModal() {
               src={profile.avatar || "https://links.papareact.com/gll"}
               width="45"
               height="45"
-              alt="userImage"
+              alt="avatar"
             ></Image>
           </div>
           <div className="p-2">

@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
-import SideBar from "../../components/SideBar";
+import SideBar from "../../components/SideBar/SideBar";
 import Profile from "../../components/Profile";
-import Widgets from "../../components/Widgets";
+import Widgets from "../../components/Widgets/Widgets";
 import TweetBoxModal from "../../components/Feed/TweetBox/TweetBoxModal";
 import CommentModal from "../../components/Feed/DisplayTweets/CommentModal";
 import Bookmarks from "../../components/unused/Bookmarks";
 import Lists from "../../components/unused/Lists";
 import Explore from "../../components/unused/Explore";
-import Messages from "../../components/Messages";
+import Messages from "../../components/Messages/MessagesPage";
 import Notifications from "../../components/unused/Notifications";
 import Search from "../../components/unused/Search";
-import Feed from "../../components/Feed";
+import Feed from "../../components/Feed/Feed";
 import FundMe from "../../components/EthersFundMe";
 import Wallet from "../../components/Wallet";
 import { useRouter } from "next/router";
@@ -26,13 +26,16 @@ import { setProfile } from "../../Redux/features/BlockchainSlice";
 import useContracts from "../../components/hooks/useContracts";
 import DarkMode from "../../components/utils/darkMode";
 import SpecificTweetDisplay from "../../components/SpecificTweetDisplay";
+import MarketPlace from "../../components/Nfts/MarketPlace/MarketPlace";
+import { NewTwitterLogo } from "../../components/utils/svgs";
+import { AiTwotoneThunderbolt } from "react-icons/ai";
 
 function All() {
   const { isContractsLoading } = useContracts();
   const router = useRouter();
 
   const { profile } = useSelector((state: RootState) => state.blockchain);
-  const { editProfileModalState, tweetBoxModalState } = useSelector(
+  const { editProfileModalState, tweetBoxModalState, isDarkMode } = useSelector(
     (state: RootState) => state.global
   );
 
@@ -76,6 +79,9 @@ function All() {
         return <NftProfile />;
       case "nft":
         return <Nft />;
+      case "marketplace":
+        return <MarketPlace />;
+
       default:
         return <div>Not Found</div>;
     }
@@ -84,8 +90,13 @@ function All() {
   if (isContractsLoading)
     return (
       <div className=" flex h-screen w-screen items-center justify-center">
-        <p>Loading</p>
-        {/* <div> naviage to SignIn</div> */}
+        <div className="relative ml-4 h-[7rem] w-[7rem] rounded-full p-[0.3rem] hover:bg-blue-200 ">
+          <NewTwitterLogo
+            isDarkMode={isDarkMode}
+            className=" animate-bounce "
+          />
+          {/* <AiTwotoneThunderbolt className=" w-40 h-40 animate-bounce" /> */}
+        </div>
       </div>
     );
 
@@ -102,7 +113,7 @@ function All() {
       </Head>
       <main className="grid grid-cols-9 ">
         <SideBar />
-        <div className=" col-span-7 max-h-screen  border-x-[0.1rem] p-2 lg:col-span-5 ">
+        <div className=" col-span-7 max-h-screen  border-x-[0.1rem] p-2 lg:col-span-5 dark:border-slate-500  ">
           {" "}
           {switchComponent(componentName)}
         </div>

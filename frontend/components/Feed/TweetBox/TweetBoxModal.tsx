@@ -17,13 +17,13 @@ function TweetBoxModal({ profileExists }: { profileExists: string }) {
 
   return (
     <div
-      className={` absolute inset-0 flex justify-center bg-black/30  ${
+      className={` absolute inset-0 flex justify-center bg-black/30 dark:bg-white/20  ${
         (tweetBoxModalState || !profileExists) && !isNftProfilePage
           ? "inline"
           : "hidden"
       } `}
     >
-      <div className="mt-8 flex h-[20rem] min-w-[35rem] flex-col rounded-lg bg-white p-4">
+      <div className="mt-8 flex h-[20rem] min-w-[35rem] flex-col rounded-lg bg-white p-4 dark:bg-black border-[0.21rem]">
         {profileExists && (
           <BiX
             onClick={() => dispatch(tweetBoxModal())}

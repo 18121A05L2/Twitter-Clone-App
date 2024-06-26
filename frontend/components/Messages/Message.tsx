@@ -4,12 +4,11 @@ import { messageType } from "../../Types/Feed.types";
 type propsType = {
   msg: messageType;
   scrollRef: React.MutableRefObject<HTMLDivElement>;
-  userId: string;
+  address: string;
 };
 
-function Message({ msg, scrollRef, userId }: propsType) {
-  const blue = userId.toLowerCase() === msg.senderId.toLowerCase();
-  // console.log("sessionId : " + sessoinId + " msg.senderid : " + msg.senderId)
+function Message({ msg, scrollRef, address }: propsType) {
+  const blue = address === msg.senderAddress;
 
   return (
     <div

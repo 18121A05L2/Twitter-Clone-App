@@ -1,7 +1,7 @@
 type commentType = {
   postId: string;
   replyData: string;
-  userImage: string;
+  avatar: string;
   userId: string;
   tweetUserId: string;
   userName: string;
@@ -17,7 +17,7 @@ type likeType = {
 type postType = {
   _id?: string;
   userId: string;
-  userImage: string;
+  avatar: string;
   userInput: string;
   comments?: [commentType];
   likes?: [likeType];
@@ -27,24 +27,26 @@ type postType = {
 };
 
 type profileType = {
-  _id?: string;
-  backgroundImage: string;
+  // _id?: string;
+  backgroundImage?: string;
   userId: string;
-  // newUserId? : string;
-  userImage: string | null | undefined;
-  name: string;
-  bio: string;
-  location: string;
-  website: string;
-  birthDate: Date;
+  avatar: string;
+  name?: string;
+  bio?: string;
+  location?: string;
+  website?: string;
+  birthDate?: Date;
   createdAt?: Date;
   updatedAt?: Date;
+  nftName?: string;
+  address: string;
+  nftId?: number;
 };
 
 type messageType = {
   _id?: string;
-  senderId: string;
-  receiverId: string;
+  senderAddress: string;
+  receiverAddress: string;
   msg: string;
   createdAt?: Date;
   updatedAt?: Date;

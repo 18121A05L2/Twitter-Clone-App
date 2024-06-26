@@ -4,15 +4,15 @@ import { BiDotsHorizontalRounded } from "react-icons/bi";
 import Link from "next/link";
 import Actions from "./Actions";
 import Image from "next/image";
-import { postType } from "../../../Types/Feed.types";
-import { tokenUriType } from "../../../Types/blockchain.types";
+import { postType, profileType } from "../../../Types/Feed.types";
+import { nftPostType } from "../../../Types/blockchain.types";
 
 function DisplayTweets({
   post,
   profile,
 }: {
   post: postType;
-  profile: tokenUriType;
+  profile: nftPostType | profileType;
 }) {
   return (
     <Link passHref href={`home/status/${post?.userId}/${post.ipfsHash}`}>
@@ -21,7 +21,7 @@ function DisplayTweets({
           <Image
             layout="fill"
             className=" rounded-full "
-            src={post.userImage || "https://links.papareact.com/gll"}
+            src={post.avatar || "https://links.papareact.com/gll"}
             alt="poat"
           ></Image>
         </div>

@@ -1,9 +1,9 @@
-import { useDispatch } from "react-redux";
-import { sepoliaTestnetId } from "../../constants/frontend";
-import { setWalletAddress } from "../../Redux/features/BlockchainSlice";
+import { localTestnetId, sepoliaTestnetId } from "../../utils/constants";
 import { toast } from "react-toastify";
 
 export const ConnectWallet = () => {
+  const useLocalBlocakchain =
+    process.env.NEXT_PUBLIC_USE_LOCAL_BLOCKCHAIN === "true";
   return new Promise((resolve, reject) => {
     if (window.ethereum) {
       (async () => {
@@ -16,7 +16,7 @@ export const ConnectWallet = () => {
           method: "wallet_switchEthereumChain",
           params: [
             {
-              chainId: `0x${sepoliaTestnetId.toString(16)}`,
+              chainId: `0x${(useLocalBlocakchain ? localTestnetId : sepoliaTestnetId).toString(16)}`,
             },
           ],
         });

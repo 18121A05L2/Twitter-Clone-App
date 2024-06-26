@@ -14,7 +14,7 @@ function MintNft() {
     <div className="flex h-[inherit] cursor-pointer items-center justify-center p-2">
       <div
         onClick={() => {
-          dispatch(tweetBoxModal());
+          // dispatch(tweetBoxModal());
           router.push("/nftprofile");
         }}
         className=" rounded-2xl bg-blue-300 p-3"

@@ -18,6 +18,8 @@ import { RootState } from "../../Redux/app/store";
 import { setWalletAddress } from "../../Redux/features/BlockchainSlice";
 import { NewTwitterLogo } from "../utils/svgs";
 import { useRouter } from "next/router";
+import { MdOutlineSell } from "react-icons/md";
+import { delay } from "../../utils/reusable";
 
 function SideBar() {
   const dispatch = useDispatch();
@@ -46,10 +48,7 @@ function SideBar() {
     <div className="col-span-2 flex h-screen flex-col pt-2  ">
       <div className="flex max-w-[12rem] flex-col items-center gap-1  lg:items-start ">
         <Link passHref href="/home">
-          <div
-            onClick={() => router.push("/")}
-            className="relative ml-4 h-[3rem] w-[3rem] rounded-full p-[0.3rem] hover:bg-blue-200 "
-          >
+          <div className="relative ml-4 h-[3rem] w-[3rem] rounded-full p-[0.3rem] hover:bg-blue-200 ">
             <NewTwitterLogo isDarkMode={isDarkMode} />
           </div>
         </Link>
@@ -66,6 +65,7 @@ function SideBar() {
         <SideBarItem Icon={FaDonate} text="FundMe" />
         <SideBarItem Icon={CiWallet} text="Wallet" />
         <SideBarItem Icon={FcSafe} text="NFTProfile" />
+        <SideBarItem Icon={MdOutlineSell} text="Marketplace" />
         <div
           onClick={() => dispatch(tweetBoxModal())}
           className=" tweetButton mt-5 "
@@ -105,12 +105,15 @@ function SideBar() {
               ></Image>
             )}
           </div>
-          <p>@{profile?.userId.split(" ")[0].toLowerCase()}</p>
+          {profile?.userId && (
+            <p>@{profile?.userId.split(" ")[0].toLowerCase()}</p>
+          )}
         </div>
 
         {walletAddress && (
           <button
             onClick={async () => {
+              await router.push("/");
               await window.ethereum.request({
                 method: "wallet_revokePermissions",
                 params: [
@@ -119,7 +122,6 @@ function SideBar() {
                   },
                 ],
               });
-              router.push("/");
             }}
             className="rounded-full bg-twitter bg-opacity-60 p-1 px-2 transition hover:scale-125"
           >

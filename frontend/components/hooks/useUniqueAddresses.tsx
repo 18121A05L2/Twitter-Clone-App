@@ -14,7 +14,9 @@ function useUniqueAddresses() {
       await nftContract?.queryFilter("Transfer", 0, "latest").then((events) => {
         events.map((event) => {
           let paddedAddress = event.topics[2];
-          const address = ethers.getAddress(paddedAddress.slice(26));
+          const address = ethers
+            .getAddress(paddedAddress.slice(26))
+            .toLowerCase();
           setUniqueAddresses((prev) => {
             if (!prev.includes(address)) {
               return [...prev, address];

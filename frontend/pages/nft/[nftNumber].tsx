@@ -5,16 +5,18 @@ import { RootState } from "../../Redux/app/store";
 
 function SpecificNft() {
   const router = useRouter();
-  const { nftContract } = useSelector((state: RootState) => state.blockchain);
+  const { twitterContract } = useSelector(
+    (state: RootState) => state.blockchain
+  );
   const nftId = Number(router.query.nftNumber);
 
   useEffect(() => {
     (async () => {
-      const nftUrl = await nftContract?.tokenURI(nftId);
-      console.log(nftContract);
+      const nftUrl = await twitterContract?.tokenURI(nftId);
+      console.log(twitterContract);
       console.log(nftUrl);
     })();
-  }, [nftContract]);
+  }, [twitterContract]);
   return <div>SpecificNft</div>;
 }
 

@@ -7,6 +7,8 @@ import "./tasks/block-number"
 import "hardhat-gas-reporter"
 import "solidity-coverage"
 import "hardhat-deploy"
+import "hardhat-ethernal"
+import "hardhat-contract-sizer"
 
 task("accounts", "prints the list of the accounts ", async (taskargs, hre) => {
     const accounts = await hre.ethers.getSigners()
@@ -38,6 +40,8 @@ const config: HardhatUserConfig = {
         },
         localhost: {
             url: "http://127.0.0.1:8545/",
+            gas: 6000000, // Adjust the gas limit here
+            blockGasLimit: 12000000, // Adjust the block gas limit if needed
             chainId: 31337, // same as hardhat node
             // accounts will be provided by harhat
         },
@@ -45,6 +49,8 @@ const config: HardhatUserConfig = {
             // forking: {
             //     url: FORKED_MAINNET_URL,
             // },
+            gas: 6000000, // Adjust the gas limit here
+            blockGasLimit: 12000000, // Adjust the block gas limit if needed
             chainId: 31337,
         },
     },
@@ -58,6 +64,12 @@ const config: HardhatUserConfig = {
             { version: "0.6.6" },
             { version: "0.4.19" },
         ],
+        settings: {
+            optimizer: {
+                enabled: true,
+                runs: 200,
+            },
+        },
     },
     etherscan: {
         apiKey: ETHER_SCAN_API,
@@ -80,6 +92,22 @@ const config: HardhatUserConfig = {
         kiran: {
             default: 1,
         },
+    },
+    ethernal: {
+        disableSync: true, // If set to true, plugin will not sync blocks & txs
+        disableTrace: true, // If set to true, plugin won't trace transaction
+        workspace: "Twitter-clone", // Set the workspace to use, will default to the default workspace (latest one used in the dashboard). It is also possible to set it through the ETHERNAL_WORKSPACE env variable
+        uploadAst: false, // If set to true, plugin will upload AST, and you'll be able to use the storage feature (longer sync time though)
+        disabled: false, // If set to true, the plugin will be disabled, nohting will be synced, ethernal.push won't do anything either
+        resetOnStart: undefined, // Pass a workspace name to reset it automatically when restarting the node, note that if the workspace doesn't exist it won't error
+        serverSync: false, // Only available on public explorer plans - If set to true, blocks & txs will be synced by the server. For this to work, your chain needs to be accessible from the internet. Also, trace won't be synced for now when this is enabled.
+        skipFirstBlock: false, // If set to true, the first block will be skipped. This is mostly useful to avoid having the first block synced with its tx when starting a mainnet fork
+        verbose: false, // If set to true, will display this config object on start and the full error object
+    },
+    contractSizer: {
+        alphaSort: true,
+        runOnCompile: true,
+        disambiguatePaths: false,
     },
 }
 

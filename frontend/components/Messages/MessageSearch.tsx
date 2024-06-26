@@ -4,18 +4,18 @@ import ProfileSection from "./ProfileSection";
 import { useSelector } from "react-redux";
 import { profileType } from "../../Types/Feed.types";
 import { RootState } from "../../Redux/app/store";
-import { tokenUriType } from "../../Types/blockchain.types";
+import { nftPostType } from "../../Types/blockchain.types";
 
 type onlineUserType = {
-  userId: string;
+  address: string;
   socketId: string;
 };
 
-function MessageSearch({ profiles }: { profiles: tokenUriType[] }) {
+function MessageSearch({ profiles }: { profiles: nftPostType[] }) {
   const [search, setSearch] = useState("");
   const onlineUsers = useSelector((state: any) => state.global.onlineUsers);
   const { profile } = useSelector((state: RootState) => state.blockchain);
-  const sessionUserId = profile.userId;
+  const sessionUserAddress = profile.address;
   return (
     <div className=" col-span-2 m-2 flex flex-col gap-2  ">
       <h1 className="text-[1.4rem] font-bold ">Messages</h1>
@@ -24,22 +24,21 @@ function MessageSearch({ profiles }: { profiles: tokenUriType[] }) {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-[10rem] text-[0.8rem] outline-none "
+          className="w-[10rem] text-[0.8rem] outline-none dark:bg-black "
           placeholder="Search Profile To Message"
         ></input>
       </div>
-      <div className="flex flex-col gap-2 bg-gray-50 ">
+      <div className="flex flex-col gap-2 bg-gray-50 dark:bg-black ">
         {profiles
           ?.filter(
             (profile) =>
-              (search ? profile?.userId?.includes(search) : true) &&
-              profile?.userId != sessionUserId
+              (search ? profile?.address?.includes(search.toLowerCase()) : true) &&
+              profile?.address?.toLowerCase() != sessionUserAddress.toLowerCase()
           )
           .map((profile) => {
-            // console.log({ profile });
             let online: Boolean = false;
             onlineUsers.map((user: onlineUserType) => {
-              if (user.userId === profile.userId) {
+              if (user.address === profile.address) {
                 online = true;
               }
             });

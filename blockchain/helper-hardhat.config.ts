@@ -32,9 +32,11 @@ const networkConfig = {
 const DECIMALS = 8
 const INITIAL_ANSWER = 340000000000
 
-const frontEndTwitterAbiFile = "../frontend/constants/TwitterAbi.json"
-const forntEndTwitterNftsAbiFile = "../frontend/constants/TwitterNftsAbi.json"
-const frontEndContractAddresses = "../frontend/constants/contractAddresses.json"
+const frontEndTwitterAbiFile = "../frontend/utils/Blockchain/TwitterAbi.json"
+const forntEndTwitterNftsAbiFile =
+    "../frontend/utils/Blockchain/TwitterNftsAbi.json"
+const frontEndContractAddresses =
+    "../frontend/utils/Blockchain/contractAddresses.json"
 
 export {
     networkConfig,

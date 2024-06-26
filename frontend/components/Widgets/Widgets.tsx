@@ -25,12 +25,12 @@ function Widgets() {
   }
   useEffect(() => {
     const getEventsData = async () => {
-      await twitterContract
-        ?.queryFilter("TransferNft", 0, "latest")
+      await nftContract
+        ?.queryFilter("Transfer", 0, "latest")
         .then((events) => {
           Promise.all(
             uniqueAddresses.map(async (address): Promise<nftPostType> => {
-              const profileUrl = await twitterContract.getProfile(address);
+              const profileUrl = await twitterContract?.getProfile(address);
               const profileData = (await fetch(profileUrl).then((res) =>
                 res.json()
               )) as nftPostType;

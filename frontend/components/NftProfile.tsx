@@ -22,11 +22,15 @@ function NftProfile() {
   const [isMinting, setIsMinting] = useState(false);
   const [tempImg, setTempImg] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
-  const [errMsg, setErrMsg] = useState("");
   const [myNfts, setMyNfts] = useState<nftPostType[]>([]);
   const dispatch = useDispatch();
-  const { walletAddress, twitterContract, profile, isSettingProfile } =
-    useSelector((state: RootState) => state.blockchain);
+  const {
+    walletAddress,
+    twitterContract,
+    nftContract,
+    profile,
+    isSettingProfile,
+  } = useSelector((state: RootState) => state.blockchain);
   const [userId, setUserId] = useState(profile.userId);
   const [isUserIdEditable, setIsUserIdEditable] = useState(
     profile.userId ? false : true
@@ -34,14 +38,14 @@ function NftProfile() {
 
   useEffect(() => {
     loadMyNfts();
-  }, [twitterContract, isMinting]);
+  }, [nftContract, isMinting]);
 
   const loadMyNfts = async () => {
-    const nftIds = await twitterContract?.getMyNfts();
+    const nftIds = await nftContract?.getMyNfts();
     if (nftIds) {
       const nfts = await Promise.all(
         nftIds.map(async (nftNumber: number) => {
-          const uri = await twitterContract?.tokenURI(Number(nftNumber));
+          const uri = await nftContract?.tokenURI(Number(nftNumber));
           const metadata = await axiosAPI
             .get(uri)
             .then((res) => res.data)
@@ -87,7 +91,7 @@ function NftProfile() {
           },
         })
         .then((res) => res.data);
-      let nextNftId = Number(await twitterContract?.nextTokenIdToMint());
+      let nextNftId = Number(await nftContract?.nextTokenIdToMint());
       const nftData: nftPostType = {
         avatar: `${PINATA_GATEWAY_URL}/${imgUploadRes.IpfsHash}`,
         nftName,
@@ -99,8 +103,8 @@ function NftProfile() {
       const jsonRes = await axiosAPI
         .post("/uploadJsonToIpfs", JSON.stringify(nftData))
         .then((res) => res.data);
-      let tokenUri = `${PINATA_GATEWAY_URL}/${jsonRes.IpfsHash}`;
-      await (await twitterContract?.mintTo(tokenUri)).wait();
+      let nftDataUri = `${PINATA_GATEWAY_URL}/${jsonRes.IpfsHash}`;
+
       const profileData = {
         ...profile,
         avatar: `${PINATA_GATEWAY_URL}/${imgUploadRes.IpfsHash}`,
@@ -112,9 +116,8 @@ function NftProfile() {
         .post("/uploadJsonToIpfs", JSON.stringify(profileData))
         .then((res) => res.data);
       let profileTokenUri = `${PINATA_GATEWAY_URL}/${profileTokenRes.IpfsHash}`;
-      await (
-        await twitterContract?.setProfile(profileTokenUri, nextNftId)
-      ).wait();
+      console.log({ profileTokenUri });
+      await (await nftContract?.mintTo(nftDataUri, profileTokenUri)).wait();
       const nftUri = await twitterContract?.getProfile(walletAddress);
       const profileRes = await fetch(nftUri).then((res) => res.json());
       console.log({ profileRes });
@@ -146,7 +149,7 @@ function NftProfile() {
     event.stopPropagation();
     dispatch(setIsSettingProfile(true));
     try {
-      const newTokenURI = await twitterContract?.tokenURI(nft.nftId);
+      const newTokenURI = await nftContract?.tokenURI(nft.nftId);
       const newProfileData = await fetch(newTokenURI).then((res) => res.json());
       const newData = {
         ...profile,
@@ -218,7 +221,6 @@ function NftProfile() {
             >
               {isMinting ? "Minting...." : "Mint NFT Profile"}
             </div>
-            {errMsg && <p className=" text-red-500">{errMsg}</p>}
           </div>
           {isSettingProfile ? (
             <div className=" ml-auto mr-auto flex h-24 w-24 items-center self-center rounded-full bg-indigo-400 text-xs">
@@ -231,7 +233,7 @@ function NftProfile() {
           ) : (
             <img
               className=" ml-auto mr-auto h-24 w-24 self-center rounded-full border-2 border-blue-500   "
-              src={profile?.avatar}
+              src={profile?.avatar || "https://links.papareact.com/gll"}
               alt="Mint an NFT"
             ></img>
           )}
@@ -251,6 +253,7 @@ function NftProfile() {
           {/* NFT cards */}
           {myNfts.length > 0 ? (
             myNfts.map((nft, i) => {
+              if (!nft) return null;
               return (
                 <Link
                   className=" cursor-pointer "

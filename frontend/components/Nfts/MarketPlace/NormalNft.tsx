@@ -10,13 +10,14 @@ function NormalNft({ nft }: { nft: nftPostType }) {
   const [isListing, setIslisting] = useState(false);
   const [owner, setOwner] = useState<string>();
   const [listingPrice, setListingPrice] = useState<number>();
-  console.log({ listingPrice });
-  const { twitterContract, walletAddress } = useSelector(
+
+  const { nftContract, walletAddress } = useSelector(
     (state: RootState) => state.blockchain
   );
+
   useEffect(() => {
     (async () => {
-      const owner = await twitterContract?.ownerOf(nft.nftId);
+      const owner = await nftContract?.ownerOf(nft.nftId);
       setOwner(owner.toLowerCase());
     })();
   }, [nft.nftId]);
@@ -29,7 +30,7 @@ function NormalNft({ nft }: { nft: nftPostType }) {
     setIslisting(true);
     console.log(nft.nftId, listingPrice);
     try {
-      (await twitterContract?.listNFT(nft.nftId, listingPrice)).wait();
+      (await nftContract?.listNFT(nft.nftId, listingPrice)).wait();
     } catch (error: any) {
       console.error(error);
       toast.error(error.shortMessage, { type: "error" });

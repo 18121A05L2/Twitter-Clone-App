@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 import "./FundMe.sol";
 import "./TwitterToken.sol";
 import "./TwitterNfts.sol";
-import "./Marketplace.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 error Twitter_NotOwner();
@@ -15,7 +14,7 @@ error Twitter_NotOwner();
  * @notice This a smaple testing project
  */
 
-contract Twitter is TwitterToken, TwitterNfts, Marketplace {
+contract Twitter is TwitterToken {
     address public contractAddress;
     using FundMe for uint256;
     address public immutable i_owner;
@@ -28,6 +27,7 @@ contract Twitter is TwitterToken, TwitterNfts, Marketplace {
     // ( owner address => tokenuri ) nft profile image
     // NOTE: token uri is the ipfs API which contains id , avatar and nft name
     mapping(address => string) public profiles;
+    TwitterNfts public nftContract;
 
     // string[] public s_msgStore;
 
@@ -36,15 +36,17 @@ contract Twitter is TwitterToken, TwitterNfts, Marketplace {
         _;
     }
 
-    constructor(
-        address priceFeedAddress,
-        string memory nftName,
-        string memory nftSymbol
-    ) payable TwitterNfts(nftName, nftSymbol) Marketplace(msg.sender) {
+    constructor(address priceFeedAddress) payable {
         require(msg.value > 0, "Must send ETH to deploy");
         i_owner = msg.sender;
         s_priceFeed = AggregatorV3Interface(priceFeedAddress);
         contractAddress = address(this);
+    }
+
+    function setNftContractAddress(
+        address _nftContractAddress
+    ) public onlyOwner {
+        nftContract = TwitterNfts(_nftContractAddress);
     }
 
     function tweet(string memory tweetUrl) public payable {
@@ -117,10 +119,12 @@ contract Twitter is TwitterToken, TwitterNfts, Marketplace {
         string memory _tokenUri,
         uint256 _id
     ) public returns (bool) {
-        require(
-            TwitterNfts.ownerOf(_id) == msg.sender,
-            "Must own the nft"
-        );
+        require(nftContract.ownerOf(_id) == msg.sender, "Must own the nft");
+        profiles[msg.sender] = _tokenUri;
+        return true;
+    }
+
+    function setProfileAtMint(string memory _tokenUri) public returns (bool) {
         profiles[msg.sender] = _tokenUri;
         return true;
     }

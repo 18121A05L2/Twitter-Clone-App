@@ -13,13 +13,13 @@ function Nft() {
   const [receiverAddress, setReceiverAddress] = useState("");
   const [approvedAddress, setApprovedAddress] = useState("");
   const [ownerAddress, setOwnerAddress] = useState("");
-  const { currentNftView, twitterContract, walletAddress } = useSelector(
+  const { currentNftView, nftContract, walletAddress } = useSelector(
     (state: RootState) => state.blockchain
   );
 
   useEffect(() => {
     (async () => {
-      const owner = await twitterContract?.ownerOf(currentNftView.nftId);
+      const owner = await nftContract?.ownerOf(currentNftView.nftId);
       setOwnerAddress(owner.toLowerCase());
     })();
   }, [currentNftView.nftId, isTransfering]);
@@ -29,19 +29,19 @@ function Nft() {
   // check is already approved or not
   useEffect(() => {
     const checkIsApproved = async () => {
-      const approvedAddress = await twitterContract?.getApproved(nftId);
+      const approvedAddress = await nftContract?.getApproved(nftId);
       console.log({ approvedAddress });
       setApprovedAddress(approvedAddress != zeroAddress ? approvedAddress : "");
     };
 
     checkIsApproved();
-  }, [twitterContract]);
+  }, [nftContract]);
 
   const handleApprove = async () => {
     if (approvedAddress) return;
     setIsApproving(true);
     try {
-      (await twitterContract?.approveNft(receiverAddress, nftId)).wait();
+      (await nftContract?.approve(receiverAddress, nftId)).wait();
       toast("Nft approved successfully", { type: "success" });
       setReceiverAddress("");
     } catch (error: any) {
@@ -60,7 +60,7 @@ function Nft() {
     console.log({ receiverAddress, walletAddress, nftId });
     try {
       await (
-        await twitterContract?.safeTransferFrom(
+        await nftContract?.safeTransferFrom(
           walletAddress,
           receiverAddress,
           nftId
@@ -78,7 +78,7 @@ function Nft() {
   };
 
   const operatorAccess = async () => {
-    await twitterContract?.setApprovalForAll(receiverAddress, true);
+    await nftContract?.setApprovalForAll(receiverAddress, true);
   };
   console.log({ ownerAddress, walletAddress });
 

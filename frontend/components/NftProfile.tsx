@@ -127,9 +127,9 @@ function NftProfile() {
       setNftName("");
       setImageUrl("");
       toast("Minted Successfully", { type: "success" });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      toast("Mint Failed", { type: "error" });
+      toast(`Mint Failed :${error.shortMessage} `, { type: "error" });
     }
     await loadMyNfts();
     setIsMinting(false);

@@ -10,6 +10,7 @@ import { zeroAddress } from "../utils/constants";
 function Nft() {
   const [isApproving, setIsApproving] = useState(false);
   const [isTransfering, setIsTransfering] = useState(false);
+  const [isBurning, setIsBurning] = useState(false);
   const [receiverAddress, setReceiverAddress] = useState("");
   const [approvedAddress, setApprovedAddress] = useState("");
   const [ownerAddress, setOwnerAddress] = useState("");
@@ -76,6 +77,22 @@ function Nft() {
       setIsTransfering(false);
     }
   };
+  const handleBurn = async () => {
+    if (ownerAddress !== walletAddress) {
+      toast("Only owner can burn nft", { type: "error" });
+      return;
+    }
+    setIsBurning(true);
+    try {
+      await (await nftContract?.burnNft(nftId)).wait();
+      toast("Nft burned successfully", { type: "success" });
+    } catch (error: any) {
+      console.error(error);
+      toast(error?.shortMessage, { type: "error" });
+    } finally {
+      setIsBurning(false);
+    }
+  };
 
   const operatorAccess = async () => {
     await nftContract?.setApprovalForAll(receiverAddress, true);
@@ -132,6 +149,13 @@ function Nft() {
             className=" rounded-lg bg-orange-400 p-2 px-4"
           >
             {isTransfering ? <Spinner /> : "Transfer"}
+          </div>
+
+          <div
+            onClick={handleBurn}
+            className=" rounded-lg bg-red-600 p-2 px-4 cursor-pointer text-white"
+          >
+            {isBurning ? <Spinner /> : "Burn"}
           </div>
           <div className=" w-full border-2 border-stone-600"></div>
           <h1> Admin Level Approvals </h1>

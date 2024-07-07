@@ -62,6 +62,7 @@ function TweetBox() {
     );
     try {
       if (Number(userBalance) <= 0) {
+          toast("you don't have enough TWT", { type: "error" });
         router.push("/wallet");
         return;
       }

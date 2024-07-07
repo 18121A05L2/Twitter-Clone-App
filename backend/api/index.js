@@ -4,10 +4,11 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import multer from "multer";
 import pinataSDK from "@pinata/sdk";
-import { twitterbackend } from "../utils.js";
+import { twitterbackend } from "../utils/oldTwitterBackend.js";
 import { Readable } from "stream";
 import "dotenv/config";
 import { ethers } from "ethers";
+import { testCaseApis } from "../testCaseApi.js";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -16,18 +17,19 @@ export const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-const pinataJWTKey = process.env.PINATA_JWT_SECRET;
-const mongooseConnectionUrl = process.env.MONGOOSE_CONNTECTION_URL;
+const pinataJWTKey = "asdfasdf" || process.env.PINATA_JWT_SECRET;
+const mongooseConnectionUrl =
+  "sadfasdf" || process.env.MONGOOSE_CONNTECTION_URL;
 const pinata = new pinataSDK({
   pinataJWTKey,
 });
 pinata
   .testAuthentication()
   .then((pinataAuthTest) => {
-    console.log({ pinataAuthTest });
+    console.log("Pinata Authentication : ", pinataAuthTest);
   })
   .catch((err) => {
-    console.log(err);
+    console.log("Error in pinata", err);
   });
 
 const PORT = process.env.PORT || 8001;
@@ -51,6 +53,7 @@ async function main() {
     });
 
   twitterbackend();
+  testCaseApis();
 
   app.get("/", (req, res) => res.send("Express on Vercel"));
 
@@ -93,6 +96,11 @@ async function main() {
       console.error(error);
       res.status(500).send({ error: "Transaction failed" });
     }
+  });
+
+  app.route("/ipfsData").post(async function (req, res) {
+    const data = await fetch(req.body.url).then((res) => res.json());
+    res.status(200).send(data);
   });
 }
 main().catch((err) => console.log(err));

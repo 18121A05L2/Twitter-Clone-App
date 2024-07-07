@@ -3,6 +3,7 @@
 pragma solidity ^0.8.9;
 import "./Twitter.sol";
 import "./interfaces/IERC721Receiver.sol";
+import "hardhat/console.sol";
 
 contract TwitterNfts {
     string public name;
@@ -167,7 +168,17 @@ contract TwitterNfts {
         _owners[nextTokenIdToMint] = msg.sender;
         _balances[msg.sender] += 1;
         _tokenUris[nextTokenIdToMint] = _nftUri;
-        twitterContract.setProfileAtMint(_profileUri);
+
+        try twitterContract.setProfileAtMint(_profileUri) {
+            console.log(twitterContract.getProfile(msg.sender));
+        } catch {
+            revert("Failed to set profile at mint");
+        }
+        console.log(
+            " profile after minted : ",
+            twitterContract.getProfile(msg.sender)
+        );
+
         emit Transfer(address(0), msg.sender, nextTokenIdToMint);
         nextTokenIdToMint += 1;
     }
@@ -259,13 +270,11 @@ contract TwitterNfts {
         uint256 _price
     ) external ownerOfToken(_tokenId) {
         require(_price > 0, "Price must be greater than zero");
-
         // Transfer the NFT from the owner to the marketplace contract
-        transferFrom(msg.sender, address(this), _tokenId);
-
+        // transferFrom(msg.sender, address(this), _tokenId);
+        approveNft(address(this), _tokenId);
         // List the NFT
         listedNfts[_tokenId] = NFT(msg.sender, _price, false);
-
         emit NFTListed(_tokenId, msg.sender, _price);
     }
 
@@ -315,9 +324,23 @@ contract TwitterNfts {
         return listedNfts[_tokenId];
     }
 
+    function getAllListedNfts() external view returns (NFT[] memory) {
+        NFT[] memory nfts = new NFT[](nextTokenIdToMint);
+        for (uint256 i = 0; i < nextTokenIdToMint; i++) {
+            nfts[i] = listedNfts[i];
+        }
+        return nfts;
+    }
+
     function setTwitterContractAddress(
         address payable _twitterTokenContract
     ) public onlyOwner {
         twitterContract = Twitter(_twitterTokenContract);
+    }
+
+    function burnNft(uint256 _tokenId) external  {
+        require(ownerOf(_tokenId) == msg.sender, "Not the owner");
+        _transfer(msg.sender, address(0), _tokenId);
+        
     }
 }

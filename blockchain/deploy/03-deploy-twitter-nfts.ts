@@ -30,4 +30,4 @@ const deployTwitterNfts: DeployFunction = async ({
 }
 
 export default deployTwitterNfts
-// deployTwitterNfts.tags = ["all", "deployTwitterNfts"]
+deployTwitterNfts.tags = ["all", "deployTwitterNfts"]

@@ -20,7 +20,7 @@ function MarketPlace() {
   useEffect(() => {
     (async () => {
       const noOfNftsMinted = Number(await nftContract?.nextTokenIdToMint());
-      console.log({ noOfNftsMinted });
+      console.log("noOfNftsMinted : ", noOfNftsMinted - 1);
       const nfts = await Promise.all(
         [...Array(noOfNftsMinted).keys()]
           .slice(1)
@@ -44,10 +44,13 @@ function MarketPlace() {
       const listedNfts = await nftContract
         ?.queryFilter("NFTListed", 0, "latest")
         .then((events) => {
-          const listedNfts = events.map((event) => {
-            const [tokenId, sender, price] = event.args;
-            return { tokenId: Number(tokenId), sender, price: Number(price) };
-          });
+          const listedNfts = events
+            .map((event) => {
+              const [tokenId, sender, price] = event.args;
+              return { tokenId: Number(tokenId), sender, price: Number(price) };
+            })
+            .filter(async (nft) => await nftContract?.ownerOf(nft.tokenId));
+          console.log({ listedNfts });
           return listedNfts;
         });
       setListedNfts(listedNfts);
@@ -61,7 +64,7 @@ function MarketPlace() {
           <AiTwotoneThunderbolt className=" w-24 h-24 animate-bounce " />
         </div>
       ) : (
-        <div>
+        <div className="flex flex-col gap-3 ">
           {/* Listed Nfts */}
           <div className=" border-2 flex flex-col items-center ">
             <h1 className=" font-bold text-2xl border-b-[0.1rem] w-full text-center ">
@@ -72,10 +75,13 @@ function MarketPlace() {
             )}
             <section className="grid grid-cols-3 gap-3 min-h-[200px] ">
               {listedNfts.length > 0 &&
-                listedNfts.map((nft, i) => <ListedNft nft={nft} />)}
+                listedNfts.map((listedNft, i) => (
+                  <ListedNft listedNft={listedNft} key={i} />
+                ))}
             </section>
           </div>
 
+          <h1 className=" font-bold text-2xl  w-full text-center ">All Nfts</h1>
           <section className=" grid grid-cols-3 gap-3 ">
             {allNfts.length > 0 &&
               allNfts.map((nft, i) => {

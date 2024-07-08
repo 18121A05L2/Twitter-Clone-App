@@ -124,8 +124,11 @@ contract Twitter is TwitterToken {
         return true;
     }
 
-    function setProfileAtMint(string memory _tokenUri) public returns (bool) {
-        profiles[msg.sender] = _tokenUri;
+    function setProfileAtMint(
+        string memory _tokenUri,
+        address walletAddress
+    ) public returns (bool) {
+        profiles[walletAddress] = _tokenUri;
         return true;
     }
 

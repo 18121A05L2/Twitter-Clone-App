@@ -33,16 +33,14 @@ describe("Running NFT test cases", () => {
         )
     })
 
-    // beforeEach(async () => {
-    //     console.log("Running before each test")
-    // })
-
     it(" Initial NFT contract checks", async () => {
         const nextTokenIdToMint = Number(await nftContract.nextTokenIdToMint())
         expect(nextTokenIdToMint).to.equal(1)
+        const owner = await nftContract.getOwner()
+        expect(owner).to.equal(lucky)
     })
 
-    it("Mint an NFT", async () => {
+    it("Mint First NFT", async () => {
         // storing data in IPFS ( here local database )
         const nftUriData = {
             avatar: "imageUrl",
@@ -65,10 +63,7 @@ describe("Running NFT test cases", () => {
         const nftUri = `${localBackend}/data/${nftHash}`
         const profileUri = `${localBackend}/data/${profileHash}`
         const res = (await nftContract.mintTo(nftUri, profileUri)).wait()
-        const firstNft = await nftContract.tokenURI(1)
         const profile = await twitterContract.getProfile(lucky)
-        console.log(" ------------ -----------------------------------------")
-        console.log({ profile, firstNft })
         const profileRes = await fetch(profile).then((res) => res.json())
         const nft = await nftContract.tokenURI(profileRes.nftId)
         const nftRes = await fetch(nft).then((res) => res.json())

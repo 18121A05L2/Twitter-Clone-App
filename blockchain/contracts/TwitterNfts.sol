@@ -168,17 +168,7 @@ contract TwitterNfts {
         _owners[nextTokenIdToMint] = msg.sender;
         _balances[msg.sender] += 1;
         _tokenUris[nextTokenIdToMint] = _nftUri;
-
-        try twitterContract.setProfileAtMint(_profileUri) {
-            console.log(twitterContract.getProfile(msg.sender));
-        } catch {
-            revert("Failed to set profile at mint");
-        }
-        console.log(
-            " profile after minted : ",
-            twitterContract.getProfile(msg.sender)
-        );
-
+        twitterContract.setProfileAtMint(_profileUri, msg.sender);
         emit Transfer(address(0), msg.sender, nextTokenIdToMint);
         nextTokenIdToMint += 1;
     }
@@ -338,9 +328,14 @@ contract TwitterNfts {
         twitterContract = Twitter(_twitterTokenContract);
     }
 
-    function burnNft(uint256 _tokenId) external  {
+    function burnNft(uint256 _tokenId) external {
         require(ownerOf(_tokenId) == msg.sender, "Not the owner");
         _transfer(msg.sender, address(0), _tokenId);
-        
+    }
+
+    // function setProfile()
+
+    function getOwner() external view returns (address) {
+        return twitterContract.i_owner();
     }
 }

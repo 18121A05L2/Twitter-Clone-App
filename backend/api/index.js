@@ -17,9 +17,8 @@ export const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-const pinataJWTKey = "asdfasdf" || process.env.PINATA_JWT_SECRET;
-const mongooseConnectionUrl =
-  "sadfasdf" || process.env.MONGOOSE_CONNTECTION_URL;
+const pinataJWTKey = process.env.PINATA_JWT_SECRET;
+const mongooseConnectionUrl = process.env.MONGOOSE_CONNTECTION_URL;
 const pinata = new pinataSDK({
   pinataJWTKey,
 });
@@ -91,16 +90,11 @@ async function main() {
       const transaction = await wallet.sendTransaction(tx);
       await transaction.wait();
 
-      res.status(200).send({ txHash: transaction.hash });
+      res.status(200).send({ txHash: transaction.hash, amount });
     } catch (error) {
       console.error(error);
       res.status(500).send({ error: "Transaction failed" });
     }
-  });
-
-  app.route("/ipfsData").post(async function (req, res) {
-    const data = await fetch(req.body.url).then((res) => res.json());
-    res.status(200).send(data);
   });
 }
 main().catch((err) => console.log(err));

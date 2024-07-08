@@ -89,10 +89,10 @@ const config: HardhatUserConfig = {
     },
     namedAccounts: {
         lucky: {
-            default: 0,
+            default: 0, // 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
         },
         kiran: {
-            default: 1,
+            default: 1,  // 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
         },
     },
     ethernal: {

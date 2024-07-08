@@ -15,13 +15,12 @@ function MarketPlace() {
   const { twitterContract, nftContract, walletAddress } = useSelector(
     (state: RootState) => state.blockchain
   );
-  console.log({ listedNfts });
 
   useEffect(() => {
     (async () => {
       const noOfNftsMinted = Number(await nftContract?.nextTokenIdToMint());
       console.log("noOfNftsMinted : ", noOfNftsMinted - 1);
-      const nfts = await Promise.all(
+      let nfts = await Promise.all(
         [...Array(noOfNftsMinted).keys()]
           .slice(1)
           .map(async (nftNumber: number) => {
@@ -35,6 +34,7 @@ function MarketPlace() {
             return metadata;
           })
       );
+      nfts = nfts.filter((nft) => nft);
       setAllNfts(nfts);
     })();
   }, [twitterContract]);

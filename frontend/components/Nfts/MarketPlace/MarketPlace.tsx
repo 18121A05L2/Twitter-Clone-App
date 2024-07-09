@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../Redux/app/store";
 import axiosAPI from "../../../axios";
-import { nftPostType } from "../../../Types/blockchain.types";
+import { listedNftType, nftPostType } from "../../../Types/blockchain.types";
 import Link from "next/link";
 import { AiTwotoneThunderbolt } from "react-icons/ai";
 import { all } from "axios";
@@ -11,7 +11,8 @@ import ListedNft from "./ListedNft";
 
 function MarketPlace() {
   const [allNfts, setAllNfts] = useState<nftPostType[]>([]);
-  const [listedNfts, setListedNfts] = useState([]);
+  const [listedNfts, setListedNfts] = useState<listedNftType[]>([]);
+  const [listedNftsChanged, setListedNftsChanged] = useState(false);
   const { twitterContract, nftContract, walletAddress } = useSelector(
     (state: RootState) => state.blockchain
   );
@@ -47,15 +48,19 @@ function MarketPlace() {
           const listedNfts = events
             .map((event) => {
               const [tokenId, sender, price] = event.args;
-              return { tokenId: Number(tokenId), sender, price: Number(price) };
+              return { nftId: Number(tokenId), sender, price: Number(price) };
             })
-            .filter(async (nft) => await nftContract?.ownerOf(nft.tokenId));
+            .filter(async (nft) => await nftContract?.ownerOf(nft.nftId));
           console.log({ listedNfts });
           return listedNfts;
         });
-      setListedNfts(listedNfts);
+      listedNfts && setListedNfts(listedNfts);
     })();
-  }, [twitterContract]);
+  }, [twitterContract, listedNftsChanged]);
+
+  function handleListedNftsChanged() {
+    setListedNftsChanged(!listedNftsChanged);
+  }
 
   return (
     <>
@@ -76,7 +81,11 @@ function MarketPlace() {
             <section className="grid grid-cols-3 gap-3 min-h-[200px] ">
               {listedNfts.length > 0 &&
                 listedNfts.map((listedNft, i) => (
-                  <ListedNft listedNft={listedNft} key={i} />
+                  <ListedNft
+                    listedNft={listedNft}
+                    key={i}
+                    handleListedNftsChanged={handleListedNftsChanged}
+                  />
                 ))}
             </section>
           </div>
@@ -85,7 +94,14 @@ function MarketPlace() {
           <section className=" grid grid-cols-3 gap-3 ">
             {allNfts.length > 0 &&
               allNfts.map((nft, i) => {
-                return <NormalNft nft={nft} key={i} />;
+                return (
+                  <NormalNft
+                    nft={nft}
+                    key={i}
+                    listedNfts={listedNfts}
+                    handleListedNftsChanged={handleListedNftsChanged}
+                  />
+                );
               })}
           </section>
         </div>

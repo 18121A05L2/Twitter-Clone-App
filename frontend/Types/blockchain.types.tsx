@@ -28,3 +28,9 @@ export type transactionData = {
   methodId: string;
   functionName: string;
 };
+
+export type listedNftType = {
+  nftId: number;
+  sender: string;
+  price: number;
+};

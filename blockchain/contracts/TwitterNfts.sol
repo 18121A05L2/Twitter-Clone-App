@@ -147,6 +147,11 @@ contract TwitterNfts {
         emit Approval(ownerOf(_tokenId), _approved, _tokenId);
     }
 
+    function revertApproval(uint256 _tokenId) public {
+        require(ownerOf(_tokenId) == msg.sender, "!Owner");
+        _tokenApprovals[_tokenId] = address(0);
+    }
+
     function setApprovalForAll(address _operator, bool _approved) public {
         _operatorApprovals[msg.sender][_operator] = _approved;
         emit ApprovalForAll(msg.sender, _operator, _approved);
@@ -302,7 +307,7 @@ contract TwitterNfts {
         require(!nft.sold, "NFT already sold");
 
         // Transfer the NFT back to the owner
-        safeTransferFrom(address(this), nft.owner, _tokenId);
+        revertApproval(_tokenId);
 
         emit NFTCanceled(_tokenId, nft.owner);
 

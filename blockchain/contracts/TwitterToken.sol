@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // ERC20 Contract
 pragma solidity ^0.8.8;
+import "hardhat/console.sol";
 
 error TwitterToken_InefficientBalane();
 error TwitterToken_NotEnoughAllowances();
@@ -14,8 +15,8 @@ contract TwitterToken {
     mapping(address => mapping(address => uint256)) public s_allowances;
 
     constructor() {
-        s_balanceOf[msg.sender] = (TOTAL_SUPPLY * 10 ** s_decimals)/2;
-        s_balanceOf[address(this)] = (TOTAL_SUPPLY * 10 ** s_decimals)/2;
+        s_balanceOf[msg.sender] = (TOTAL_SUPPLY * 10 ** s_decimals) / 2;
+        s_balanceOf[address(this)] = (TOTAL_SUPPLY * 10 ** s_decimals) / 2;
     }
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
@@ -67,16 +68,19 @@ contract TwitterToken {
         return true;
     }
 
+    // claiming approval
     function transferFrom(
         address _from,
         address _to,
         uint256 _value
     ) public returns (bool success) {
-        if (s_allowances[_from][msg.sender] >= _value) {
+        if (_value > s_allowances[_from][msg.sender]) {
             revert TwitterToken_NotEnoughAllowances();
         }
         s_allowances[_from][msg.sender] -= _value;
-        _transfer(msg.sender, _to, _value);
+        s_balanceOf[_from] -= _value;
+        s_balanceOf[_to] += _value;
+        // _transfer(msg.sender, _to, _value);
         return true;
     }
 
@@ -84,9 +88,25 @@ contract TwitterToken {
         address _spender,
         uint256 _value
     ) public returns (bool success) {
+        require(
+            s_balanceOf[msg.sender] >= _value,
+            " User doesn't have enought tokens "
+        );
         s_allowances[msg.sender][_spender] = _value;
         emit Approval(msg.sender, _spender, _value);
         return true;
+    }
+
+    function approveTokensForNftContract(
+        address _from,
+        address _spender,
+        uint256 _value
+    ) public {
+        require(
+            s_balanceOf[_from] >= _value,
+            " User doesn't have enought tokens "
+        );
+        s_allowances[_from][_spender] = _value;
     }
 }
 

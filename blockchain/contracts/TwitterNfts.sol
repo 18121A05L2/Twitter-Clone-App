@@ -147,6 +147,12 @@ contract TwitterNfts {
         emit Approval(ownerOf(_tokenId), _approved, _tokenId);
     }
 
+    function approveNftInternal(address _approved, uint256 _tokenId) private {
+        require(ownerOf(_tokenId) == address(this), "!Owner");
+        _tokenApprovals[_tokenId] = _approved;
+        emit Approval(ownerOf(_tokenId), _approved, _tokenId);
+    }
+
     function revertApproval(uint256 _tokenId) public {
         require(ownerOf(_tokenId) == msg.sender, "!Owner");
         _tokenApprovals[_tokenId] = address(0);
@@ -282,22 +288,28 @@ contract TwitterNfts {
         require(nft.price == _price, "Incorrect price");
         require(nft.owner != msg.sender, "Cannot buy your own NFT");
         require(
-            twitterContract.balanceOf() >= _price,
+            twitterContract.s_balanceOf(msg.sender) >= _price,
             "Insufficient token balance"
         );
 
         nft.sold = true;
         address seller = nft.owner;
-
+        // address listedOwner = ownerOf(_tokenId);
+        // TODO : need to check the gas contract of this
+        // Transfer the NFT from Listed owner to marketplace contracts
+        _transfer(seller, address(this), _tokenId);
+        approveNftInternal(msg.sender, _tokenId);
         // Transfer the NFT from the marketplace contract to the buyer
         safeTransferFrom(address(this), msg.sender, _tokenId);
 
         // Transfer the payment to the seller
-        // payable(seller).transfer(msg.value);
-        twitterContract.transfer(seller, nft.price);
-
+        twitterContract.approveTokensForNftContract(
+            msg.sender,
+            address(this),
+            _price
+        );
+        twitterContract.transferFrom(msg.sender, seller, nft.price);
         emit NFTSold(_tokenId, msg.sender, nft.price);
-
         // Remove the NFT from the listings
         delete listedNfts[_tokenId];
     }
@@ -306,7 +318,7 @@ contract TwitterNfts {
         NFT storage nft = listedNfts[_tokenId];
         require(!nft.sold, "NFT already sold");
 
-        // Transfer the NFT back to the owner
+        // Revert the approval which was given to the marketplace contract
         revertApproval(_tokenId);
 
         emit NFTCanceled(_tokenId, nft.owner);

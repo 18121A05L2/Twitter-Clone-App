@@ -107,7 +107,7 @@ export default function SignIn() {
 
   async function getFreeEth() {
     setTransaction("");
-    if (isFreeEthAlreadySent) {
+    if (Boolean(isFreeEthAlreadySent?.length)) {
       return;
     }
     if (!walletAddress) {
@@ -167,12 +167,12 @@ export default function SignIn() {
       </div>
 
       <div
-        className={` min-w-16 cursor-pointer rounded-full bg-orange-200 p-3 px-5 dark:bg-green-400  ${isFreeEthAlreadySent && " bg-slate-200 cursor-none "} `}
+        className={` min-w-16 cursor-pointer rounded-full bg-orange-200 p-3 px-5 dark:bg-green-400  ${Boolean(isFreeEthAlreadySent?.length) && " bg-slate-200 cursor-none "} `}
         onClick={getFreeEth}
       >
         {isFreeEth ? (
           <Spinner />
-        ) : isFreeEthAlreadySent ? (
+        ) : Boolean(isFreeEthAlreadySent?.length) && isFreeEthAlreadySent ? (
           <>
             Already sent free eth{" "}
             <Moment fromNow>

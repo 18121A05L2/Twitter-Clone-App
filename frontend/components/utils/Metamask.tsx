@@ -9,7 +9,7 @@ const MetamaskLogo = ({
   followMouse = false,
   slowDrift = false,
 }) => {
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const viewer = useMemo(
     () =>

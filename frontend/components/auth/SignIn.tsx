@@ -45,7 +45,9 @@ export default function SignIn() {
         Boolean(provider?.getNetwork) &&
         process.env.NEXT_PUBLIC_USE_LOCAL_BLOCKCHAIN === "false"
       ) {
-        const { chainId, name } = await provider?.getNetwork();
+        const network = await provider?.getNetwork();
+        const chainId = network?.chainId;
+        const name = network?.name;
         const etherscanAPi =
           name === "sepolia" ? sepoliaEtherscanApi : mainnetEtherscanApi;
         console.log({ chainId, name, etherscanAPi });

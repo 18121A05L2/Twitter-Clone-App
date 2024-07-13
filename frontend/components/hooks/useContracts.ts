@@ -6,7 +6,7 @@ import {
   contractAddresses,
   TwitterAbi,
   TwitterNftsAbi,
-} from "../../constants/exportJsons";
+} from "../../utils/exportJsons";
 import {
   setNftContract,
   setProfile,
@@ -61,16 +61,19 @@ const useContracts = () => {
           dispatch(setNftContract(nftContract));
 
           // setting the profile if user already exists
-          const nftUri = await nftContract?.getProfile(walletAddress);
-          const profileRes = await fetch(nftUri).then((res) => res.json());
-          dispatch(setProfile(profileRes));
+          const nftUri = await twitterContract?.getProfile(walletAddress);
+
+          if (nftUri) {
+            const profileRes = await fetch(nftUri).then((res) => res.json());
+            dispatch(setProfile({ ...profileRes, address: walletAddress }));
+          }
         } else {
           if (!isRootPath) {
             const fetchWalletAddress = await ConnectWallet();
             dispatch(setWalletAddress(fetchWalletAddress));
           }
         }
-      } catch (err : any) {
+      } catch (err: any) {
         console.log({ err });
         toast("Contracts : " + err.shortMessage, { type: "error" });
       } finally {

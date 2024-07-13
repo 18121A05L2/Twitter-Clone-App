@@ -3,6 +3,7 @@
 pragma solidity ^0.8.0;
 import "./FundMe.sol";
 import "./TwitterToken.sol";
+import "./TwitterNfts.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 error Twitter_NotOwner();
@@ -15,7 +16,6 @@ error Twitter_NotOwner();
 
 contract Twitter is TwitterToken {
     address public contractAddress;
-    TwitterToken public TwitterTokenInstance;
     using FundMe for uint256;
     address public immutable i_owner;
     // uint256 public constant PER_TWEET = 10 * 10 ** 18; // per tweet 10 dollars
@@ -23,7 +23,11 @@ contract Twitter is TwitterToken {
     address[] public s_funders;
     mapping(address => uint256) public s_addressToAmountFunded;
     mapping(address => string[]) public s_addressToTweets;
-    event Tweet(address indexed _from, string indexed _tweetUrl);
+    event Tweet(address indexed _from, string _tweetUrl);
+    // ( owner address => tokenuri ) nft profile image
+    // NOTE: token uri is the ipfs API which contains id , avatar and nft name
+    mapping(address => string) public profiles;
+    TwitterNfts public nftContract;
 
     // string[] public s_msgStore;
 
@@ -36,18 +40,24 @@ contract Twitter is TwitterToken {
         require(msg.value > 0, "Must send ETH to deploy");
         i_owner = msg.sender;
         s_priceFeed = AggregatorV3Interface(priceFeedAddress);
-        TwitterTokenInstance = new TwitterToken();
         contractAddress = address(this);
     }
 
+    function setNftContractAddress(
+        address _nftContractAddress
+    ) public onlyOwner {
+        nftContract = TwitterNfts(_nftContractAddress);
+    }
+
     function tweet(string memory tweetUrl) public payable {
+        // U need to pay 1 Twitter token for Tweet
         require(
             uint256(msg.value) >= uint256(1 * 10 ** s_decimals),
-            " U need to pay 1 Twitter token for Tweet"
+            "need 1 TWT token"
         );
         require(
             s_balanceOf[msg.sender] >= msg.value,
-            " Not enough Twitter token balance"
+            " Not enough TWT token balance"
         );
         s_balanceOf[msg.sender] -= msg.value;
         s_balanceOf[contractAddress] += msg.value;
@@ -87,10 +97,6 @@ contract Twitter is TwitterToken {
         return s_funders;
     }
 
-    function getTotalSupply() public pure returns (uint256 location) {
-        return TOTAL_SUPPLY;
-    }
-
     function faucet() public payable {
         require(
             s_balanceOf[contractAddress] >= 10 * 10 ** s_decimals,
@@ -103,10 +109,31 @@ contract Twitter is TwitterToken {
     function freeEth(uint256 amount) public payable {
         require(
             contractAddress.balance >= amount,
-            " Contract does not have the required balance of 0.01 ETH"
+            " Contract not have 0.01 ETH"
         );
         (bool success, ) = payable(msg.sender).call{value: amount}("");
         require(success, " Failed to send 0.01 ETH");
+    }
+
+    function setProfile(
+        string memory _tokenUri,
+        uint256 _id
+    ) public returns (bool) {
+        require(nftContract.ownerOf(_id) == msg.sender, "Must own the nft");
+        profiles[msg.sender] = _tokenUri;
+        return true;
+    }
+
+    function setProfileAtMint(
+        string memory _tokenUri,
+        address walletAddress
+    ) public returns (bool) {
+        profiles[walletAddress] = _tokenUri;
+        return true;
+    }
+
+    function getProfile(address _address) public view returns (string memory) {
+        return profiles[_address];
     }
 
     // A fallback function to accept ETH

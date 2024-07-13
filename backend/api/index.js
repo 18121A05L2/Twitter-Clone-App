@@ -4,10 +4,11 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import multer from "multer";
 import pinataSDK from "@pinata/sdk";
-import { twitterbackend } from "../utils.js";
+import { twitterbackend } from "../utils/oldTwitterBackend.js";
 import { Readable } from "stream";
 import "dotenv/config";
 import { ethers } from "ethers";
+import { testCaseApis } from "../testCaseApi.js";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -24,10 +25,10 @@ const pinata = new pinataSDK({
 pinata
   .testAuthentication()
   .then((pinataAuthTest) => {
-    console.log({ pinataAuthTest });
+    console.log("Pinata Authentication : ", pinataAuthTest);
   })
   .catch((err) => {
-    console.log(err);
+    console.log("Error in pinata", err);
   });
 
 const PORT = process.env.PORT || 8001;
@@ -51,6 +52,7 @@ async function main() {
     });
 
   twitterbackend();
+  testCaseApis();
 
   app.get("/", (req, res) => res.send("Express on Vercel"));
 
@@ -76,7 +78,8 @@ async function main() {
   app.route("/sendEth").post(async function (req, res) {
     // console.log(req.body)
     const { address } = req.body;
-    const amount = 0.01;
+    //TODO : revert to 0.01
+    const amount = 0.0001;
 
     try {
       const tx = {
@@ -87,7 +90,7 @@ async function main() {
       const transaction = await wallet.sendTransaction(tx);
       await transaction.wait();
 
-      res.status(200).send({ txHash: transaction.hash });
+      res.status(200).send({ txHash: transaction.hash, amount });
     } catch (error) {
       console.error(error);
       res.status(500).send({ error: "Transaction failed" });

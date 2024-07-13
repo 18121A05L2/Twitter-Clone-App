@@ -8,29 +8,40 @@ import {
 import axiosAPI from "../axios";
 import { profileType } from "../Types/Feed.types";
 import { RootState } from "../Redux/app/store";
+import { PINATA_GATEWAY_URL } from "../utils/constants";
+import { toast } from "react-toastify";
+import { setProfile } from "../Redux/features/BlockchainSlice";
+import { Spinner } from "./utils/svgs";
 
 const styles = {
   div: " border m-2 rounded-md p-1  ",
   caption: " text-gray-500 text-[0.7rem]    ",
-  input: " outline-none w-full pr-4  px-1 text-twitter  ",
+  input: " outline-none w-full pr-4  px-1 text-twitter dark:bg-black  ",
 };
 
 function EditProfileModal() {
+  const [isSaving, setIsSaving] = useState(false);
   const dispatch = useDispatch();
-  const [profileData, setProfileData] = useState({} as profileType);
-  const { profile } = useSelector((state: RootState) => state.blockchain);
+  const { profile, twitterContract, walletAddress } = useSelector(
+    (state: RootState) => state.blockchain
+  );
+  const { profileDataChanged, editProfileModalState } = useSelector(
+    (state: RootState) => state.global
+  );
+  console.log({ profile });
   const { userId, avatar } = profile;
 
   useEffect(() => {
-    // -------------------------------------------- fetching Profile Data --------------------
-    async function fetchProfileData() {
-      const profileData = await axiosAPI
-        .post("/profiledata", JSON.stringify({ userId: userId }))
-        .then((res) => res.data);
-      setProfileData(profileData);
-    }
-    fetchProfileData();
-  }, []);
+    //updating the profile if data changes
+    (async () => {
+      const nftUri = await twitterContract?.getProfile(walletAddress);
+
+      if (nftUri) {
+        const profileRes = await fetch(nftUri).then((res) => res.json());
+        dispatch(setProfile({ ...profileRes, address: walletAddress }));
+      }
+    })();
+  }, [profileDataChanged]);
 
   const [data, setData] = useState<profileType>({
     name: "",
@@ -39,36 +50,48 @@ function EditProfileModal() {
     website: "",
     userId: userId,
     birthDate: new Date(),
-    userImage: avatar,
+    avatar: avatar,
     backgroundImage: "",
+    address: walletAddress,
   });
   useEffect(() => {
-    profileData &&
-      setData({
-        name: profileData.name,
-        bio: profileData.bio,
-        location: profileData.location,
-        website: profileData.website,
+    profile &&
+      setData((prev) => ({
+        ...prev,
+        name: profile.name,
+        bio: profile.bio,
+        location: profile.location,
+        website: profile.website,
         userId: userId,
         birthDate: new Date(),
-        userImage: avatar,
-        backgroundImage: profileData.backgroundImage,
-      });
-  }, [profileData, profile]);
-  const editProfileModalState = useSelector(
-    (state: any) => state.global.editProfileModalState
-  );
+        avatar: avatar,
+        backgroundImage: profile.backgroundImage,
+      }));
+  }, [profile, profile]);
 
   async function handleSave() {
-    const res = await fetch("http://localhost:8001/profile", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    dispatch(editProfileModal());
-    dispatch(profileDataChainging());
+    setIsSaving(true);
+    try {
+      let updatingData = { ...profile, ...data };
+      const jsonRes = await axiosAPI
+        .post("/uploadJsonToIpfs", JSON.stringify(updatingData))
+        .then((res) => res.data);
+      let tokenUri = `${PINATA_GATEWAY_URL}/${jsonRes.IpfsHash}`;
+      const transactionResponse = await twitterContract?.setProfile(
+        tokenUri,
+        profile.nftId
+      );
+      await transactionResponse.wait();
+      dispatch(profileDataChainging());
+      await transactionResponse.wait(1);
+      dispatch(editProfileModal());
+      toast("profile updated successfully", { type: "success" });
+    } catch (err: any) {
+      console.error(err);
+      toast(err?.shortMessage, { type: "error" });
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   return (
@@ -77,7 +100,7 @@ function EditProfileModal() {
         editProfileModalState ? " inline " : " hidden "
       }   `}
     >
-      <div className="min-h-[30rem] min-w-[35rem] rounded-xl bg-white   ">
+      <div className="min-h-[30rem] min-w-[35rem] rounded-xl bg-white dark:bg-black  dark:text-white dark:border-2 ">
         <div className="flex items-center gap-4 p-2 ">
           <BiX
             onClick={() => dispatch(editProfileModal())}
@@ -87,9 +110,10 @@ function EditProfileModal() {
           <p className="text-[1.3rem] font-bold   ">Edit Profile</p>
           <button
             onClick={handleSave}
-            className="ml-auto rounded-full bg-black p-2 px-6 text-white opacity-80 hover:opacity-100   "
+            disabled={isSaving}
+            className="ml-auto rounded-full bg-black p-2 px-6 text-white  dark:bg-white dark:text-black "
           >
-            Save
+            {isSaving ? <Spinner /> : "Save"}
           </button>
         </div>
         <div className={styles.div}>
@@ -132,16 +156,6 @@ function EditProfileModal() {
             value={data.website}
           ></input>
         </div>
-        {/* <div className={styles.div}>
-          <p className={styles.caption}>new User Id</p>
-          <input
-            className={styles.input}
-            onChange={(e) =>
-              setData((prev) => ({ ...prev, newUserId: e.target.value }))
-            }
-            value={data.newUserId}
-          ></input>
-        </div> */}
         <div className={styles.div}>
           <p className={styles.caption}>backgroundImage Url</p>
           <input

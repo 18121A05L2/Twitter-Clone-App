@@ -21,6 +21,28 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
   reducer: persistedReducer,
+  //TODO: recheck this ignoring noserializable data storing
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [
+          "persist/PERSIST",
+          "persist/REHYDRATE",
+          "blockchain/setProvider",
+          "blockchain/setSigner",
+          "blockchain/setTwitterContract",
+          "blockchain/setNftContract",
+        ],
+        ignoredPaths: [
+          "register",
+          "rehydrate",
+          "blockchain.provider",
+          "blockchain.signer",
+          "blockchain.twitterContract",
+          "blockchain.nftContract",
+        ],
+      },
+    }),
 });
 
 export const persistor = persistStore(store);

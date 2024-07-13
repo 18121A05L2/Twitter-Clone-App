@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { tokenUriType } from "../../Types/blockchain.types";
+import { profileType } from "../../Types/Feed.types";
 
 type initialState = {
   tweetAdded: number;
@@ -11,7 +11,7 @@ type initialState = {
   editProfileModalState: boolean;
   onlineUsers: [];
   isDarkMode: boolean;
-  receiverProfile: tokenUriType;
+  receiverProfile: profileType;
 };
 
 const initialState: initialState = {
@@ -24,7 +24,7 @@ const initialState: initialState = {
   editProfileModalState: false,
   onlineUsers: [],
   isDarkMode: false,
-  receiverProfile: { userId: "", avatar: "", nftName: "" },
+  receiverProfile: { userId: "", avatar: "", nftName: "" , address: ""},
 };
 
 const globalSlice = createSlice({

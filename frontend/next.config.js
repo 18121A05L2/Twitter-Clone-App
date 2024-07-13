@@ -7,6 +7,7 @@ module.exports = {
       "twitter.com",
       "thumbs.dreamstime.com",
       "turquoise-electrical-halibut-222.mypinata.cloud",
+      "azure-fantastic-gecko-907.mypinata.cloud",
     ],
   },
 

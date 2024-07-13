@@ -19,6 +19,25 @@ function MyApp({
 }: AppProps<{ session: Session }>) {
   // document.documentElement.classList.add("dark");
 
+  // service workers
+  // useEffect(() => {
+  //   if ("serviceWorker" in navigator) {
+  //     window.addEventListener("load", () => {
+  //       navigator.serviceWorker
+  //         .register("/service-worker.js")
+  //         .then((registration) => {
+  //           console.log(
+  //             "Service Worker registered with scope:",
+  //             registration.scope
+  //           );
+  //         })
+  //         .catch((error) => {
+  //           console.error("Service Worker registration failed:", error);
+  //         });
+  //     });
+  //   }
+  // }, []);
+
   useEffect(() => {
     const handleAccountsChanged = () => {
       console.log("accountsChanged");
@@ -29,6 +48,8 @@ function MyApp({
 
     const handleChainChanged = () => {
       console.log("chainChanged");
+      window.sessionStorage.clear();
+      window.localStorage.clear();
       window.location.reload();
     };
 

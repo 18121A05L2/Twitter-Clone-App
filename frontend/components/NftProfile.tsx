@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "dotenv/config";
 import { RootState } from "../Redux/app/store";
 
-import axiosAPI from "../axios";
+import axiosAPI, { localhost } from "../axios";
 import {
   setCurrentNftView,
   setIsSettingProfile,
@@ -13,45 +13,39 @@ import {
 } from "../Redux/features/BlockchainSlice";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import { PINATA_GATEWAY_URL } from "../constants/frontend";
-import { tokenUriType } from "../Types/blockchain.types";
+import { PINATA_GATEWAY_URL } from "../utils/constants";
+import { nftPostType } from "../Types/blockchain.types";
+import { AiTwotoneThunderbolt } from "react-icons/ai";
 
 function NftProfile() {
-  const [avatar, setAvatar] = useState("");
   const [nftName, setNftName] = useState("");
-  const [userId, setUserId] = useState("");
   const [isMinting, setIsMinting] = useState(false);
   const [tempImg, setTempImg] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
-  const [errMsg, setErrMsg] = useState("");
-  const [myNfts, setMyNfts] = useState<tokenUriType[]>();
+  const [myNfts, setMyNfts] = useState<nftPostType[]>([]);
   const dispatch = useDispatch();
-  const { walletAddress, nftContract, profile, isSettingProfile } = useSelector(
-    (state: RootState) => state.blockchain
+  const {
+    walletAddress,
+    twitterContract,
+    nftContract,
+    profile,
+    isSettingProfile,
+  } = useSelector((state: RootState) => state.blockchain);
+  const [userId, setUserId] = useState(profile.userId);
+  const [isUserIdEditable, setIsUserIdEditable] = useState(
+    profile.userId ? false : true
   );
-  // const nftContract = useSelector(
-  //   (state: RootState) => state.blockchain.nftContract
-  // );
-  // const profile = useSelector((state: RootState) => state.blockchain.profile);
 
   useEffect(() => {
     loadMyNfts();
   }, [nftContract, isMinting]);
 
-  useEffect(() => {
-    (async () => {
-      // const nftUri = await nftContract?.getProfile(walletAddress);
-      // const profileRes = await fetch(nftUri).then((res) => res.json());
-      // setProfile(profileRes);
-    })();
-  }, [nftContract]);
-
   const loadMyNfts = async () => {
     const nftIds = await nftContract?.getMyNfts();
     if (nftIds) {
       const nfts = await Promise.all(
-        nftIds.map(async (i: number) => {
-          const uri = await nftContract?.tokenURI(Number(i));
+        nftIds.map(async (nftNumber: number) => {
+          const uri = await nftContract?.tokenURI(Number(nftNumber));
           const metadata = await axiosAPI
             .get(uri)
             .then((res) => res.data)
@@ -64,27 +58,26 @@ function NftProfile() {
       setMyNfts(nfts);
     }
   };
+
   const MintNft = async () => {
     if (!tempImg || !nftName || !userId) {
-      setIsMinting(false);
       if (!tempImg && !nftName && !userId) {
-        setErrMsg("Please select an image , enter nft name and userId");
+        toast("Please select an image , enter nft name and userId", {
+          type: "error",
+        });
       } else if (!tempImg && !nftName) {
-        setErrMsg("Please select an image , enter nft name ");
+        toast("Please select an image , enter nft name ", { type: "error" });
       } else if (!tempImg && !userId) {
-        setErrMsg("Please select an image , enter userId");
+        toast("Please select an image , enter userId", { type: "error" });
       } else if (!nftName && !userId) {
-        setErrMsg("Please enter nft name and userId");
+        toast("Please enter nft name and userId", { type: "error" });
       } else if (!tempImg) {
-        setErrMsg("Please select an image");
+        toast("Please select an image", { type: "error" });
       } else if (!nftName) {
-        setErrMsg("Please enter nft name");
+        toast("Please enter nft name", { type: "error" });
       } else if (!userId) {
-        setErrMsg("Please enter userId");
+        toast("Please enter userId", { type: "error" });
       }
-
-      // console.log({ tempImg, nftName });
-      // console.log(" add avatar and name ")
       return;
     }
     setIsMinting(true);
@@ -92,31 +85,51 @@ function NftProfile() {
       const formData = new FormData();
       formData.append("image", tempImg);
       const imgUploadRes = await axios
-        .post("http://localhost:8001/uploadImageToIpfs", formData, {
+        .post(`${localhost}/uploadImageToIpfs`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         })
         .then((res) => res.data);
-      setAvatar(`${PINATA_GATEWAY_URL}/${imgUploadRes.IpfsHash}`);
-      let nftId = Number(await nftContract?.nextTokenIdToMint());
+      let nextNftId = Number(await nftContract?.nextTokenIdToMint());
+      const nftData: nftPostType = {
+        avatar: `${PINATA_GATEWAY_URL}/${imgUploadRes.IpfsHash}`,
+        nftName,
+        userId,
+        nftId: nextNftId,
+        address: walletAddress,
+      };
 
       const jsonRes = await axiosAPI
-        .post(
-          "/uploadJsonToIpfs",
-          JSON.stringify({
-            avatar: `${PINATA_GATEWAY_URL}/${imgUploadRes.IpfsHash}`,
-            nftName,
-            userId,
-            nftId,
-          })
-        )
+        .post("/uploadJsonToIpfs", JSON.stringify(nftData))
         .then((res) => res.data);
-      let tokenUri = `${PINATA_GATEWAY_URL}/${jsonRes.IpfsHash}`;
-      await (await nftContract?.mintTo(tokenUri)).wait();
-      // await nftContract?.setProfile(tokenIdCount);
-    } catch (error) {
+      let nftDataUri = `${PINATA_GATEWAY_URL}/${jsonRes.IpfsHash}`;
+
+      const profileData = {
+        ...profile,
+        avatar: `${PINATA_GATEWAY_URL}/${imgUploadRes.IpfsHash}`,
+        nftName,
+        userId,
+        nftId: nextNftId,
+      };
+      const profileTokenRes = await axiosAPI
+        .post("/uploadJsonToIpfs", JSON.stringify(profileData))
+        .then((res) => res.data);
+      let profileTokenUri = `${PINATA_GATEWAY_URL}/${profileTokenRes.IpfsHash}`;
+      console.log({ profileTokenUri });
+      await (await nftContract?.mintTo(nftDataUri, profileTokenUri)).wait();
+      const nftUri = await twitterContract?.getProfile(walletAddress);
+      const profileRes = await fetch(nftUri).then((res) => res.json());
+      console.log({ profileRes });
+      dispatch(setProfile({ ...profileRes, address: walletAddress }));
+      setIsUserIdEditable(profile.userId ? false : true);
+      setTempImg(null);
+      setNftName("");
+      setImageUrl("");
+      toast("Minted Successfully", { type: "success" });
+    } catch (error: any) {
       console.log(error);
+      toast(`Mint Failed :${error.shortMessage} `, { type: "error" });
     }
     await loadMyNfts();
     setIsMinting(false);
@@ -132,50 +145,40 @@ function NftProfile() {
     }
   };
 
-  const switchProfile = async (event: any, nft: tokenUriType) => {
+  const switchProfile = async (event: any, nft: nftPostType) => {
     event.stopPropagation();
     dispatch(setIsSettingProfile(true));
     try {
-      (await nftContract?.setProfile(nft.nftId)).wait();
-      const nftUri = await nftContract?.getProfile(walletAddress);
+      const newTokenURI = await nftContract?.tokenURI(nft.nftId);
+      const newProfileData = await fetch(newTokenURI).then((res) => res.json());
+      const newData = {
+        ...profile,
+        ...newProfileData,
+        userId: profile.userId,
+      };
+      const jsonRes = await axiosAPI
+        .post("/uploadJsonToIpfs", JSON.stringify(newData))
+        .then((res) => res.data);
+      let tokenUri = `${PINATA_GATEWAY_URL}/${jsonRes.IpfsHash}`;
+
+      await (await twitterContract?.setProfile(tokenUri, nft.nftId)).wait();
+      const nftUri = await twitterContract?.getProfile(walletAddress);
       const profileRes = await fetch(nftUri).then((res) => res.json());
-      dispatch(setProfile(profileRes));
+      dispatch(setProfile({ ...profileRes, address: walletAddress }));
       dispatch(setIsSettingProfile(false));
-    } catch (err : any) {
+    } catch (err: any) {
       toast(err.shortMessage, { type: "error" });
+    } finally {
+      dispatch(setIsSettingProfile(false));
     }
   };
-  const getEventsData = async () => {
-    await nftContract
-      ?.queryFilter("Transfer", 0, "latest")
-      .then((events) => {
-        console.log({ events });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-  getEventsData();
 
-  // nftContract
-  //   ?.on("Transfer", (event) => {
-  //     console.log(" received " + event);
-  //   })
-  //   .then((events) => {
-  //     console.log(" event in real time ");
-  //     console.log(events);
-  //   })
-  //   .catch((error) => {
-  //     console.error(error);
-  //   });
-  // console.log(profile);
-
-  const nftOnclick = async (nft: tokenUriType) => {
+  const nftOnclick = async (nft: nftPostType) => {
     dispatch(setCurrentNftView(nft));
   };
 
   return (
-    <div className=" no-scrollbar no-scrollbar flex max-h-screen flex-col gap-5 overflow-y-scroll">
+    <div className=" no-scrollbar flex max-h-screen flex-col gap-5 overflow-y-scroll">
       <div className=" flex flex-col gap-3 ">
         <div className=" flex flex-row">
           <div className=" flex flex-col gap-3 ">
@@ -187,24 +190,37 @@ function NftProfile() {
               accept="image/*"
             ></input>
             <input
-              className=" rounded-md border-2 p-1 outline-none  "
+              className=" rounded-md border-2 p-1 outline-none dark:bg-black "
               type="text"
               placeholder="NFT name "
+              value={nftName}
               onChange={(e) => setNftName(e.target.value)}
             ></input>
-            <input
-              className=" rounded-md border-2 p-1 outline-none  "
-              type="text"
-              placeholder="user id "
-              onChange={(e) => setUserId(e.target.value)}
-            ></input>
+            <div className=" flex items-center gap-5 ">
+              <input
+                className={` rounded-md border-2 p-1 w-max outline-none dark:bg-black ${!isUserIdEditable && " cursor-not-allowed opacity-30"} `}
+                type="text"
+                placeholder="user id "
+                value={userId}
+                readOnly={!isUserIdEditable}
+                onChange={(e) => setUserId(e.target.value)}
+              ></input>
+              <div
+                className={` bg-red-300 p-1 rounded-md cursor-pointer ${isUserIdEditable && " opacity-30"}`}
+                onClick={() => {
+                  if (!isUserIdEditable) setIsUserIdEditable(!isUserIdEditable);
+                }}
+              >
+                Edit userId
+              </div>
+            </div>
+
             <div
               onClick={MintNft}
-              className=" max-w-40  cursor-pointer rounded-md bg-blue-200 px-4 "
+              className=" max-w-40 py-2  cursor-pointer rounded-md bg-blue-200 px-4 dark:text-black "
             >
               {isMinting ? "Minting...." : "Mint NFT Profile"}
             </div>
-            {errMsg && <p className=" text-red-500">{errMsg}</p>}
           </div>
           {isSettingProfile ? (
             <div className=" ml-auto mr-auto flex h-24 w-24 items-center self-center rounded-full bg-indigo-400 text-xs">
@@ -216,9 +232,9 @@ function NftProfile() {
             </div>
           ) : (
             <img
-              className=" ml-auto mr-auto h-24 w-24 self-center rounded-full border-2 border-blue-500  "
-              src={profile?.avatar}
-              alt={profile?.nftName}
+              className=" ml-auto mr-auto h-24 w-24 self-center rounded-full border-2 border-blue-500   "
+              src={profile?.avatar || "https://links.papareact.com/gll"}
+              alt="Mint an NFT"
             ></img>
           )}
         </div>
@@ -226,41 +242,58 @@ function NftProfile() {
         {imageUrl && (
           <img
             alt="profile"
-            className=" h-80 w-80 align-middle "
+            className={`h-80 w-80 align-middle ${isMinting && "animate-pulse"} `}
             src={imageUrl}
           ></img>
         )}
       </div>
       <div className=" flex flex-col border-2 py-3 ">
-        <h1 className=" text-center "> Owned NFTS</h1>
-        <section className=" grid grid-cols-3 gap-3 ">
+        <h1 className=" text-center pb-2 "> Owned NFTS</h1>
+        <section className=" grid grid-cols-3 gap-3 p-2 ">
           {/* NFT cards */}
-          {myNfts?.map((nft, i) => {
-            return (
-              <Link className=" cursor-pointer " passHref href={`/nft`}>
-                <div
+          {myNfts.length > 0 ? (
+            myNfts.map((nft, i) => {
+              if (!nft) return null;
+              return (
+                <Link
+                  className=" cursor-pointer "
+                  passHref
+                  href={`/nft`}
                   key={i}
-                  className=" flex cursor-pointer flex-col  items-center rounded-lg  "
-                  onClick={() => nftOnclick(nft)}
                 >
-                  <img className=" h-40 w-40" src={nft.avatar} />
-                  <p>
-                    {" "}
-                    {nft.nftId && `#${nft.nftId} - `} {nft.nftName}
-                  </p>
                   <div
-                    onClick={(event) => switchProfile(event, nft)}
-                    className=" cursor-pointer rounded-lg bg-slate-500 px-2"
+                    key={i}
+                    className=" flex cursor-pointer flex-col  items-center rounded-lg  "
+                    onClick={() => nftOnclick(nft)}
                   >
-                    Set as NFT profile
+                    <img className=" h-40 w-40 rounded" src={nft.avatar} />
+                    <p className=" py-2 text-center ">
+                      <a href="">{`#${nft.nftId}`}</a>
+                      {` - `} {nft.nftName}
+                    </p>
+                    <div
+                      onClick={(event) => switchProfile(event, nft)}
+                      className=" cursor-pointer rounded-lg bg-slate-400 px-2"
+                    >
+                      Set as NFT profile
+                    </div>
                   </div>
-                </div>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            })
+          ) : (
+            <div className=" w-full flex justify-center h-40 items-center ">
+              <AiTwotoneThunderbolt className=" w-24 h-24 animate-bounce ml-auto" />
+            </div>
+          )}
         </section>
       </div>
-      <div className=""> Go to MarketPlace </div>
+      <Link href="/marketplace">
+        <div className=" bg-yellow-300 p-3 rounded-xl w-fit cursor-pointer dark:text-black mb-6 ">
+          {" "}
+          Go to MarketPlace{" "}
+        </div>
+      </Link>
     </div>
   );
 }

@@ -8,6 +8,7 @@ import { AiTwotoneThunderbolt } from "react-icons/ai";
 import { all } from "axios";
 import NormalNft from "./NormalNft";
 import ListedNft from "./ListedNft";
+import { zeroAddress } from "../../../utils/constants";
 
 function MarketPlace() {
   const [allNfts, setAllNfts] = useState<nftPostType[]>([]);
@@ -20,7 +21,7 @@ function MarketPlace() {
   useEffect(() => {
     (async () => {
       const noOfNftsMinted = Number(await nftContract?.nextTokenIdToMint());
-      console.log("noOfNftsMinted : ", noOfNftsMinted - 1);
+      // console.log("noOfNftsMinted : ", noOfNftsMinted - 1);
       let nfts = await Promise.all(
         [...Array(noOfNftsMinted).keys()]
           .slice(1)
@@ -42,7 +43,7 @@ function MarketPlace() {
 
   useEffect(() => {
     (async () => {
-      const listedNfts = await nftContract
+      const listedNfts: listedNftType[] | undefined = await nftContract
         ?.queryFilter("NFTListed", 0, "latest")
         .then((events) => {
           const listedNfts = events
@@ -51,10 +52,27 @@ function MarketPlace() {
               return { nftId: Number(tokenId), sender, price: Number(price) };
             })
             .filter(async (nft) => await nftContract?.ownerOf(nft.nftId));
-          console.log({ listedNfts });
+          // console.log({ listedNfts });
           return listedNfts;
         });
-      listedNfts && setListedNfts(listedNfts);
+      const filterPromises = listedNfts?.map(async (listedNft) => {
+        const listedNftStruct = await nftContract?.getListedNFT(
+          listedNft.nftId
+        );
+        const [address, nftId, sold] = listedNftStruct;
+        // console.log({ listedNftStruct, listedNft, address });
+        console.log(address.toLowerCase() !== zeroAddress.toLowerCase());
+        return {
+          ...listedNft,
+          notListed: address.toLowerCase() !== zeroAddress.toLowerCase(),
+        };
+      });
+      const filterResults = await Promise.all(filterPromises);
+      const filteredListedNfts = filterResults.filter(
+        (filterNft) => filterNft?.notListed
+      );
+      console.log({ filteredListedNfts, listedNfts });
+      filteredListedNfts && setListedNfts(filteredListedNfts);
     })();
   }, [twitterContract, listedNftsChanged]);
 

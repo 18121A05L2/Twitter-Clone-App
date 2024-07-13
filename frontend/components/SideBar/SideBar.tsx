@@ -48,7 +48,7 @@ function SideBar() {
     <div className="col-span-2 flex h-screen flex-col pt-2  ">
       <div className="flex max-w-[12rem] flex-col items-center gap-1  lg:items-start ">
         <Link passHref href="/home">
-          <div className="relative ml-4 h-[3rem] w-[3rem] rounded-full p-[0.3rem] hover:bg-blue-200 ">
+          <div className="relative ml-4 h-[3rem] w-[3rem] rounded-full p-[0.3rem] cursor-pointer  ">
             <NewTwitterLogo isDarkMode={isDarkMode} />
           </div>
         </Link>

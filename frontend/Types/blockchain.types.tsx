@@ -33,4 +33,5 @@ export type listedNftType = {
   nftId: number;
   sender: string;
   price: number;
+  notListed?: boolean;
 };

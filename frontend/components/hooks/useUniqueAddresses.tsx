@@ -2,11 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/app/store";
 import { ethers } from "ethers";
+import { contractAddresses } from "../../utils/exportJsons";
+import { sepoliaTestnetId } from "../../utils/constants";
 
 function useUniqueAddresses() {
   const { nftContract } = useSelector((state: RootState) => state.blockchain);
   const [isLoading, setIsLoading] = useState(true);
   const [uniqueAddresses, setUniqueAddresses] = useState<string[]>([]);
+
+  const myContractAddresses = Object.values(
+    contractAddresses[sepoliaTestnetId]
+  ).map((address) => address.toLowerCase());
+  console.log({ myContractAddresses });
 
   useEffect(() => {
     (async () => {
@@ -27,6 +34,11 @@ function useUniqueAddresses() {
         });
       });
       setIsLoading(false);
+      setUniqueAddresses((prev) => {
+        const withOutContractAddresses = prev.filter((address) => !myContractAddresses.includes(address));
+        console.log({ withOutContractAddresses });
+        return withOutContractAddresses;
+      });
     })();
   }, []);
 

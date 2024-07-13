@@ -249,7 +249,7 @@ function NftProfile() {
       </div>
       <div className=" flex flex-col border-2 py-3 ">
         <h1 className=" text-center pb-2 "> Owned NFTS</h1>
-        <section className=" grid grid-cols-3 gap-3 ">
+        <section className=" grid grid-cols-3 gap-3 p-2 ">
           {/* NFT cards */}
           {myNfts.length > 0 ? (
             myNfts.map((nft, i) => {
@@ -267,7 +267,7 @@ function NftProfile() {
                     onClick={() => nftOnclick(nft)}
                   >
                     <img className=" h-40 w-40 rounded" src={nft.avatar} />
-                    <p className=" py-2">
+                    <p className=" py-2 text-center ">
                       <a href="">{`#${nft.nftId}`}</a>
                       {` - `} {nft.nftName}
                     </p>

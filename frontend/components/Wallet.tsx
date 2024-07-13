@@ -68,7 +68,10 @@ function Wallet() {
         ethers.parseUnits(amount, tokenDecimals)
       );
       await transactionResponse.wait();
-      toast.success("tokens sent successfully");
+      toast.success(
+        `${amount} TWT token${Number(amount) > 1 ? "s" : ""} sent successfully`
+      );
+      setInputs((prev) => ({ ...prev, senderAddress: "", amount: "" }));
     } catch (err: any) {
       console.error({ err });
       toast.error(err.message);
@@ -98,13 +101,14 @@ function Wallet() {
 
   return (
     <div className=" flex flex-col gap-5 ">
-      <h1 className=" text-center ">Wallet</h1>
-      <div> account balance : {}</div>
+      <h1 className=" text-center mb-5 ">Wallet</h1>
+      {/* <div> account balance : {}</div> */}
       <div className=" flex gap-2 align-middle ">
         <label>send money to : </label>{" "}
         <input
           className=" w-1/2 rounded-md border-2 p-1 outline-none "
           placeholder="enter address to send"
+          value={senderAddress}
           onChange={(e) =>
             setInputs((prev) => ({
               ...prev,
@@ -115,6 +119,7 @@ function Wallet() {
         <input
           className=" w-1/2 rounded-md border-2 p-1 outline-none "
           placeholder="enter number of tokens"
+          value={amount}
           onChange={(e) =>
             setInputs((prev) => ({
               ...prev,

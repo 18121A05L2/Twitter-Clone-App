@@ -26,6 +26,7 @@ function Profile() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!profile.address) return;
     (async () => {
       const tweetUrls = await twitterContract?.retriveTweets(profile.address);
       Promise.all(

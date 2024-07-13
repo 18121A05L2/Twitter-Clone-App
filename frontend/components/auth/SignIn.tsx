@@ -21,6 +21,7 @@ import { explorerPaths } from "../../utils/constants.json";
 import Moment from "react-moment";
 import { transactionData } from "../../Types/blockchain.types";
 import { sortArray } from "../../utils/commonFunctions";
+import MetamaskLogo from "../utils/Metamask";
 
 export default function SignIn() {
   useContracts();
@@ -34,6 +35,7 @@ export default function SignIn() {
   const { twitterContract, walletAddress, provider } = useSelector(
     (state: RootState) => state.blockchain
   );
+  const [displayMetamask, setShouldDisplayMetamask] = useState(false);
   const currentTimestamp = Date.now();
   const twentyFourHours = 24 * 60 * 60 * 1000;
 
@@ -76,9 +78,13 @@ export default function SignIn() {
   function connectWallet() {
     if (window.ethereum) {
       (async () => {
+        setShouldDisplayMetamask(false);
         const fetchWalletAddress = await ConnectWallet();
         dispatch(setWalletAddress(fetchWalletAddress));
       })();
+    } else {
+      setShouldDisplayMetamask(true);
+      toast("install metamask to connect", { type: "warning" });
     }
   }
 
@@ -155,6 +161,28 @@ export default function SignIn() {
           {walletAddress ? walletAddress : "Connect Wallet"}
         </div>
       </div>
+
+      {displayMetamask && (
+        <a
+          href="https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en"
+          id="metamask-container"
+          target="_blank"
+        >
+          <MetamaskLogo
+            pxNotRatio={true}
+            width={150}
+            height={120}
+            followMouse={true}
+            slowDrift={false}
+          />
+          {/* <img
+          alt="Metamask"
+          src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg"
+          className=" w-32 h-32 cursor-pointer"
+        /> */}
+        </a>
+      )}
+
       <div
         className=" min-w-16 cursor-pointer rounded-full bg-orange-200 p-3 px-5 dark:bg-green-400 "
         onClick={getEthWithGas}

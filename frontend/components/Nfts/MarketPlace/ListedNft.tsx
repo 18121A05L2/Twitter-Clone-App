@@ -14,7 +14,7 @@ function ListedNft({
   listedNft: listedNftType;
   handleListedNftsChanged: () => void;
 }) {
-  console.log({ listedNft });
+  // console.log({ listedNft });
   const [nftInfo, setNftInfo] = useState<nftPostType>();
   const [ownerOfNft, setOwnerOfNft] = useState<string>();
   const { price, sender, nftId } = listedNft;
@@ -31,7 +31,7 @@ function ListedNft({
       setNftInfo(nftInfo);
       const ownerOfNft = await nftContract?.ownerOf(nftId);
       setOwnerOfNft(ownerOfNft);
-      console.log({ nftInfo });
+      // console.log({ nftInfo });
     })();
   }, [listedNft]);
 

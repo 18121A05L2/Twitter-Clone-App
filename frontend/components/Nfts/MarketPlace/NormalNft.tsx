@@ -17,7 +17,7 @@ function NormalNft({
   listedNfts: listedNftType[];
   handleListedNftsChanged: () => void;
 }) {
-  console.log({ nft, listedNfts });
+  // console.log({ nft, listedNfts });
   const [isListing, setIslisting] = useState(false);
   const [owner, setOwner] = useState<string>();
   const [listingPrice, setListingPrice] = useState<string>();
@@ -49,7 +49,7 @@ function NormalNft({
       return;
     }
     setIslisting(true);
-    console.log(nft.nftId, ethers.parseUnits(listingPrice, tokenDecimals));
+    // console.log(nft.nftId, ethers.parseUnits(listingPrice, tokenDecimals));
     try {
       (
         await nftContract?.listNFT(
@@ -73,7 +73,7 @@ function NormalNft({
       // onClick={() => nftOnclick(nft)}
     >
       <img className=" h-40 w-40 rounded " src={nft.avatar} />
-      <p className="">
+      <p className=" text-center">
         <a href="">{`#${nft.nftId}`}</a>
         {` - `} {nft.nftName}
       </p>

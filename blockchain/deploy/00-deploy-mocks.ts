@@ -27,6 +27,8 @@ const deployMocks: DeployFunction = async ({
         log(
             "Please run `yarn hardhat console` to interact with the deployed smart contracts!",
         )
+    } else {
+        log("No need to deploy mocks")
     }
 }
 

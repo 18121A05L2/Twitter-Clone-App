@@ -16,6 +16,7 @@ function MessagesPage() {
   const [input, setInput] = useState("");
   const socket = useRef<Socket>();
   const inputRef = useRef<HTMLInputElement>(null);
+  const inputFocusRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef() as React.MutableRefObject<HTMLInputElement>;
   const dispatch = useDispatch();
   const router = useRouter();
@@ -49,6 +50,7 @@ function MessagesPage() {
         msg: msg.msg,
       });
     });
+    inputFocusRef?.current?.focus();
   }, []);
 
   useEffect(() => {
@@ -151,16 +153,17 @@ function MessagesPage() {
                 );
               })}
           </div>
-          <div className="sticky bottom-0 m-1  mx-2 mt-auto flex items-center gap-4 rounded-3xl bg-gray-100 p-4 py-2 text-[1.5rem] text-twitter mb-2 ">
+          <div className="sticky bottom-0 m-1  mx-2 mt-auto flex items-center gap-4 rounded-3xl bg-gray-100 p-4 py-2 text-[1.5rem] text-twitter mb-4 ">
             <BsCardImage />
             <AiOutlineFileGif />
             <BsEmojiSmile />
             <input
-              className="w-full bg-gray-100 text-[1rem] outline-none  "
+              className="w-full bg-gray-100 text-[1rem] outline-none caret-twitter  "
               onChange={(e) => setInput(e.target.value)}
               value={input}
               type="text"
               placeholder="Start a new Message"
+              ref={inputFocusRef}
             ></input>
             <div onClick={handleSend} ref={inputRef}>
               <BiSend className="ml-auto cursor-pointer text-[2.5rem] transition-transform hover:-rotate-45 " />

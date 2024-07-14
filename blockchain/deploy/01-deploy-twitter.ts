@@ -27,7 +27,7 @@ const deployTwitter: DeployFunction = async ({
 
     let deployedTwitterContract = await deploy("Twitter", {
         from: lucky,
-        args: [ethPriceFeedAddress, "TwitterNfts", "TNFT"],
+        args: [ethPriceFeedAddress],
         log: true,
         gasLimit: 6000000,
         waitConfirmations: networkConfig[chainId].blockConfirmations,
@@ -40,7 +40,7 @@ const deployTwitter: DeployFunction = async ({
         "Twitter",
         twitterAddress,
     )
-    console.log(" Nft Symbol :  ", await twitterContract.getNftSymbol())
+    // console.log(" Nft Symbol :  ", await twitterContract.getNftSymbol())
     // FUND ME
     // let amount = "0.03"
 
@@ -56,11 +56,7 @@ const deployTwitter: DeployFunction = async ({
     //         ),
     // )
     if (chainId !== 31337 && process.env.ETHER_SCAN_API) {
-        await verify(twitterAddress, [
-            ethPriceFeedAddress,
-            "TwitterNfts",
-            "TNFT",
-        ])
+        await verify(twitterAddress, [ethPriceFeedAddress])
     }
 }
 

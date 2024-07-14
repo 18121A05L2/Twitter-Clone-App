@@ -40,6 +40,7 @@ const config: HardhatUserConfig = {
         },
         localhost: {
             url: "http://127.0.0.1:8545/",
+            loggingEnabled: true,
             gas: 6000000, // Adjust the gas limit here
             blockGasLimit: 12000000, // Adjust the block gas limit if needed
             chainId: 31337, // same as hardhat node
@@ -52,6 +53,7 @@ const config: HardhatUserConfig = {
             gas: 6000000, // Adjust the gas limit here
             blockGasLimit: 12000000, // Adjust the block gas limit if needed
             chainId: 31337,
+            loggingEnabled: true,
         },
     },
     solidity: {
@@ -87,10 +89,10 @@ const config: HardhatUserConfig = {
     },
     namedAccounts: {
         lucky: {
-            default: 0,
+            default: 0, // 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
         },
         kiran: {
-            default: 1,
+            default: 1,  // 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
         },
     },
     ethernal: {

@@ -8,7 +8,7 @@ describe("running Twitter tests ", async () => {
 
     beforeEach(async () => {
         Twitter = await ethers.getContractFactory("Twitter")
-        twitter = await Twitter.deploy()
+        // twitter = await Twitter.deploy()
     })
 
     // it(" checks the perTweet cost", async () => {

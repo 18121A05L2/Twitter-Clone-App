@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { app } from "./api/index.js";
+import { app } from "../api/index.js";
 export const twitterbackend = async () => {
   // -------------------------------------   Tweets ----------------------------------
   const commentSchema = mongoose.Schema(

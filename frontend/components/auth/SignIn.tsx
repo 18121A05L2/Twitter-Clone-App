@@ -3,6 +3,7 @@ import { ConnectButton } from "web3uikit";
 import { useDispatch, useSelector } from "react-redux";
 import { setWalletAddress } from "../../Redux/features/BlockchainSlice";
 import {
+  freeEthPublicAddress,
   mainnetEtherscanApi,
   sepoliaEtherscanApi,
   sepoliaExplorer,
@@ -19,7 +20,7 @@ import { ConnectWallet } from "../utils/reusable";
 import axiosAPI from "../../axios";
 import { explorerPaths } from "../../utils/constants.json";
 import Moment from "react-moment";
-import { transactionData } from "../../Types/blockchain.types";
+import { etherScanRes } from "../../Types/blockchain.types";
 import { sortArray } from "../../utils/commonFunctions";
 import MetamaskLogo from "../utils/Metamask";
 
@@ -29,7 +30,7 @@ export default function SignIn() {
   const [isFreeEth, setIsFreeEth] = useState(false);
   const [transaction, setTransaction] = useState("");
   const [isFreeEthAlreadySent, setIsFreeEthAlreadySent] =
-    useState<transactionData[]>();
+    useState<etherScanRes[]>();
   const dispatch = useDispatch();
   const router = useRouter();
   const { twitterContract, walletAddress, provider } = useSelector(
@@ -52,22 +53,25 @@ export default function SignIn() {
           name === "sepolia" ? sepoliaEtherscanApi : mainnetEtherscanApi;
         console.log({ chainId, name, etherscanAPi });
         const timeStamp = (currentTimestamp - twentyFourHours) / 1000;
-        const { data } = await axiosAPI.get(etherscanAPi, {
-          params: {
-            module: "account",
-            action: "txlist",
-            tag: "latest",
-            address: walletAddress,
-            startblock: 0,
-            endblock: 99999999,
-            sort: "asc",
-            // TODO : CHECK WHETHER THIS NEEDS TO BE MOVED TO BACKEND
-            apikey: process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
-          },
-        });
+        const { data }: { data: { result: etherScanRes[] } } =
+          await axiosAPI.get(etherscanAPi, {
+            params: {
+              module: "account",
+              action: "txlist",
+              tag: "latest",
+              address: walletAddress,
+              startblock: 0,
+              endblock: 99999999,
+              sort: "asc",
+              // TODO : CHECK WHETHER THIS NEEDS TO BE MOVED TO BACKEND
+              apikey: process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
+            },
+          });
 
-        const filteredData = data.result.filter(
-          (item: { timeStamp: number }) => Number(item.timeStamp) > timeStamp
+        const filteredData = data?.result?.filter(
+          (item) =>
+            Number(item.timeStamp) > timeStamp &&
+            item?.from?.toLowerCase() === freeEthPublicAddress.toLowerCase()
         );
         const sortedData = sortArray(filteredData, "timeStamp", false);
         setIsFreeEthAlreadySent(filteredData);

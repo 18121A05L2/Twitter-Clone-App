@@ -113,6 +113,7 @@ function TweetBox() {
             layout="fill"
             className=" m-2 rounded-full"
             src={profile.avatar || "https://links.papareact.com/gll"}
+            alt="avatar"
           ></Image>
         </div>
       </Link>

@@ -1,16 +1,18 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import type { Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
+// import { SessionProvider } from "next-auth/react";
 import { Provider } from "react-redux";
 import store, { persistor } from "../Redux/app/store";
-import DataProvider from "../context/DataContext";
-import { MoralisProvider } from "react-moralis";
-import { NotificationProvider } from "web3uikit";
+// import DataProvider from "../context/DataContext";
+// import { MoralisProvider } from "react-moralis";
+// import { NotificationProvider } from "web3uikit";
 import { PersistGate } from "redux-persist/integration/react";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // need to learn about this Session type
 function MyApp({
@@ -21,7 +23,7 @@ function MyApp({
 
   // service workers
   useEffect(() => {
-    if ("serviceWorker" in navigator && window) {
+    if (typeof window !== "undefined" && "serviceWorker" in navigator) {
       console.log("serviceWorker in navigator");
       navigator.serviceWorker
         .register("/service-worker.js")
@@ -35,7 +37,7 @@ function MyApp({
           console.error("Service Worker registration failed:", error);
         });
     }
-  }, [navigator]);
+  }, []);
 
   useEffect(() => {
     const handleAccountsChanged = () => {
@@ -81,6 +83,8 @@ function MyApp({
       <PersistGate loading={null} persistor={persistor}>
         <Component {...pageProps} />
         <ToastContainer />
+        <Analytics />
+        <SpeedInsights />
       </PersistGate>
       {/* </NotificationProvider> */}
       {/* </MoralisProvider> */}

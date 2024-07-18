@@ -36,6 +36,6 @@
     "components/Widgets/Widgets.tsx",
     "axios.ts",
     "components/Nfts/MarketPlace"
-  ],
+, "public/service-worker.js"  ],
   "exclude": ["node_modules"]
 }

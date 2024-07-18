@@ -133,6 +133,7 @@ function MessagesPage() {
                 src={
                   receiverProfile?.avatar || "https://links.papareact.com/gll"
                 }
+                alt="avatar"
               ></Image>
             </div>
 

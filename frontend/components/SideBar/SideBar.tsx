@@ -102,6 +102,7 @@ function SideBar() {
                 layout="fill"
                 className=" rounded-full"
                 src={profile.avatar || "https://links.papareact.com/gll"}
+                alt="avatar"
               ></Image>
             )}
           </div>

@@ -13,6 +13,7 @@ function CommentDesign({ data }: { data: commentType }) {
         width={50}
         height={50}
         src={data.avatar}
+        alt="avatar"
       ></Image>
       <div className="w-full">
         <section className=" flex gap-2  ">

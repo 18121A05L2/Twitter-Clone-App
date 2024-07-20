@@ -59,19 +59,30 @@ const config: HardhatUserConfig = {
     solidity: {
         compilers: [
             { version: "0.8.8" },
+            {
+                version: "0.8.23",
+                settings: {
+                    optimizer: {
+                        enabled: true,
+                        runs: 200, // reduces deployment cost and run time cost
+                    },
+                },
+            },
             { version: "0.8.2" },
             { version: "0.8.20" },
-            { version: "0.8.0" },
+            {
+                version: "0.8.0",
+                settings: {
+                    optimizer: {
+                        enabled: true,
+                        runs: 200, // reduces deployment cost and run time cost
+                    },
+                },
+            },
             { version: "0.6.12" },
             { version: "0.6.6" },
             { version: "0.4.19" },
         ],
-        settings: {
-            optimizer: {
-                enabled: true,
-                runs: 200,
-            },
-        },
     },
     etherscan: {
         apiKey: ETHER_SCAN_API,
@@ -92,7 +103,7 @@ const config: HardhatUserConfig = {
             default: 0, // 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
         },
         kiran: {
-            default: 1,  // 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+            default: 1, // 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
         },
     },
     ethernal: {

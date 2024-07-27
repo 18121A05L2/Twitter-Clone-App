@@ -9,6 +9,7 @@ import "solidity-coverage"
 import "hardhat-deploy"
 import "hardhat-ethernal"
 import "hardhat-contract-sizer"
+import "@matterlabs/hardhat-zksync"
 
 task("accounts", "prints the list of the accounts ", async (taskargs, hre) => {
     const accounts = await hre.ethers.getSigners()
@@ -22,6 +23,7 @@ const MAINNET_URL = process.env.MAINNET_URL
 const ETHER_SCAN_API = process.env.ETHER_SCAN_API
 const COINMARKET_CAP_API = process.env.COINMARKET_CAP_API
 const FORKED_MAINNET_URL = process.env.FORKED_MAINNET_URL || ""
+const ZKSYNC_SEPOLIA_URL = process.env.ZKSYNC_SEPOLIA_URL
 
 const config: HardhatUserConfig = {
     defaultNetwork: "hardhat",
@@ -31,12 +33,14 @@ const config: HardhatUserConfig = {
             accounts:
                 PRIVATE_KEY != undefined ? [PRIVATE_KEY, PRIVATE_KEY_2] : [],
             chainId: 11155111,
+            zksync: false,
         },
         mainnet: {
             chainId: 1,
             url: MAINNET_URL,
             accounts:
                 PRIVATE_KEY != undefined ? [PRIVATE_KEY, PRIVATE_KEY_2] : [],
+            zksync: false,
         },
         localhost: {
             url: "http://127.0.0.1:8545/",
@@ -45,6 +49,7 @@ const config: HardhatUserConfig = {
             blockGasLimit: 12000000, // Adjust the block gas limit if needed
             chainId: 31337, // same as hardhat node
             // accounts will be provided by harhat
+            zksync: false,
         },
         hardhat: {
             // forking: {
@@ -54,7 +59,15 @@ const config: HardhatUserConfig = {
             blockGasLimit: 12000000, // Adjust the block gas limit if needed
             chainId: 31337,
             loggingEnabled: true,
+            zksync: false,
         },
+        zksyncSepolia: {
+            url: ZKSYNC_SEPOLIA_URL,
+            // ethNetwork: "sepolia",
+            zksync: true,
+            chainId: 300,
+        },
+        // defaultNetwork: "harhdat",
     },
     solidity: {
         compilers: [
@@ -83,6 +96,10 @@ const config: HardhatUserConfig = {
             { version: "0.6.6" },
             { version: "0.4.19" },
         ],
+    },
+    zksolc: {
+        version: "latest",
+        settings: {},
     },
     etherscan: {
         apiKey: ETHER_SCAN_API,

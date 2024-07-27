@@ -1,41 +1,30 @@
 # Block Chain
 
 —> Elliptic curve digital signature algorithm
-
 —> ETH Classic 51% Attack
 —> sharding , arbitrum , optimism 
 —> we only spend gas when we change the state of the block chain 
 → https://solidity-by-example.org/
 —> https://docs.chain.link/data-feeds/getting-started#examine-the-sample-contract
-—> **new address[](size) - dynamic arrays in Solidity are initialised with default values
-—> Solidity is a synchronous language**
-
 —> Ethers.js and web3.js
 —> Reentrancy attack in smart contracts
 —> Smart contract Attacks 
      1 ) Gas griefing
      2 ) Replay Signature Attack ( introduction of chain id , this was mitigated )
-     3 ) Meata transactions ( chain id wont mitigate the inner transaction that bounded in with the           outer transaction 
+     3 ) Meata transactions ( chain id wont mitigate the inner transaction that bounded in with the outer transaction 
      4 ) MEV ( front running ) 
-
-—> for an external call always has calldata ( which stores parameters )
-—> internal functions can only have references , it wont need callldata or memory
-—> function modifiers can be inefficient ( repetitive code copy )
 
 —> Yearn Finance ( auto bot trading ) 
 —> solidity library ( openzepplin ) 
 —> The base fee can increase a maximum of 12.5 % per block when the block is utilized with more than 50%
 —> consensus can be of two types 1)chain selection and 2) Sybil resistance
-→ sybil attack and 51% attack
+→ sybil attack and 51% attack 
 —> sharding and rollups are scalability solutions
-—> stack is the local variables 
-—> calldata was the temp variable that can’t be modified, memory was the temp variable that can be modified in the function execution  ( structs, mappings, and arrays )
 —> chainlink VRF ( Verifiable Randomness Function ) 
 —> How IPFS runs ( Architecture ) 
 —> How EVM works internally ( what is geth )
 —> the assignment of a value to **`names[0x5B38Da6a701c568545dCfcB03FcB875f56beddC4]`** outside of a function or constructor is not allowed in Solidity
 —> making a get req with the help of the chainlink
-—> we can’t add state variable in libraries
 —> constants and the immutable variables are present in the byte code of the contract itself , those doesn’t take storage slot in the blockchain
 —> EIP : Ethereum Imporvement Proposal
 —> ERC : Ethereum Request for Comments
@@ -48,9 +37,7 @@
 
 —> Libraries do not count towards the 24KB limit of the contract that uses them
 
-—> 
-
-**Contract-to-Contract Call**:
+--Contract-to-Contract Call--
 
 - When one contract (let's call it `CurrentContract`) calls a function on another contract (`ExternalContract`), `msg.sender` in `ExternalContract` will be the address of `CurrentContract`, not the original user who initiated the transaction.
 - Call Data: Read-only

@@ -3,6 +3,7 @@
     "author": "lucky",
     "version": "1.0.0",
     "devDependencies": {
+        "@matterlabs/hardhat-zksync": "^1.1.0",
         "@nomicfoundation/hardhat-toolbox": "^4.0.0",
         "@nomicfoundation/hardhat-verify": "^2.0.5",
         "@nomiclabs/hardhat-ethers": "^2.2.3",

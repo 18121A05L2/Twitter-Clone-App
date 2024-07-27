@@ -1,0 +1,1 @@
+--> need to add , add test net to the wallet networks when user clicks on the connect wallet to connect to metamask 

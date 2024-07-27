@@ -1,0 +1,9 @@
+—> stack is the local variables ( cheapest of all variable type access )
+—> calldata was the temp variable that can't be modified, memory was the temp variable that can be modified in the function execution 
+-> Data location can only be specified for arrays ,structs or mappings ( a string is an array or bytes )
+—> we can't add state variable in libraries
+—> new address[](size) - dynamic arrays in Solidity are initialised with default values ( here zero addresses )
+—> Solidity is a synchronous language
+—> for an external call always has calldata ( which stores parameters )
+—> internal functions can only have references , it wont need callldata or memory
+—> function modifiers can be inefficient ( repetitive code copy )

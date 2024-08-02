@@ -18,5 +18,5 @@
        -> if we have a smart contract function that is deployed to onchain , if we want to try to access the blob data , we cannot access it directly 
          , but we can access the a hash of the data with the new BLOBHASH code
        -> whar are kzg commitments ? - hash of the blob data
-       -> blocks contains Regular transactions and Data transactions ( does everything a regular transaction does ) , Data transaction contains the hash of the bobs too as an extra
+       -> blocks contains Regular transactions and Data transactions ( does everything a regular transaction does ) , Data transaction may contains the hash of the blobs too as an extra than Regular
        -> blobs are breaked into tiny pieces to stored as distrubuted with the help of the bittorrent

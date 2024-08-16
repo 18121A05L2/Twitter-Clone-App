@@ -75,22 +75,24 @@ function MyApp({
   }, []);
 
   return (
-    // <SessionProvider session={session}>
-    <Provider store={store}>
-      {/* <DataProvider> */}
-      {/* <MoralisProvider initializeOnMount={false}> */}
-      {/* <NotificationProvider> */}
-      <PersistGate loading={null} persistor={persistor}>
-        <Component {...pageProps} />
-        <ToastContainer />
-        <Analytics />
-        <SpeedInsights />
-      </PersistGate>
-      {/* </NotificationProvider> */}
-      {/* </MoralisProvider> */}
-      {/* </DataProvider> */}
-    </Provider>
-    // </SessionProvider>
+    <div className=" max-h-screen overflow-hidden bg-[linear-gradient(251.51deg,#F7F9FA_12.74%,#F7F9FA_98.57%)] dark:bg-[linear-gradient(251.51deg,#194547_12.74%,#15202B_98.57%)] ">
+      {/* <SessionProvider session={session}> */}
+      <Provider store={store}>
+        {/* <DataProvider> */}
+        {/* <MoralisProvider initializeOnMount={false}> */}
+        {/* <NotificationProvider> */}
+        <PersistGate loading={null} persistor={persistor}>
+          <Component {...pageProps} />
+          <ToastContainer />
+          <Analytics />
+          <SpeedInsights />
+        </PersistGate>
+        {/* </NotificationProvider> */}
+        {/* </MoralisProvider> */}
+        {/* </DataProvider> */}
+      </Provider>
+      // {/* </SessionProvider> */}
+    </div>
   );
 }
 

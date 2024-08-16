@@ -147,7 +147,7 @@ export default function SignIn() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-10 dark:bg-black dark:text-white">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-10 dark:text-white">
       <DarkMode />
       <div className="flex max-w-xl flex-col items-center gap-5 rounded-[3rem] border p-6 ">
         <a className=" w-[4rem] cursor-pointer " href="/home">

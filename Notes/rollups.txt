@@ -20,3 +20,5 @@
        -> whar are kzg commitments ? - hash of the blob data
        -> blocks contains Regular transactions and Data transactions ( does everything a regular transaction does ) , Data transaction may contains the hash of the blobs too as an extra than Regular
        -> blobs are breaked into tiny pieces to stored as distrubuted with the help of the bittorrent
+
+--> possible scalability solutions  - sharding , roll ups , proto Danksharding , lightening network , Plasma and state channels

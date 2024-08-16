@@ -106,7 +106,7 @@ function All() {
       : router.asPath;
 
   return (
-    <div className=" mx-auto max-h-screen  max-w-7xl overflow-hidden dark:bg-black dark:text-white ">
+    <div className=" mx-auto max-h-screen  max-w-7xl overflow-hidden  dark:text-white ">
       <DarkMode />
       <Head>
         <title>{router?.query?.component && router.query.component[0]}</title>

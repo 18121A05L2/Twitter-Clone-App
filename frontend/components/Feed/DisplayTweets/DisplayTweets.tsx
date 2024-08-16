@@ -16,7 +16,9 @@ function DisplayTweets({
 }) {
   return (
     <Link passHref href={`home/status/${post?.userId}/${post.ipfsHash}`}>
-      <div className="flex border-t-[0.1rem] p-2 hover:bg-gray-100">
+      <div
+        className="flex  p-2 hover:bg-gray-100 bg-[#2AA3EF0A] rounded-2xl "
+      >
         <div className="relative h-[3rem] w-[3.2rem] ">
           <Image
             layout="fill"

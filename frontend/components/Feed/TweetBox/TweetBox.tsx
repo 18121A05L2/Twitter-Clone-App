@@ -62,7 +62,7 @@ function TweetBox() {
     );
     try {
       if (Number(userBalance) <= 0) {
-          toast("you don't have enough TWT", { type: "error" });
+        toast("you don't have enough TWT", { type: "error" });
         router.push("/wallet");
         return;
       }
@@ -95,9 +95,7 @@ function TweetBox() {
   }
 
   return (
-    <div
-      className={`relative m-2 flex ${isLoading && " opacity-30"} dark:bg-black `}
-    >
+    <div className={`relative m-2 flex ${isLoading && " opacity-30"}  `}>
       {isLoading && (
         <div className=" absolute flex h-full w-full">
           <svg
@@ -118,10 +116,10 @@ function TweetBox() {
         </div>
       </Link>
 
-      <div className=" flex flex-1 flex-col   ">
+      <div className=" flex flex-1 flex-col    ">
         <textarea
           id="tweet_input"
-          className="p-3 outline-none dark:bg-black"
+          className="p-3 outline-none dark:bg-black bg-[linear-gradient(251.51deg,#F7F9FA_12.74%,#F7F9FA_98.57%)] dark:bg-[linear-gradient(251.51deg,#194547_12.74%,#15202B_98.57%)] "
           value={input}
           onChange={(e) => setInput(e.target.value)}
           cols={50}

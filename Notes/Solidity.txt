@@ -7,3 +7,9 @@
 —> for an external call always has calldata ( which stores parameters )
 —> internal functions can only have references , it wont need callldata or memory
 —> function modifiers can be inefficient ( repetitive code copy )
+-> safemath and libraries , what are checked and unchecked
+-> in Solidity in order to send native blockchain tokens like etherem , you can only work with payable address to do that 
+-> enums , events , try catch , function selectors , abi encode and decode , hashing and assembly
+-> what does it mean by data is empy with respective to receive and fallback
+-> bash scription ( basic knowledge)
+

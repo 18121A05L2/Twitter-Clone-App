@@ -119,7 +119,7 @@ function TweetBox() {
         <div className=" flex flex-1 flex-col   ">
           <textarea
             id="tweet_input"
-            className="p-3 outline-none dark:bg-[#2AA3EF0A] resize-none no-scrollbar bg-[linear-gradient(251.51deg,#F7F9FA_12.74%,#F7F9FA_98.57%)]   "
+            className="p-3 outline-none resize-none no-scrollbar bg-[#2AA3EF0A]  "
             value={input}
             onChange={(e) => setInput(e.target.value)}
             cols={50}

@@ -113,7 +113,7 @@ function All() {
       </Head>
       <main className="grid grid-cols-9 ">
         <SideBar />
-        <div className=" col-span-7 max-h-screen  border-x-[0.1rem] p-2 lg:col-span-5 dark:border-slate-500  ">
+        <div className=" col-span-7 max-h-screen overflow-scroll no-scrollbar scroll-smooth  border-x-[0.1rem] p-2 lg:col-span-5 dark:border-slate-500  ">
           {" "}
           {switchComponent(componentName)}
         </div>

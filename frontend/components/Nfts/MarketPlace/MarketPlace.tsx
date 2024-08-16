@@ -43,18 +43,28 @@ function MarketPlace() {
 
   useEffect(() => {
     (async () => {
-      const listedNfts: listedNftType[] = (await nftContract
-        ?.queryFilter("NFTListed", 0, "latest")
-        .then((events) => {
-          const listedNfts = events
-            .map((event: any) => {
-              const [tokenId, sender, price] = event.args;
-              return { nftId: Number(tokenId), sender, price: Number(price) };
-            })
-            .filter(async (nft) => await nftContract?.ownerOf(nft.nftId));
-          // console.log({ listedNfts });
-          return listedNfts;
-        })) as listedNftType[];
+      const listedNfts: listedNftType[] = (
+        await nftContract?.getAllListedNfts()
+      )
+        .map((nft : any, i : number) => ({
+          nftId: i,
+          sender: nft[0],
+          price: Number(nft[1]),
+        }))
+        .filter((nft : any) => nft[0] !== zeroAddress);
+
+      // const listedNfts: listedNftType[] = (await nftContract
+      //   ?.queryFilter("NFTListed", 0, "latest")
+      //   .then((events) => {
+      //     const listedNfts = events
+      //       .map((event: any) => {
+      //         const [tokenId, sender, price] = event.args;
+      //         return { nftId: Number(tokenId), sender, price: Number(price) };
+      //       })
+      //       .filter(async (nft) => await nftContract?.ownerOf(nft.nftId));
+      //     // console.log({ listedNfts });
+      //     return listedNfts;
+      //   })) as listedNftType[];
       const filterPromises: Promise<listedNftType>[] = listedNfts?.map(
         async (listedNft) => {
           const listedNftStruct = await nftContract?.getListedNFT(

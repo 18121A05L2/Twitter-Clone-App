@@ -17,7 +17,7 @@ function DisplayTweets({
   return (
     <Link passHref href={`home/status/${post?.userId}/${post.ipfsHash}`}>
       <div
-        className="flex  p-2 hover:bg-gray-100 bg-[#2AA3EF0A] rounded-2xl "
+        className="flex  p-2 bg-[#2AA3EF0A] rounded-2xl hover:scale-[1.01]  "
       >
         <div className="relative h-[3rem] w-[3.2rem] ">
           <Image
@@ -28,7 +28,7 @@ function DisplayTweets({
           ></Image>
         </div>
 
-        <div className="w-full px-2 ">
+        <div className="w-full px-4 ">
           {/* Top  */}
           <section className="flex  items-center ">
             <p className=" text-sm text-gray-400">
@@ -37,7 +37,7 @@ function DisplayTweets({
             </p>
             <BiDotsHorizontalRounded className="ml-auto h-[1.2rem] w-[1.2rem]" />
           </section>
-          <section className="p-4">{post?.userInput}</section>
+          <section className="pb-4 pt-1">{post?.userInput}</section>
           {/* icons */}
           <Actions post={post} />
         </div>

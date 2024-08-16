@@ -47,11 +47,11 @@ function Feed({ profileExists }: { profileExists: string }) {
   }, [tweetAdded, dataChanged]);
 
   return (
-    <div className="  col-span-7  max-h-screen overflow-scroll flex flex-col gap-4 no-scrollbar lg:col-span-5 dark:border-slate-500 ">
-      <div className="flex justify-between p-2 ">
+    <div className="  col-span-7  max-h-screen overflow-scroll flex flex-col gap-3 no-scrollbar lg:col-span-5 dark:border-slate-500 ">
+      {/* <div className="flex justify-between p-2 ">
         <h2>Home</h2>
         <HiOutlineRefresh /> 
-      </div>
+      </div> */}
       <TweetBox />
       {profileExists &&
         allPosts?.map((post) => {

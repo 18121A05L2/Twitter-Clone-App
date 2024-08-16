@@ -95,7 +95,7 @@ function TweetBox() {
   }
 
   return (
-    <div className={`relative m-2 flex ${isLoading && " opacity-30"}  `}>
+    <div className={`relative my-2 flex ${isLoading && " opacity-30"}  `}>
       {isLoading && (
         <div className=" absolute flex h-full w-full">
           <svg
@@ -105,52 +105,53 @@ function TweetBox() {
         </div>
       )}
 
-      <Link passHref href={"/profile"}>
-        <div className="relative h-[2.5rem] w-[2.5rem] ">
+      <div className=" flex flex-row w-[-webkit-fill-available] ">
+        <Link passHref href={"/profile"}>
           <Image
-            layout="fill"
-            className=" m-2 rounded-full"
+            className=" ml-2 mr-4 rounded-full  "
             src={profile.avatar || "https://links.papareact.com/gll"}
             alt="avatar"
+            height={48}
+            width={48}
           ></Image>
-        </div>
-      </Link>
+        </Link>
 
-      <div className=" flex flex-1 flex-col    ">
-        <textarea
-          id="tweet_input"
-          className="p-3 outline-none dark:bg-black bg-[linear-gradient(251.51deg,#F7F9FA_12.74%,#F7F9FA_98.57%)] dark:bg-[linear-gradient(251.51deg,#194547_12.74%,#15202B_98.57%)] "
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          cols={50}
-          rows={tweetBoxModalState ? 7 : 3}
-          placeholder={
-            `what's happening ` + profile.userId?.split(" ")[0] + " ?"
-          }
-        ></textarea>
-        <div
-          className={`mt-auto flex justify-between ${
-            tweetBoxModalState && " border-t-2 "
-          }`}
-        >
-          {/* Icons */}
-          <Icons />
-          <section className="flex items-center">
-            {input && (
-              <p className={` ${input.length > 256 && " text-red-500 "}   `}>
-                {256 - input?.length}
-              </p>
-            )}
+        <div className=" flex flex-1 flex-col   ">
+          <textarea
+            id="tweet_input"
+            className="p-3 outline-none dark:bg-[#2AA3EF0A] resize-none no-scrollbar bg-[linear-gradient(251.51deg,#F7F9FA_12.74%,#F7F9FA_98.57%)]   "
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            cols={50}
+            rows={tweetBoxModalState ? 7 : 3}
+            placeholder={
+              `what's happening ` + profile.userId?.split(" ")[0] + " ?"
+            }
+          ></textarea>
+          <div
+            className={`mt-auto flex justify-between ${
+              tweetBoxModalState && " border-t-2 "
+            }`}
+          >
+            {/* Icons */}
+            <Icons />
+            <section className="flex items-center">
+              {input && (
+                <p className={` ${input.length > 256 && " text-red-500 "}   `}>
+                  {256 - input?.length}
+                </p>
+              )}
 
-            <button
-              id="tweet_btn"
-              className="m-2 rounded-full bg-twitter p-1 px-3 font-bold text-white disabled:opacity-60"
-              disabled={!input || input.length > 256}
-              onClick={addTweetToIpfs}
-            >
-              Tweet
-            </button>
-          </section>
+              <button
+                id="tweet_btn"
+                className="m-2 rounded-full bg-twitter p-1 px-3 font-bold text-white disabled:opacity-60"
+                disabled={!input || input.length > 256}
+                onClick={addTweetToIpfs}
+              >
+                Tweet
+              </button>
+            </section>
+          </div>
         </div>
       </div>
     </div>

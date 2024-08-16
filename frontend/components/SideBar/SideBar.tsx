@@ -84,7 +84,7 @@ function SideBar() {
         </div>
         <div
           onClick={connectWallet}
-          className=" tweetButton mt-5 bg-green-500 "
+          className=" tweetButton mt-5 bg-sky-500 "
         >
           {walletAddress
             ? walletAddress.slice(0, 7) +

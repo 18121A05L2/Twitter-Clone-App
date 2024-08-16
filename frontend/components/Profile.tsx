@@ -60,7 +60,7 @@ function Profile() {
           className="cursor-pointer rounded-full p-1 text-[2.3rem] hover:bg-gray-300"
         />
 
-        <section>
+        <section className="flex flex-col justify-center">
           <p>{profile?.bio}</p>
           <p>{profilePosts?.length} Tweets</p>
         </section>
@@ -144,7 +144,7 @@ function Profile() {
           </div>
         </div>
       </div>
-      <div className=" border-b-[0.1rem]">
+      <div className=" flex flex-col gap-3">
         <div className="p-2">Tweets</div>
         {profilePosts ? (
           profilePosts.map((post: postType, i) => (

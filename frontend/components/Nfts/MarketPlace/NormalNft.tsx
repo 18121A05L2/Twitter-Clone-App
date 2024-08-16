@@ -19,6 +19,7 @@ function NormalNft({
 }) {
   // console.log({ nft, listedNfts });
   const [isListing, setIslisting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [owner, setOwner] = useState<string>();
   const [listingPrice, setListingPrice] = useState<string>();
   const [isAlreadyListed, setIsAlreadyListed] = useState(false);
@@ -44,6 +45,7 @@ function NormalNft({
   }, [nft.nftId]);
 
   async function handleListing() {
+    setIsLoading(true);
     if (!listingPrice) {
       toast("Please enter listing price", { type: "error" });
       return;
@@ -51,25 +53,27 @@ function NormalNft({
     setIslisting(true);
     // console.log(nft.nftId, ethers.parseUnits(listingPrice, tokenDecimals));
     try {
-      (
+      await (
         await nftContract?.listNFT(
           nft.nftId,
           ethers.parseUnits(listingPrice, tokenDecimals)
         )
       ).wait();
-      handleListedNftsChanged()
+      toast("Nft listed successfully", { type: "success" });
+      handleListedNftsChanged();
     } catch (error: any) {
       console.error(error);
       toast.error(error.shortMessage, { type: "error" });
     } finally {
       setIslisting(false);
     }
+    setIsLoading(false);
   }
 
   return (
     // <Link passHref href={`/nft`}>
     <div
-      className=" flex cursor-pointer flex-col  items-center rounded-lg  border-slate-400 py-4 gap-3 "
+      className={` flex cursor-pointer flex-col  items-center rounded-lg  border-slate-400 py-4 gap-3 ${isLoading ? " animate-pulse " : ""} `}
       // onClick={() => nftOnclick(nft)}
     >
       <img className=" h-40 w-40 rounded " src={nft.avatar} />

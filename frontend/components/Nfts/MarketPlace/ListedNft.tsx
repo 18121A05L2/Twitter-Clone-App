@@ -17,6 +17,7 @@ function ListedNft({
   // console.log({ listedNft });
   const [nftInfo, setNftInfo] = useState<nftPostType>();
   const [ownerOfNft, setOwnerOfNft] = useState<string>();
+  const [isLoading, setIsLoading] = useState(false);
   const { price, sender, nftId } = listedNft;
   const listedPrice = ethers.formatUnits(listedNft.price, tokenDecimals);
   const router = useRouter();
@@ -36,6 +37,7 @@ function ListedNft({
   }, [listedNft]);
 
   async function handleBuy() {
+    setIsLoading(true);
     if (sender.toLowerCase() == walletAddress.toLowerCase()) {
       toast("you can't buy your own nft", { type: "error" });
       return;
@@ -52,27 +54,36 @@ function ListedNft({
       return;
     }
     try {
-      (await nftContract?.buyNFT(nftId, price)).wait();
+      await (await nftContract?.buyNFT(nftId, price)).wait();
+      toast("Nft bought successfully for " + listedPrice + " TWT", {
+        type: "success",
+      });
       handleListedNftsChanged();
     } catch (error: any) {
       console.log({ error });
       toast(error.shortMessage, { type: "error" });
     }
+    setIsLoading(false);
   }
 
   async function handleCancel() {
+    setIsLoading(true);
     try {
-      (await nftContract?.cancelNFT(nftId)).wait();
+      await (await nftContract?.cancelNFT(nftId)).wait();
+      toast("Nft canceled successfully", { type: "success" });
       handleListedNftsChanged();
     } catch (err: any) {
       toast(err.shortMessage, { type: "error" });
     }
+    setIsLoading(false);
   }
 
   return (
-    <div className=" flex cursor-pointer flex-col  items-center rounded-lg  border-slate-400 py-4 gap-3 ">
+    <div
+      className={` flex cursor-pointer flex-col  items-center rounded-lg  border-slate-400 py-4 gap-3 ${isLoading ? " animate-pulse " : ""} `}
+    >
       <img className=" h-40 w-40 rounded " src={nftInfo?.avatar} />
-      <p className="">
+      <p className=" text-center">
         <a href="">{`#${nftInfo?.nftId}`}</a>
         {` - `} {nftInfo?.nftName}
       </p>

@@ -13,7 +13,7 @@ self.addEventListener("install", (e) => {
     caches
       .open(cacheName)
       .then((cache) => {
-        console.log("Service Worker: Caching Files");
+        // console.log("Service Worker: Caching Files");
         return cache.addAll(cacheAssets);
       })
       .then(() => self.skipWaiting())
@@ -52,7 +52,7 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        console.log("Serving from cache:", event.request.url);
+        // console.log("Serving from cache:", event.request.url);
         return cachedResponse;
       }
       return fetch(event.request)
@@ -62,7 +62,7 @@ self.addEventListener("fetch", (event) => {
             console.log("Partial response not cached:", event.request.url);
             return response;
           }
-          console.log("Fetching from network and caching:", event.request.url);
+          // console.log("Fetching from network and caching:", event.request.url);
           return caches.open(cacheName).then((cache) => {
             cache.put(event.request, response.clone());
             return response;

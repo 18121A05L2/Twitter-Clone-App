@@ -27,6 +27,10 @@ const networkConfig = {
         blockConfirmations: 0,
         wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", // mainnet weth address , using it here with the help of forked mainnet
     },
+    300: {
+        name: "zksyncSepolia",
+        blockConfirmations,
+    }
 }
 
 const DECIMALS = 8

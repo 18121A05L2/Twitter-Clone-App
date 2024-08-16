@@ -23,6 +23,7 @@ import Moment from "react-moment";
 import { etherScanRes } from "../../Types/blockchain.types";
 import { sortArray } from "../../utils/commonFunctions";
 import MetamaskLogo from "../utils/Metamask";
+import ThreeDotsLoading from "../utils/threeDotsLoading";
 
 export default function SignIn() {
   useContracts();
@@ -31,6 +32,7 @@ export default function SignIn() {
   const [transaction, setTransaction] = useState("");
   const [isFreeEthAlreadySent, setIsFreeEthAlreadySent] =
     useState<etherScanRes[]>();
+  const [isEtherScanLoading, setIsEtherScanLoading] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
   const { twitterContract, walletAddress, provider } = useSelector(
@@ -53,6 +55,7 @@ export default function SignIn() {
           name === "sepolia" ? sepoliaEtherscanApi : mainnetEtherscanApi;
         console.log({ chainId, name, etherscanAPi });
         const timeStamp = (currentTimestamp - twentyFourHours) / 1000;
+        setIsEtherScanLoading(true);
         const { data }: { data: { result: etherScanRes[] } } =
           await axiosAPI.get(etherscanAPi, {
             params: {
@@ -68,6 +71,7 @@ export default function SignIn() {
             },
           });
 
+        setIsEtherScanLoading(false);
         const filteredData = data?.result?.filter(
           (item) =>
             Number(item.timeStamp) > timeStamp &&
@@ -147,7 +151,7 @@ export default function SignIn() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-10 dark:bg-black dark:text-white">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-10 dark:text-white">
       <DarkMode />
       <div className="flex max-w-xl flex-col items-center gap-5 rounded-[3rem] border p-6 ">
         <a className=" w-[4rem] cursor-pointer " href="/home">
@@ -190,7 +194,7 @@ export default function SignIn() {
       )}
 
       <div
-        className=" min-w-16 cursor-pointer rounded-full bg-orange-200 p-3 px-5 dark:bg-green-400 "
+        className=" min-w-16 cursor-pointer rounded-full bg-orange-200 p-3 px-5 dark:bg-orange-400 "
         onClick={getEthWithGas}
       >
         {isEthWithGas ? (
@@ -200,28 +204,32 @@ export default function SignIn() {
         )}
       </div>
 
-      <div
-        className={` min-w-16 cursor-pointer rounded-full bg-orange-200 p-3 px-5 dark:bg-green-400  ${Boolean(isFreeEthAlreadySent?.length) && " bg-slate-200 cursor-none "} `}
-        onClick={getFreeEth}
-      >
-        {isFreeEth ? (
-          <Spinner />
-        ) : Boolean(isFreeEthAlreadySent?.length) && isFreeEthAlreadySent ? (
-          <>
-            Already sent free eth{" "}
-            <Moment fromNow>
-              {Number(isFreeEthAlreadySent[0]?.timeStamp) * 1000}
-            </Moment>
-            {", "}
-            Redeem again{" "}
-            <Moment toNow subtract={{ hours: 24 }}>
-              {Number(isFreeEthAlreadySent[0]?.timeStamp) * 1000}
-            </Moment>
-          </>
-        ) : (
-          "Get free eth without any gas cost "
-        )}
-      </div>
+      {!isEtherScanLoading ? (
+        <div
+          className={` min-w-16 rounded-full  p-3 px-5  ${Boolean(isFreeEthAlreadySent?.length) ? " bg-slate-200 cursor-not-allowed dark:bg-slate-600 " : " bg-orange-200 dark:bg-orange-400 cursor-pointer "} `}
+          onClick={getFreeEth}
+        >
+          {isFreeEth ? (
+            <Spinner />
+          ) : Boolean(isFreeEthAlreadySent?.length) && isFreeEthAlreadySent ? (
+            <>
+              Already sent free eth{" "}
+              <Moment fromNow>
+                {Number(isFreeEthAlreadySent[0]?.timeStamp) * 1000}
+              </Moment>
+              {", "}
+              Redeem again{" "}
+              <Moment toNow subtract={{ hours: 24 }}>
+                {Number(isFreeEthAlreadySent[0]?.timeStamp) * 1000}
+              </Moment>
+            </>
+          ) : (
+            "Get free eth without any gas cost "
+          )}
+        </div>
+      ) : (
+        <ThreeDotsLoading />
+      )}
       {transaction ? (
         <p>
           <a className=" underline" href={transaction} target="_blank">

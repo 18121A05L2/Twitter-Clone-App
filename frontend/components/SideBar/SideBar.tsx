@@ -1,24 +1,31 @@
 import React from "react";
 import { IoNotificationsOutline, IoSearch } from "react-icons/io5";
-import { AiOutlineHome } from "react-icons/ai";
+// import { AiOutlineHome } from "react-icons/ai";
+import { TiHome } from "react-icons/ti";
 import { BiHash } from "react-icons/bi";
-import { FiMail } from "react-icons/fi";
+// import { FiMail } from "react-icons/fi";
+import { AiFillMessage } from "react-icons/ai";
 import { BsBookmark, BsCardList } from "react-icons/bs";
-import { HiOutlineUser } from "react-icons/hi";
+// import { HiOutlineUser } from "react-icons/hi";
+// import { BsPersonCircle } from "react-icons/bs";
+import { BsFillPersonFill } from "react-icons/bs";
 import { CgMoreO } from "react-icons/cg";
-import { CiWallet } from "react-icons/ci";
+// import { CiWallet } from "react-icons/ci";
+import { IoWallet } from "react-icons/io5";
 import SideBarItem from "./SideBarItem";
 import Link from "next/link";
 import { tweetBoxModal } from "../../Redux/features/GlobalSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import { FaDonate } from "react-icons/fa";
-import { FcSafe } from "react-icons/fc";
+// import { FcSafe } from "react-icons/fc";
+import { RiNftFill } from "react-icons/ri";
 import { RootState } from "../../Redux/app/store";
 import { setWalletAddress } from "../../Redux/features/BlockchainSlice";
 import { NewTwitterLogo } from "../utils/svgs";
 import { useRouter } from "next/router";
-import { MdOutlineSell } from "react-icons/md";
+import { MdSell } from "react-icons/md";
+// import { MdOutlineSell } from "react-icons/md";
 import { delay } from "../../utils/reusable";
 
 function SideBar() {
@@ -51,30 +58,33 @@ function SideBar() {
           <div className="relative ml-4 h-[3rem] w-[3rem] rounded-full p-[0.3rem] cursor-pointer  ">
             <NewTwitterLogo isDarkMode={isDarkMode} />
           </div>
+          {/* <h1 className=" items-center mx-auto ">
+            Twit<span className="text-[#4FD8E0]">Gram.</span>
+          </h1> */}
         </Link>
 
-        <SideBarItem Icon={AiOutlineHome} text="Home" />
+        <SideBarItem Icon={TiHome} text="Home" />
         {/* <SideBarItem Icon={IoSearch} text="Search" /> */}
         {/* <SideBarItem Icon={BiHash} text="Explore" /> */}
         {/* <SideBarItem Icon={IoNotificationsOutline} text="Notifications" /> */}
-        <SideBarItem Icon={FiMail} text="Messages" />
+        <SideBarItem Icon={AiFillMessage} text="Messages" />
         {/* <SideBarItem Icon={BsBookmark} text="Bookmarks" /> */}
         {/* <SideBarItem Icon={BsCardList} text="Lists" /> */}
-        <SideBarItem Icon={HiOutlineUser} text="Profile" />
+        <SideBarItem Icon={BsFillPersonFill} text="Profile" />
         {/* <SideBarItem Icon={CgMoreO} text="More" /> */}
         <SideBarItem Icon={FaDonate} text="FundMe" />
-        <SideBarItem Icon={CiWallet} text="Wallet" />
-        <SideBarItem Icon={FcSafe} text="NFTProfile" />
-        <SideBarItem Icon={MdOutlineSell} text="Marketplace" />
+        <SideBarItem Icon={IoWallet} text="Wallet" />
+        <SideBarItem Icon={RiNftFill} text="NFTProfile" />
+        <SideBarItem Icon={MdSell} text="Marketplace" />
         <div
           onClick={() => dispatch(tweetBoxModal())}
-          className=" tweetButton mt-5 "
+          className=" tweetButton mt-5 bg-[#4FD8E0] "
         >
           Tweet
         </div>
         <div
           onClick={connectWallet}
-          className=" tweetButton mt-5 bg-green-500 "
+          className=" tweetButton mt-5 bg-sky-500 "
         >
           {walletAddress
             ? walletAddress.slice(0, 7) +

@@ -5,6 +5,7 @@ import { contractAddresses } from "../utils/exportJsons";
 import { useSelector } from "react-redux";
 import { RootState } from "../Redux/app/store";
 import { toast } from "react-toastify";
+import { Spinner } from "./utils/svgs";
 
 type DataType = {
   contractBalance: number;
@@ -32,6 +33,7 @@ function FundMe() {
     connectedAccounts: [],
     contractAddress: "",
   });
+  const [isFundLoading, setIsFundLoading] = useState(false);
   let { contractBalance, contractOwner, connectedAccounts, contractAddress } =
     data;
 
@@ -68,6 +70,7 @@ function FundMe() {
   }, [update, twitterContract]);
 
   async function Fund() {
+    setIsFundLoading(true);
     try {
       console.log(typeof fundAmt);
       let finalAmount = Number(fundAmt) / 3500;
@@ -83,6 +86,7 @@ function FundMe() {
       toast(err.shortMessage, { type: "error" });
     }
     setUpdate(update + 1);
+    setIsFundLoading(false);
   }
   async function Withdraw() {
     const transactionResponse = await twitterContract?.withdraw();
@@ -101,16 +105,16 @@ function FundMe() {
       <div className="flex gap-3  align-middle">
         <input
           type="text"
-          className=" rounded-md border-2 p-1 outline-none "
+          className=" rounded-md border-2 p-1 outline-none text-black "
           placeholder="enter USD  "
           onChange={(e) => setFundAmt(e.target.value)}
           value={fundAmt}
         ></input>
         <div
           onClick={Fund}
-          className=" cursor-default rounded-lg bg-blue-500 p-1 px-4 font-bold "
+          className={` cursor-default rounded-lg bg-blue-500 p-1 px-4 font-bold ${isFundLoading ? "" : " cursor-pointer"} `}
         >
-          Fund
+          {isFundLoading ? <Spinner /> : "Fund"}
         </div>
         <div
           onClick={Withdraw}

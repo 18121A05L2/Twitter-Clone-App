@@ -1,0 +1,8 @@
+-> multisig wallets , counterfactual accounts , gnoysis safe , tornado cash ( exclusion list in proof of innocence )
+-> privacy for the weak and transperancy for the powerful
+-> Peer scoring algorithms
+-> Pos is not just a block driven but also a time driven network
+-> Beacon nodes ( consensus ) database was 50-Gb and the execution client has between 500-700 GB
+-> We need to run separate consensus and execution clients, which has their own p2p nodes and data will come through consensus to execution through Engine API
+-> Putting ur wallet ( private key ) inside the execution client for those key management APIs was dumb
+-> What are archive nodes

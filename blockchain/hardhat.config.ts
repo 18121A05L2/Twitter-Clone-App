@@ -9,6 +9,7 @@ import "solidity-coverage"
 import "hardhat-deploy"
 import "hardhat-ethernal"
 import "hardhat-contract-sizer"
+import "@matterlabs/hardhat-zksync"
 
 task("accounts", "prints the list of the accounts ", async (taskargs, hre) => {
     const accounts = await hre.ethers.getSigners()
@@ -22,6 +23,7 @@ const MAINNET_URL = process.env.MAINNET_URL
 const ETHER_SCAN_API = process.env.ETHER_SCAN_API
 const COINMARKET_CAP_API = process.env.COINMARKET_CAP_API
 const FORKED_MAINNET_URL = process.env.FORKED_MAINNET_URL || ""
+const ZKSYNC_SEPOLIA_URL = process.env.ZKSYNC_SEPOLIA_URL
 
 const config: HardhatUserConfig = {
     defaultNetwork: "hardhat",
@@ -31,12 +33,14 @@ const config: HardhatUserConfig = {
             accounts:
                 PRIVATE_KEY != undefined ? [PRIVATE_KEY, PRIVATE_KEY_2] : [],
             chainId: 11155111,
+            zksync: false,
         },
         mainnet: {
             chainId: 1,
             url: MAINNET_URL,
             accounts:
                 PRIVATE_KEY != undefined ? [PRIVATE_KEY, PRIVATE_KEY_2] : [],
+            zksync: false,
         },
         localhost: {
             url: "http://127.0.0.1:8545/",
@@ -45,6 +49,7 @@ const config: HardhatUserConfig = {
             blockGasLimit: 12000000, // Adjust the block gas limit if needed
             chainId: 31337, // same as hardhat node
             // accounts will be provided by harhat
+            zksync: false,
         },
         hardhat: {
             // forking: {
@@ -54,24 +59,47 @@ const config: HardhatUserConfig = {
             blockGasLimit: 12000000, // Adjust the block gas limit if needed
             chainId: 31337,
             loggingEnabled: true,
+            zksync: false,
         },
+        zksyncSepolia: {
+            url: ZKSYNC_SEPOLIA_URL,
+            // ethNetwork: "sepolia",
+            zksync: true,
+            chainId: 300,
+        },
+        // defaultNetwork: "harhdat",
     },
     solidity: {
         compilers: [
             { version: "0.8.8" },
+            {
+                version: "0.8.23",
+                settings: {
+                    optimizer: {
+                        enabled: true,
+                        runs: 200, // reduces deployment cost and run time cost
+                    },
+                },
+            },
             { version: "0.8.2" },
             { version: "0.8.20" },
-            { version: "0.8.0" },
+            {
+                version: "0.8.0",
+                settings: {
+                    optimizer: {
+                        enabled: true,
+                        runs: 200, // reduces deployment cost and run time cost
+                    },
+                },
+            },
             { version: "0.6.12" },
             { version: "0.6.6" },
             { version: "0.4.19" },
         ],
-        settings: {
-            optimizer: {
-                enabled: true,
-                runs: 200,
-            },
-        },
+    },
+    zksolc: {
+        version: "latest",
+        settings: {},
     },
     etherscan: {
         apiKey: ETHER_SCAN_API,
@@ -92,7 +120,7 @@ const config: HardhatUserConfig = {
             default: 0, // 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
         },
         kiran: {
-            default: 1,  // 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+            default: 1, // 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
         },
     },
     ethernal: {

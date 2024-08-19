@@ -44,6 +44,7 @@ function ViewProfile({
             layout="fill"
             className="rounded-full "
             src={profile?.avatar}
+            alt="avatar"
           ></Image>
         </div>
 

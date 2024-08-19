@@ -14,7 +14,7 @@ function Message({ msg, scrollRef, address }: propsType) {
     <div
       ref={scrollRef}
       className={`  ${
-        blue ? " ml-auto bg-twitter " : "mr-auto bg-gray-100 "
+        blue ? " ml-auto bg-twitter " : "mr-auto bg-gray-100 dark:bg-gray-400 "
       }  m-1 rounded-full px-3  `}
     >
       {msg.msg}

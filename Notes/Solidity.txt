@@ -1,0 +1,15 @@
+—> stack is the local variable ( cheapest of all variables )
+—> calldata was the temp variable that can't be modified, memory was the temp variable that can be modified in the function execution 
+-> Data location can only be specified for arrays ,structs or mappings ( a string is an array or bytes )
+—> we can't add state variable in libraries
+—> new address[](size) - dynamic arrays in Solidity are initialised with default values ( here zero addresses )
+—> Solidity is a synchronous language
+—> for an external call always has calldata ( which stores parameters )
+—> internal functions can only have references , it wont need callldata or memory
+—> function modifiers can be inefficient ( repetitive code copy )
+-> safemath and libraries , what are checked and unchecked
+-> in Solidity in order to send native blockchain tokens like etherem , you can only work with payable address to do that 
+-> enums , events , try catch , function selectors , abi encode and decode , hashing and assembly
+-> what does it mean by data is empy with respective to receive and fallback
+-> bash scription ( basic knowledge)
+

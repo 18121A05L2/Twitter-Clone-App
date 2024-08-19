@@ -146,6 +146,7 @@ function NftProfile() {
   };
 
   const switchProfile = async (event: any, nft: nftPostType) => {
+    event.preventDefault();
     event.stopPropagation();
     dispatch(setIsSettingProfile(true));
     try {

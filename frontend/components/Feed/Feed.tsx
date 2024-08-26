@@ -39,8 +39,8 @@ function Feed({ profileExists }: { profileExists: string }) {
       )
         .then((results) => {
           console.log("All data fetched successfully:");
-          let temArr: postType[] = results
-            .filter((item) => item !== null)
+          const temArr: postType[] = results
+            .filter((item): item is postType => item !== null)
             .reverse();
           setAllPosts(temArr);
         })

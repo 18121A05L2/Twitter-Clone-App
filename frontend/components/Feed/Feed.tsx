@@ -27,17 +27,21 @@ function Feed({ profileExists }: { profileExists: string }) {
         );
 
       Promise.all(
-        (await tweetUrls?.map(async (tokenUri: string): Promise<postType> => {
-          const metadata = (await fetch(tokenUri).then((res) =>
-            res.json()
-          )) as postType;
+        tweetUrls?.map(async (tokenUri: string): Promise<postType | null> => {
+          const metadata = (await fetch(tokenUri).then((res) => {
+            if (res.status !== 200) return null;
+            return res.json();
+          })) as postType | null;
           let a = tokenUri.split("/");
+          if (!metadata) return null;
           return { ...metadata, ipfsHash: a[a.length - 1] };
-        })) as Promise<postType>[]
+        }) as Promise<postType | null>[]
       )
         .then((results) => {
           console.log("All data fetched successfully:");
-          let temArr = results.reverse();
+          let temArr: postType[] = results
+            .filter((item) => item !== null)
+            .reverse();
           setAllPosts(temArr);
         })
         .catch((error) => {

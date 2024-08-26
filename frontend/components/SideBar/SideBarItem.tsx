@@ -12,7 +12,6 @@ type PropsType = {
 function SideBarItem({ Icon, text }: PropsType) {
   const router = useRouter();
   const isPageActive = router.asPath?.split("/")[1] === text.toLowerCase();
-  console.log(isPageActive, router.asPath);
   return (
     <Link href={`/${text.toLowerCase()}`} passHref>
       <div className="flex ">

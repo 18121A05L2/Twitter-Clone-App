@@ -16,17 +16,17 @@ function DisplayTweets({
 }) {
   return (
     <Link passHref href={`home/status/${post?.userId}/${post.ipfsHash}`}>
-      <div
-        className="flex  p-2 bg-[#2AA3EF0A] rounded-2xl hover:scale-[1.01]  "
-      >
-        <div className="relative h-[3rem] w-[3.2rem] ">
-          <Image
-            layout="fill"
-            className=" rounded-full "
-            src={post.avatar || "https://links.papareact.com/gll"}
-            alt="poat"
-          ></Image>
-        </div>
+      <div className="flex  p-2 bg-[#2AA3EF0A] rounded-2xl hover:scale-[1.01] transition-all ease-in-out  ">
+        <Link passHref href={`profile/${post.address}`}>
+          <div className="relative h-[3rem] w-[3.2rem] ">
+            <Image
+              layout="fill"
+              className=" rounded-full "
+              src={post.avatar || "https://links.papareact.com/gll"}
+              alt="poat"
+            ></Image>
+          </div>
+        </Link>
 
         <div className="w-full px-4 ">
           {/* Top  */}

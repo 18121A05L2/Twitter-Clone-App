@@ -19,21 +19,24 @@ function MessageSearch({ profiles }: { profiles: nftPostType[] }) {
   return (
     <div className=" col-span-2 m-2 flex flex-col gap-2  ">
       <h1 className="text-[1.4rem] font-bold ">Messages</h1>
-      <div className=" flex items-center justify-center gap-2 rounded-full border-2 p-2 text-gray-400 ">
+      <div className=" flex items-center gap-2 rounded-full border-2 p-2 text-gray-400 ">
         <AiOutlineSearch />
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-[10rem] text-[0.8rem] outline-none dark:bg-black "
+          className="w-[15rem] text-[0.8rem] outline-none dark:bg-[linear-gradient(251.51deg,#194547_12.74%,#194547_98.57%)]  "
           placeholder="Search Profile To Message"
         ></input>
       </div>
-      <div className="flex flex-col gap-2 bg-gray-50 dark:bg-black ">
+      <div className="flex flex-col gap-2 bg-gray-100 dark:bg-[#BDE8CA]/70 rounded-md ">
         {profiles
           ?.filter(
             (profile) =>
-              (search ? profile?.address?.includes(search.toLowerCase()) : true) &&
-              profile?.address?.toLowerCase() != sessionUserAddress.toLowerCase()
+              (search
+                ? profile?.address?.includes(search.toLowerCase())
+                : true) &&
+              profile?.address?.toLowerCase() !=
+                sessionUserAddress.toLowerCase()
           )
           .map((profile) => {
             let online: Boolean = false;

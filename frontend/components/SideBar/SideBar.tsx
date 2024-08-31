@@ -82,10 +82,7 @@ function SideBar() {
         >
           Tweet
         </div>
-        <div
-          onClick={connectWallet}
-          className=" tweetButton mt-5 bg-sky-500 "
-        >
+        <div onClick={connectWallet} className=" tweetButton mt-5 bg-sky-500 ">
           {walletAddress
             ? walletAddress.slice(0, 7) +
               "......" +
@@ -134,7 +131,7 @@ function SideBar() {
                 ],
               });
             }}
-            className="rounded-full bg-twitter bg-opacity-60 p-1 px-2 transition hover:scale-125"
+            className="rounded-full bg-twitter bg-opacity-60 p-1 px-2 transition-all ease-in-out hover:scale-105"
           >
             disconnect
           </button>

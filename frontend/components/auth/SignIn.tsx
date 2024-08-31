@@ -82,7 +82,7 @@ export default function SignIn() {
       console.log({ filteredData, timeStamp });
       // }
     })();
-  }, [walletAddress, provider, process.env, isFreeEth]);
+  }, [walletAddress, process.env, isFreeEth]);
 
   const { isDarkMode } = useSelector((state: RootState) => state.global);
   function connectWallet() {

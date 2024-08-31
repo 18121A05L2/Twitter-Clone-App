@@ -24,6 +24,7 @@ type postType = {
   retweets?: [];
   timeStamp: Date;
   ipfsHash?: string;
+  address: string;
 };
 
 type profileType = {

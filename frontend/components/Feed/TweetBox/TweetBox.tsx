@@ -43,6 +43,7 @@ function TweetBox() {
       userInput: input,
       userId: profile.userId,
       avatar: profile.avatar,
+      address : profile.address
     };
 
     const userOwnedTokens = await twitterContract?.balanceOf();
@@ -119,7 +120,7 @@ function TweetBox() {
         <div className=" flex flex-1 flex-col   ">
           <textarea
             id="tweet_input"
-            className="p-3 outline-none resize-none no-scrollbar bg-[#2AA3EF0A]  "
+            className="p-3 outline-none resize-none no-scrollbar bg-[#2AA3EF0A] rounded-xl  "
             value={input}
             onChange={(e) => setInput(e.target.value)}
             cols={50}
@@ -144,7 +145,7 @@ function TweetBox() {
 
               <button
                 id="tweet_btn"
-                className="m-2 rounded-full bg-twitter p-1 px-3 font-bold text-white disabled:opacity-60"
+                className="m-2 rounded-full bg-twitter p-1 px-3 font-bold text-white disabled:opacity-60 disabled:cursor-not-allowed"
                 disabled={!input || input.length > 256}
                 onClick={addTweetToIpfs}
               >

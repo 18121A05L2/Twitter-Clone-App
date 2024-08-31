@@ -7,7 +7,7 @@ import { VscCalendar } from "react-icons/vsc";
 import { FiMapPin } from "react-icons/fi";
 
 const styles = {
-  icon: "w-[1.4rem] h-[1.4rem] text-twitter cursor-pointer hover:scale-150 transition-all",
+  icon: "w-[1.4rem] h-[1.4rem] text-twitter cursor-pointer hover:scale-110 transition-all",
 };
 
 function Icons() {

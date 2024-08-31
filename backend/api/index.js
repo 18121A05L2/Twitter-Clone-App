@@ -18,7 +18,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 const pinataJWTKey = process.env.PINATA_JWT_SECRET;
-const mongooseConnectionUrl = process.env.MONGOOSE_CONNTECTION_URL;
+// const mongooseConnectionUrl = process.env.MONGOOSE_CONNTECTION_URL;
 const pinata = new pinataSDK({
   pinataJWTKey,
 });
@@ -40,19 +40,19 @@ const wallet = new ethers.Wallet(privateKey, provider);
 async function main() {
   // -----------------------------------   Mongo DB ---------------------------------------
 
-  await mongoose
-    .connect(mongooseConnectionUrl)
-    .then((value) => {
-      // console.log(value);
-      console.log("successfully connected with mongoose");
-    })
-    .catch((err) => {
-      console.log("There is an error connecting to mongoose");
-      console.log(err);
-    });
+  // await mongoose
+  //   .connect(mongooseConnectionUrl)
+  //   .then((value) => {
+  //     // console.log(value);
+  //     console.log("successfully connected with mongoose");
+  //   })
+  //   .catch((err) => {
+  //     console.log("There is an error connecting to mongoose");
+  //     console.log(err);
+  //   });
 
-  twitterbackend();
-  testCaseApis();
+  // twitterbackend();
+  // testCaseApis();
 
   app.get("/", (req, res) => res.send("Express on Vercel"));
 

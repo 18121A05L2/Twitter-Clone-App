@@ -44,16 +44,13 @@ export default function SignIn() {
 
   useEffect(() => {
     (async () => {
-      if (
-        Boolean(provider?.getNetwork) &&
-        process.env.NEXT_PUBLIC_USE_LOCAL_BLOCKCHAIN === "false"
-      ) {
-        const network = await provider?.getNetwork();
-        const chainId = network?.chainId;
-        const name = network?.name;
+      if (process.env.NEXT_PUBLIC_USE_LOCAL_BLOCKCHAIN === "false") {
+        const network = provider?.getNetwork
+          ? await provider?.getNetwork()
+          : null;
+        const name = network?.name || "sepolia";
         const etherscanAPi =
           name === "sepolia" ? sepoliaEtherscanApi : mainnetEtherscanApi;
-        console.log({ chainId, name, etherscanAPi });
         const timeStamp = (currentTimestamp - twentyFourHours) / 1000;
         setIsEtherScanLoading(true);
         const { data }: { data: { result: etherScanRes[] } } =

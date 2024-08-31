@@ -10,6 +10,6 @@ module.exports = {
       "azure-fantastic-gecko-907.mypinata.cloud",
     ],
   },
-
+  productionBrowserSourceMaps: true,
   reactStrictMode: false,
 };

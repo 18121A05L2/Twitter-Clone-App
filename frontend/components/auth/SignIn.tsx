@@ -41,43 +41,46 @@ export default function SignIn() {
   const [displayMetamask, setShouldDisplayMetamask] = useState(false);
   const currentTimestamp = Date.now();
   const twentyFourHours = 24 * 60 * 60 * 1000;
+  console.log(process.env.NEXT_PUBLIC_USE_LOCAL_BLOCKCHAIN);
 
   useEffect(() => {
     (async () => {
-      if (process.env.NEXT_PUBLIC_USE_LOCAL_BLOCKCHAIN === "false") {
-        const network = provider?.getNetwork
-          ? await provider?.getNetwork()
-          : null;
-        const name = network?.name || "sepolia";
-        const etherscanAPi =
-          name === "sepolia" ? sepoliaEtherscanApi : mainnetEtherscanApi;
-        const timeStamp = (currentTimestamp - twentyFourHours) / 1000;
-        setIsEtherScanLoading(true);
-        const { data }: { data: { result: etherScanRes[] } } =
-          await axiosAPI.get(etherscanAPi, {
-            params: {
-              module: "account",
-              action: "txlist",
-              tag: "latest",
-              address: walletAddress,
-              startblock: 0,
-              endblock: 99999999,
-              sort: "asc",
-              // TODO : CHECK WHETHER THIS NEEDS TO BE MOVED TO BACKEND
-              apikey: process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
-            },
-          });
+      // if (process.env.NEXT_PUBLIC_USE_LOCAL_BLOCKCHAIN === "false") {
+      const network = provider?.getNetwork
+        ? await provider?.getNetwork()
+        : null;
+      const name = network?.name || "sepolia";
+      const etherscanAPi =
+        name === "sepolia" ? sepoliaEtherscanApi : mainnetEtherscanApi;
+      const timeStamp = (currentTimestamp - twentyFourHours) / 1000;
+      setIsEtherScanLoading(true);
+      const { data }: { data: { result: etherScanRes[] } } = await axiosAPI.get(
+        etherscanAPi,
+        {
+          params: {
+            module: "account",
+            action: "txlist",
+            tag: "latest",
+            address: walletAddress,
+            startblock: 0,
+            endblock: 99999999,
+            sort: "asc",
+            // TODO : CHECK WHETHER THIS NEEDS TO BE MOVED TO BACKEND
+            apikey: process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
+          },
+        }
+      );
 
-        setIsEtherScanLoading(false);
-        const filteredData = data?.result?.filter(
-          (item) =>
-            Number(item.timeStamp) > timeStamp &&
-            item?.from?.toLowerCase() === freeEthPublicAddress.toLowerCase()
-        );
-        const sortedData = sortArray(filteredData, "timeStamp", false);
-        setIsFreeEthAlreadySent(filteredData);
-        console.log({ filteredData, timeStamp });
-      }
+      setIsEtherScanLoading(false);
+      const filteredData = data?.result?.filter(
+        (item) =>
+          Number(item.timeStamp) > timeStamp &&
+          item?.from?.toLowerCase() === freeEthPublicAddress.toLowerCase()
+      );
+      const sortedData = sortArray(filteredData, "timeStamp", false);
+      setIsFreeEthAlreadySent(filteredData);
+      console.log({ filteredData, timeStamp });
+      // }
     })();
   }, [walletAddress, provider, process.env, isFreeEth]);
 

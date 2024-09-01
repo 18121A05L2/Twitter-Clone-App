@@ -8,7 +8,7 @@ const deployTwitter: DeployFunction = async ({
     getNamedAccounts,
     deployments,
 }: HardhatRuntimeEnvironment) => {
-    console.log(" ------------- 02-deploy-twitter ------------- ")
+    console.log(" ------------- 01-deploy-twitter ------------- ")
     const { deploy, log, get } = deployments
     const { lucky, kiran } = await getNamedAccounts()
     const [deployer] = await ethers.getSigners()
@@ -31,7 +31,8 @@ const deployTwitter: DeployFunction = async ({
         log: true,
         gasLimit: 6000000,
         waitConfirmations: networkConfig[chainId].blockConfirmations,
-        value: ethers.parseEther("0.01"),
+        value: ethers.parseEther("0.0001"),
+        // value: 0,
     })
 
     const twitterAddress = deployedTwitterContract.address

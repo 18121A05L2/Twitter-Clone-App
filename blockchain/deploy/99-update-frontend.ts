@@ -25,11 +25,13 @@ const updateFrontEnd: DeployFunction = async (
         fs.readFileSync(frontEndContractAddresses, "utf8"),
     )
 
-    // updating twitter contract
-    const twitterContract = await deployments.get("Twitter")
-    twitterContactAddress = twitterContract.address
-    contractAddresses[chainId] = {}
-    contractAddresses[chainId]["Twitter"] = twitterContract.address
+    const twitterImplementation = await deployments.get("Twitter")
+        twitterContactAddress = twitterImplementation.address
+
+        // updating twitter proxy contract
+        const twitterProxy = await deployments.get("TwitterProxy")
+        contractAddresses[chainId] = {}
+        contractAddresses[chainId]["Twitter"] = twitterProxy.address
 
     // updating NFT contract
     const nftContract = await deployments.get("TwitterNfts")
@@ -43,7 +45,7 @@ const updateFrontEnd: DeployFunction = async (
     // updating ABI files
     fs.writeFileSync(
         frontEndTwitterAbiFile,
-        JSON.stringify(twitterContract.abi),
+        JSON.stringify(twitterImplementation.abi),
     )
     fs.writeFileSync(
         forntEndTwitterNftsAbiFile,

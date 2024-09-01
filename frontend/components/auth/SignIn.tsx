@@ -27,8 +27,8 @@ import ThreeDotsLoading from "../utils/threeDotsLoading";
 
 export default function SignIn() {
   useContracts();
-  const [isEthWithGas, setIsEthWithGas] = useState(false);
-  const [isFreeEth, setIsFreeEth] = useState(false);
+  const [isEthWithGasLoading, setIsEthWithGasLoading] = useState(false);
+  const [isFreeEthLoading, setIsFreeEthLoading] = useState(false);
   const [transaction, setTransaction] = useState("");
   const [isFreeEthAlreadySent, setIsFreeEthAlreadySent] =
     useState<etherScanRes[]>();
@@ -41,9 +41,9 @@ export default function SignIn() {
   const [displayMetamask, setShouldDisplayMetamask] = useState(false);
   const currentTimestamp = Date.now();
   const twentyFourHours = 24 * 60 * 60 * 1000;
-  console.log(process.env.NEXT_PUBLIC_USE_LOCAL_BLOCKCHAIN);
 
   useEffect(() => {
+    if (!walletAddress) return;
     (async () => {
       // if (process.env.NEXT_PUBLIC_USE_LOCAL_BLOCKCHAIN === "false") {
       const network = provider?.getNetwork
@@ -79,7 +79,7 @@ export default function SignIn() {
       );
       const sortedData = sortArray(filteredData, "timeStamp", false);
       setIsFreeEthAlreadySent(filteredData);
-      console.log({ filteredData, timeStamp });
+      // console.log({ filteredData, timeStamp });
       // }
     })();
   }, [walletAddress, process.env, transaction]);
@@ -104,12 +104,13 @@ export default function SignIn() {
       toast("Please connect your wallet", { type: "error" });
       return;
     }
-    setIsEthWithGas(true);
+    setIsEthWithGasLoading(true);
     const freeEth = 0.01;
     try {
-      const ContractTransactionResponse = await twitterContract?.freeEth(
-        ethers.parseEther(freeEth.toString())
-      );
+      const ContractTransactionResponse = await (
+        await twitterContract?.freeEth(ethers.parseEther(freeEth.toString()))
+      ).wait(1);
+      console.log({ ContractTransactionResponse });
       setTransaction(
         `${sepoliaExplorer}/${explorerPaths.transaction}/${ContractTransactionResponse.hash}`
       );
@@ -117,7 +118,7 @@ export default function SignIn() {
       // console.log({ err });
       toast(err.shortMessage, { type: "error" });
     } finally {
-      setIsEthWithGas(false);
+      setIsEthWithGasLoading(false);
     }
   }
 
@@ -130,7 +131,7 @@ export default function SignIn() {
       toast("Please connect your wallet", { type: "error" });
       return;
     }
-    setIsFreeEth(true);
+    setIsFreeEthLoading(true);
     try {
       const res = (await axiosAPI.post(
         "/sendEth",
@@ -146,7 +147,7 @@ export default function SignIn() {
       console.error({ err });
       toast(err.shortMessage, { type: "error" });
     } finally {
-      setIsFreeEth(false);
+      setIsFreeEthLoading(false);
     }
   }
 
@@ -197,7 +198,7 @@ export default function SignIn() {
         className=" min-w-16 cursor-pointer rounded-full bg-orange-200 p-3 px-5 dark:bg-orange-400 "
         onClick={getEthWithGas}
       >
-        {isEthWithGas ? (
+        {isEthWithGasLoading ? (
           <Spinner />
         ) : (
           "Get 0.01 testnet eth by bearing gas cost "
@@ -209,7 +210,7 @@ export default function SignIn() {
           className={` min-w-16 rounded-full  p-3 px-5  ${Boolean(isFreeEthAlreadySent?.length) ? " bg-slate-200 cursor-not-allowed dark:bg-slate-600 " : " bg-orange-200 dark:bg-orange-400 cursor-pointer "} `}
           onClick={getFreeEth}
         >
-          {isFreeEth ? (
+          {isFreeEthLoading ? (
             <Spinner />
           ) : Boolean(isFreeEthAlreadySent?.length) && isFreeEthAlreadySent ? (
             <>

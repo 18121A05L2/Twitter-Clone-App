@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../Redux/app/store";
 import { toast } from "react-toastify";
 import { Spinner } from "./utils/svgs";
+import { currentEthPrice } from "../utils/constants";
 
 type DataType = {
   contractBalance: number;
@@ -51,6 +52,8 @@ function FundMe() {
         contractOwner: owner,
       }));
     })();
+
+    // get eth price
   }, [twitterContract]);
 
   // need to add more features to it
@@ -73,14 +76,17 @@ function FundMe() {
     setIsFundLoading(true);
     try {
       console.log(typeof fundAmt);
-      let finalAmount = Number(fundAmt) / 3500;
+      let finalAmount = Number(fundAmt) / currentEthPrice;
       const transactionResponse: TransactionResponse =
         await twitterContract?.fund({
           value: ethers.parseEther(finalAmount.toString()),
         });
       await transactionResponse.wait(1);
       const newbalance = Number(await provider?.getBalance(contractAddress));
-      setData((prev) => ({ ...prev, contractBalance: newbalance }));
+      setData((prev) => ({
+        ...prev,
+        contractBalance: Number(ethers.formatEther(newbalance.toString())),
+      }));
     } catch (err: any) {
       console.log({ err });
       toast(err.shortMessage, { type: "error" });
@@ -92,7 +98,10 @@ function FundMe() {
     const transactionResponse = await twitterContract?.withdraw();
     await transactionResponse.wait(1);
     const newbalance = Number(await provider?.getBalance(contractAddress));
-    setData((prev) => ({ ...prev, contractBalance: newbalance }));
+    setData((prev) => ({
+      ...prev,
+      contractBalance: Number(ethers.formatEther(newbalance.toString())),
+    }));
   }
 
   return (

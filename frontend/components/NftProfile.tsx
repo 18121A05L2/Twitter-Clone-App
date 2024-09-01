@@ -20,6 +20,7 @@ import { AiTwotoneThunderbolt } from "react-icons/ai";
 function NftProfile() {
   const [nftName, setNftName] = useState("");
   const [isMinting, setIsMinting] = useState(false);
+  const [isNftsApiCallLoading, setIsNftsApiCallLoading] = useState(false);
   const [tempImg, setTempImg] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [myNfts, setMyNfts] = useState<nftPostType[]>([]);
@@ -41,6 +42,7 @@ function NftProfile() {
   }, [nftContract, isMinting]);
 
   const loadMyNfts = async () => {
+    setIsNftsApiCallLoading(true);
     const nftIds = await nftContract?.getMyNfts();
     if (nftIds) {
       const nfts = await Promise.all(
@@ -57,6 +59,7 @@ function NftProfile() {
       );
       setMyNfts(nfts);
     }
+    setIsNftsApiCallLoading(false);
   };
 
   const MintNft = async () => {
@@ -252,36 +255,40 @@ function NftProfile() {
         <h1 className=" text-center pb-2 "> Owned NFTS</h1>
         <section className=" grid grid-cols-3 gap-3 p-2 ">
           {/* NFT cards */}
-          {myNfts.length > 0 ? (
-            myNfts.map((nft, i) => {
-              if (!nft) return null;
-              return (
-                <Link
-                  className=" cursor-pointer "
-                  passHref
-                  href={`/nft`}
-                  key={i}
-                >
-                  <div
+          {!isNftsApiCallLoading ? (
+            myNfts.length > 0 ? (
+              myNfts.map((nft, i) => {
+                if (!nft) return null;
+                return (
+                  <Link
+                    className=" cursor-pointer "
+                    passHref
+                    href={`/nft`}
                     key={i}
-                    className=" flex cursor-pointer flex-col  items-center rounded-lg  "
-                    onClick={() => nftOnclick(nft)}
                   >
-                    <img className=" h-40 w-40 rounded" src={nft.avatar} />
-                    <p className=" py-2 text-center ">
-                      <a href="">{`#${nft.nftId}`}</a>
-                      {` - `} {nft.nftName}
-                    </p>
                     <div
-                      onClick={(event) => switchProfile(event, nft)}
-                      className=" cursor-pointer rounded-lg bg-slate-400 px-2"
+                      key={i}
+                      className=" flex cursor-pointer flex-col  items-center rounded-lg  "
+                      onClick={() => nftOnclick(nft)}
                     >
-                      Set as NFT profile
+                      <img className=" h-40 w-40 rounded" src={nft.avatar} />
+                      <p className=" py-2 text-center ">
+                        <a href="">{`#${nft.nftId}`}</a>
+                        {` - `} {nft.nftName}
+                      </p>
+                      <div
+                        onClick={(event) => switchProfile(event, nft)}
+                        className=" cursor-pointer rounded-lg bg-slate-400 px-2"
+                      >
+                        Set as NFT profile
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              );
-            })
+                  </Link>
+                );
+              })
+            ) : (
+              <div className=" w-full h-full flex justify-center items-center ">No Owned Nfts</div>
+            )
           ) : (
             <div className=" w-full flex justify-center h-40 items-center ">
               <AiTwotoneThunderbolt className=" w-24 h-24 animate-bounce ml-auto" />

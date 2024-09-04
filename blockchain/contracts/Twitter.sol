@@ -9,9 +9,9 @@ import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/Ag
 error Twitter_NotOwner();
 
 /**
- * @title integrating twitter clone with blockchain
- * @author lucky
- * @notice This a smaple testing project
+ * @title integrating twitter with blockchain
+ * @author Lakshmi Sanikommu
+ * @notice Implemention twitter in a decentralized way
  */
 
 contract Twitter is TwitterToken {

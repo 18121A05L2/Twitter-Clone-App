@@ -1,3 +1,5 @@
+-> Variables , Types , Functions , Visibility , Modifiers , Custom Modifiers , constructors , global variables , operators , conditionals , Arrays , Mappings , Structs , Events , Ether , Errors , Inheritance , calling other functions , interface
+-> receive , fallback , call , send , transfer , payable , enums
 —> stack is the local variable ( cheapest of all variables )
 —> calldata was the temp variable that can't be modified, memory was the temp variable that can be modified in the function execution 
 -> Data location can only be specified for arrays ,structs or mappings ( a string is an array or bytes )
@@ -12,4 +14,12 @@
 -> enums , events , try catch , function selectors , abi encode and decode , hashing and assembly
 -> what does it mean by data is empy with respective to receive and fallback
 -> bash scription ( basic knowledge)
+-> Ether in Solidity has 18 decimal places
+--> Public: Accessible everywhere; includes an automatic getter for variables.
+    Private: Accessible only within the contract where it is defined; not visible to derived contracts.
+    Internal: Accessible within the contract and by derived contracts; not visible externally.
+    External: Functions accessible only from outside the contract; variables cannot have external visibility.
+-> Enums in Solidity are simply a way to give names to a set of integer values, and these names are internally mapped to unsigned integers starting from 0.
+-> enum: User-defined types for creating a set of named constants
+-> different Data types : value types - uint, int, bool ,address ,enum, bytes , and reference types - strings, arrays, mappings, structs
 

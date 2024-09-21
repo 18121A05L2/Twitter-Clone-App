@@ -141,21 +141,10 @@ contract TwitterNfts {
         _transfer(_from, _to, _tokenId);
     }
 
-    function approveNft(address _approved, uint256 _tokenId) public payable {
+    function approve(address _approved, uint256 _tokenId) public payable {
         require(ownerOf(_tokenId) == msg.sender, "!Owner");
         _tokenApprovals[_tokenId] = _approved;
         emit Approval(ownerOf(_tokenId), _approved, _tokenId);
-    }
-
-    function approveNftInternal(address _approved, uint256 _tokenId) private {
-        require(ownerOf(_tokenId) == address(this), "!Owner");
-        _tokenApprovals[_tokenId] = _approved;
-        emit Approval(ownerOf(_tokenId), _approved, _tokenId);
-    }
-
-    function revertApproval(uint256 _tokenId) public {
-        require(ownerOf(_tokenId) == msg.sender, "!Owner");
-        _tokenApprovals[_tokenId] = address(0);
     }
 
     function setApprovalForAll(address _operator, bool _approved) public {
@@ -172,6 +161,19 @@ contract TwitterNfts {
         address _operator
     ) public view returns (bool) {
         return _operatorApprovals[_owner][_operator];
+    }
+
+    // ------------------------ End of Erc-721 implementation ------------------------
+
+    function approveNftInternal(address _approved, uint256 _tokenId) private {
+        require(ownerOf(_tokenId) == address(this), "!Owner");
+        _tokenApprovals[_tokenId] = _approved;
+        emit Approval(ownerOf(_tokenId), _approved, _tokenId);
+    }
+
+    function revertApproval(uint256 _tokenId) public {
+        require(ownerOf(_tokenId) == msg.sender, "!Owner");
+        _tokenApprovals[_tokenId] = address(0);
     }
 
     function mintTo(string memory _nftUri, string memory _profileUri) public {
@@ -264,7 +266,7 @@ contract TwitterNfts {
         return symbol;
     }
 
-    // MarketPlace Code
+    // ----------------------------------- MarketPlace Code ---------------------------------
 
     function listNFT(
         uint256 _tokenId,
@@ -273,7 +275,7 @@ contract TwitterNfts {
         require(_price > 0, "Price must be greater than zero");
         // Transfer the NFT from the owner to the marketplace contract
         // transferFrom(msg.sender, address(this), _tokenId);
-        approveNft(address(this), _tokenId);
+        approve(address(this), _tokenId);
         // List the NFT
         listedNfts[_tokenId] = NFT(msg.sender, _price, false);
         emit NFTListed(_tokenId, msg.sender, _price);
@@ -356,3 +358,7 @@ contract TwitterNfts {
         return twitterContract.i_owner();
     }
 }
+
+// https://eips.ethereum.org/EIPS/eip-721
+
+// https://ethereum.org/en/developers/docs/standards/tokens/erc-721/

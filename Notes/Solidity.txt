@@ -1,4 +1,5 @@
--> Variables , Types , Functions , Visibility , Modifiers , Custom Modifiers , constructors , global variables , operators , conditionals , Arrays , Mappings , Structs , Events , Ether , Errors , Inheritance , calling other functions , interface
+-> Variables , Types ( value and referene types , complex type (string), user defined ) , Functions , 
+   Visibility , Modifiers , Custom Modifiers , constructors , global variables , operators , conditionals , Arrays , Mappings , Structs , Events , Ether , Errors , Inheritance , calling other functions , interface
 -> receive , fallback , call , send , transfer , payable , enums
 —> stack is the local variable ( cheapest of all variables )
 —> calldata was the temp variable that can't be modified, memory was the temp variable that can be modified in the function execution 
@@ -22,4 +23,8 @@
 -> Enums in Solidity are simply a way to give names to a set of integer values, and these names are internally mapped to unsigned integers starting from 0.
 -> enum: User-defined types for creating a set of named constants
 -> different Data types : value types - uint, int, bool ,address ,enum, bytes , and reference types - strings, arrays, mappings, structs
+-> address: Holds a 20 byte value (size of an Ethereum address).
+-> function (<parameter types>) {internal|external} [pure|view|payable] [returns (<return types>)]
+-> Data location : memory (whose lifetime is limited to an external function call), storage (the location where the state variables are stored, where the lifetime is limited to the lifetime of a contract) or calldata (special data location that contains the function arguments).
+-> Data location can only be specified for array, struct or mapping types.
 

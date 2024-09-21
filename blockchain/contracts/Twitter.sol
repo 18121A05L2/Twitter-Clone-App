@@ -18,18 +18,13 @@ contract Twitter is TwitterToken {
     address public contractAddress;
     using FundMe for uint256;
     address public immutable i_owner;
-    // uint256 public constant PER_TWEET = 10 * 10 ** 18; // per tweet 10 dollars
     AggregatorV3Interface internal s_priceFeed;
     address[] public s_funders;
     mapping(address => uint256) public s_addressToAmountFunded;
     mapping(address => string[]) public s_addressToTweets;
     event Tweet(address indexed _from, string _tweetUrl);
-    // ( owner address => tokenuri ) nft profile image
-    // NOTE: token uri is the ipfs API which contains id , avatar and nft name
     mapping(address => string) public profiles;
     TwitterNfts public nftContract;
-
-    // string[] public s_msgStore;
 
     modifier onlyOwner() {
         if (msg.sender != i_owner) revert Twitter_NotOwner();

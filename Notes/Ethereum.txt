@@ -14,3 +14,13 @@
 -> A bug in a consensus client with over 33% of the Ethereum nodes could prevent the consensus layer from finalizing
 -> Epochs are units of 32 slots - each slot lasts 12 seconds - Slots and epochs set the pace of the blockchain --> In each epoch, the block in the first slot is a checkpoint. These checkpoints are important because they are used to make sections of the blockchain permanent and irreversible ( justified Epochs and Finalized Epochs )
 -> a validator will participate in a sync committee. A sync committee is a group of 512 randomly chosen validators that sign block headers so that light clients can retrieve validated blocks without having to access the full historical chain or the full validator set
+-> the validator is slashed. This means that 1/64th of their staked ether (up to a maximum of 0.5 ether) is immediately burned, then a 36 day removal period begins
+-> Execution Client is not responsible for block building, block gossiping or handling consensus logic
+-> Execution Client - home to the Ethereum Virtual Machine, Ethereum's state and transaction pool
+-> The consensus client does not participate in attesting to or proposing blocks - this is done by a validator, an optional add-on to a consensus client
+-> Node operators can add a validator to their consensus clients by depositing 32 ETH in the deposit contract. The validator client comes bundled with the consensus client and can be added to a node at any time
+-> Randomly selecting a subset of 512 validators every 1.1 days to act as a sync committee - The sync committee signs the header of recent blocks which is helpful for Light clients - This means a light client can quickly see that the sync committee has signed off on the data they receive, and they can also check that the sync committee is the genuine one by comparing the one they receive from the one they were told to expect in the previous block -- checked against block headers that they know have been signed by at least 2/3 of a random set of 512 Ethereum validators
+-> Currently, light clients rely on RPC requests to full nodes using a client/server model, but in the future the data could be requested in a more decentralized way using a dedicated network such as the Portal Network(opens in a new tab) that could serve the data to light clients using a peer-to-peer gossip protocol
+-> Ethereum Networking Protocols - Both stacks work in parallel. The discovery stack feeds new network participants into the network, and the DevP2P stack enables their interactions
+-> A successful PING-PONG "bonds" the new node to a bootnode
+-> start client --> connect to bootnode --> bond to bootnode --> find neighbours --> bond to neighbours

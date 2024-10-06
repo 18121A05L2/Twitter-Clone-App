@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // ERC20 Contract
 pragma solidity ^0.8.0;
-import "hardhat/console.sol";
+
 
 error TwitterToken_InefficientBalane();
 error TwitterToken_NotEnoughAllowances();

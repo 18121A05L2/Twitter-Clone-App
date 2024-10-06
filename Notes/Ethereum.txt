@@ -24,3 +24,12 @@
 -> Ethereum Networking Protocols - Both stacks work in parallel. The discovery stack feeds new network participants into the network, and the DevP2P stack enables their interactions
 -> A successful PING-PONG "bonds" the new node to a bootnode
 -> start client --> connect to bootnode --> bond to bootnode --> find neighbours --> bond to neighbours
+
+
+
+
+
+
+-> upcoming features
+    verkle tree 
+    portal network for light clients

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // ERC20 Contract
 pragma solidity ^0.8.0;
-import "hardhat/console.sol";
+
 
 error TwitterToken_InefficientBalane();
 error TwitterToken_NotEnoughAllowances();
@@ -96,6 +96,13 @@ contract TwitterToken {
         emit Approval(msg.sender, _spender, _value);
         return true;
     }
+
+    function allowance(
+        address _owner,
+        address _spender
+    ) public view returns (uint256 remaining) {}
+
+    //----------------------------- End of ERC-20 Token implementation -----------------------------
 
     function approveTokensForNftContract(
         address _from,

@@ -1,6 +1,6 @@
 {
-    "name": "hardhat-project",
-    "author": "lucky",
+    "name": "twitter-clone-blockchain",
+    "author": "LakshmiSanikommu",
     "version": "1.0.0",
     "devDependencies": {
         "@matterlabs/hardhat-zksync": "^1.2.0",
@@ -28,7 +28,7 @@
         "@types/mocha": "^10.0.8",
         "@types/node": "^22.7.4",
         "axios": "^1.7.7",
-        "chai": "^5.1.1",
+        "chai": "^4.3.7",
         "dotenv": "^16.4.5",
         "ethereum-waffle": "^4.0.10",
         "solhint": "^5.0.3",

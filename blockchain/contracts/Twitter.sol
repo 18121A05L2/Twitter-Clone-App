@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "./FundMe.sol";
 import "./TwitterToken.sol";
 import "./TwitterNfts.sol";
-import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 
 error Twitter_NotOwner();
 

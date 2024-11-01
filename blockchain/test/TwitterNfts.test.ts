@@ -150,4 +150,8 @@ describe("Running NFT test cases", () => {
         //     expect(listedNft.owner).to.equal(ZeroAddress)
         // })
     })
+
+//     it("Should support IERC721 interface", async function () {
+//   expect(await nft.supportsInterface("0x80ac58cd")).to.be.true; // ERC721 interface ID
+// });
 })

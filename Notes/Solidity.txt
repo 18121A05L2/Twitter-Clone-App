@@ -27,4 +27,7 @@
 -> function (<parameter types>) {internal|external} [pure|view|payable] [returns (<return types>)]
 -> Data location : memory (whose lifetime is limited to an external function call), storage (the location where the state variables are stored, where the lifetime is limited to the lifetime of a contract) or calldata (special data location that contains the function arguments).
 -> Data location can only be specified for array, struct or mapping types.
+-> type(int256).min , type(I).interfaceId , bytes1 a = 0xb5; //  [10110101] , 
+-> EIP-165 is a standard that enables smart contracts to declare the interfaces they implement. The interface identifier for an interface like IERC20 is derived by XORing all of the function selectors in that interface. This identifier is stored as type(IERC20).interfaceId and helps other contracts verify that a given contract implements IERC20 without needing to know the implementation details
+-> For example, if a function is defined as function transfer(address to, uint256 amount), its signature is "transfer(address,uint256)". The function selector is then the first 4 bytes of the Keccak-256 hash of this signature
 

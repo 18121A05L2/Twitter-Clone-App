@@ -23,7 +23,7 @@ A blockchain is a public database that is updated and shared across many compute
 
 —> Yearn Finance ( auto bot trading ) 
 —> solidity library ( openzepplin ) 
-—> The base fee can increase a maximum of 12.5 % per block when the block is utilized with more than 50%
+—> The base fee can increase a maximum of 12.5 % per block when the block is utilized with more than 50% ( in ETH)
 —> consensus can be of two types 1)chain selection and 2) Sybil resistance
 → sybil attack and 51% attack 
 —> sharding and rollups are scalability solutions

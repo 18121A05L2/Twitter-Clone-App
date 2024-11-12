@@ -1,0 +1,3 @@
+[submodule "foundry-template"]
+	path = foundry-template
+	url = https://github.com/PaulRBerg/foundry-template

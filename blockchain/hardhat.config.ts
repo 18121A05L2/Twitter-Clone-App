@@ -58,7 +58,7 @@ const config: HardhatUserConfig = {
             gas: 6000000, // Adjust the gas limit here
             blockGasLimit: 12000000, // Adjust the block gas limit if needed
             chainId: 31337,
-            loggingEnabled: true,
+            // loggingEnabled: true,
             zksync: false,
         },
         zksyncSepolia: {

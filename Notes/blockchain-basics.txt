@@ -46,3 +46,5 @@ A blockchain is a public database that is updated and shared across many compute
 - When one contract (let's call it `CurrentContract`) calls a function on another contract (`ExternalContract`), `msg.sender` in `ExternalContract` will be the address of `CurrentContract`, not the original user who initiated the transaction.
 - Call Data: Read-only
 - Memory: Read-write
+
+-> ChainID was introduced in EIP-155 to prevent replay attacks between the main ETH and ETC chains, which both have a networkID of 1

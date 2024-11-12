@@ -5,6 +5,8 @@ import "./FundMe.sol";
 import "./TwitterToken.sol";
 import "./TwitterNfts.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
+import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
+import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
 error Twitter_NotOwner();
 
@@ -14,7 +16,7 @@ error Twitter_NotOwner();
  * @notice Implemention twitter in a decentralized way
  */
 
-contract Twitter is TwitterToken {
+contract Twitter is TwitterToken,ERC165 {
     address public contractAddress;
     using FundMe for uint256;
     address public immutable i_owner;
@@ -129,6 +131,10 @@ contract Twitter is TwitterToken {
 
     function getProfile(address _address) public view returns (string memory) {
         return profiles[_address];
+    }
+
+     function supportsInterface(bytes4 interfaceId) public view override(ERC165) returns (bool) {
+        return interfaceId == type(IERC165).interfaceId || super.supportsInterface(interfaceId);
     }
 
     // A fallback function to accept ETH

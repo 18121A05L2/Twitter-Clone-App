@@ -24,6 +24,7 @@
 -> Ethereum Networking Protocols - Both stacks work in parallel. The discovery stack feeds new network participants into the network, and the DevP2P stack enables their interactions
 -> A successful PING-PONG "bonds" the new node to a bootnode
 -> start client --> connect to bootnode --> bond to bootnode --> find neighbours --> bond to neighbours
+-> storage optimisations and categorises them into replication-based, redaction-based, and content-based optimisations. Replication-based optimisations focus on reducing duplication of blockchain data shared among participants after committing data on the blockchain ledger. Redaction-based optimisations allow users to modify or delete data already committed on the ledger in various ways, while content-based optimisations compress data before or after committing it to the ledger
 
 
 

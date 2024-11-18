@@ -13,3 +13,15 @@
 [submodule "blockchain/foundry/lib/solmate"]
 	path = blockchain/foundry/lib/solmate
 	url = https://github.com/transmissions11/solmate
+[submodule "blockchain/foundry-pc/lib/foundry-devops"]
+	path = blockchain/foundry-pc/lib/foundry-devops
+	url = https://github.com/cyfrin/foundry-devops
+[submodule "blockchain/foundry-pc/lib/chainlink-brownie-contracts"]
+	path = blockchain/foundry-pc/lib/chainlink-brownie-contracts
+	url = https://github.com/smartcontractkit/chainlink-brownie-contracts
+[submodule "blockchain/foundry-pc/lib/forge-std"]
+	path = blockchain/foundry-pc/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "blockchain/foundry-pc/lib/solmate"]
+	path = blockchain/foundry-pc/lib/solmate
+	url = https://github.com/transmissions11/solmate

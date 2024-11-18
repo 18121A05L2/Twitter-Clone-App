@@ -6,6 +6,8 @@
 --> foundryup , foundryup-zksync
 --> forge fmt
 --> forge coverage
+--> forge coverage --report debug > coverage.txt
+--> forge test -mt <TestFunctionName>
 --> cast call 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9 "retrieve()"
     - 0x0000000000000000000000000000000000000000000000000000000000000159
 --> cast --to-base 0x0000000000000000000000000000000000000000000000000000000000000159 dec
@@ -17,3 +19,4 @@
 --> forge inspect FundMe storageLayout
 --> cast storage <contractAddress>
 --> cast sig "fund()" - will return the hex code of the function
+--> FUZZ Testing

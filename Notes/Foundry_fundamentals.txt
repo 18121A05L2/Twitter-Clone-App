@@ -7,6 +7,7 @@
 --> forge fmt
 --> forge coverage
 --> forge coverage --report debug > coverage.txt
+--> forge test test --debug <TestFunctionName>
 --> forge test -mt <TestFunctionName>
 --> cast call 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9 "retrieve()"
     - 0x0000000000000000000000000000000000000000000000000000000000000159

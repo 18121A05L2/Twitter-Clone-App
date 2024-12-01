@@ -1,0 +1,147 @@
+Compiling 10 files with Solc 0.8.28
+Solc 0.8.28 finished in 173.56ms
+Compiler run successful!
+Analysing contracts...
+Running tests...
+Uncovered for src/DecentralizedStableCoin.sol:
+- Function "burn" (location: source ID 9, line 43, chars 1143-1454, hits: 0)
+- Line (location: source ID 9, line 44, chars 1204-1215, hits: 0)
+- Statement (location: source ID 9, line 44, chars 1204-1215, hits: 0)
+- Branch (branch: 0, path: 0) (location: source ID 9, line 44, chars 1217-1300, hits: 0)
+- Line (location: source ID 9, line 45, chars 1231-1289, hits: 0)
+- Statement (location: source ID 9, line 45, chars 1231-1289, hits: 0)
+- Line (location: source ID 9, line 48, chars 1314-1345, hits: 0)
+- Statement (location: source ID 9, line 48, chars 1314-1345, hits: 0)
+- Statement (location: source ID 9, line 48, chars 1324-1345, hits: 0)
+- Branch (branch: 1, path: 0) (location: source ID 9, line 48, chars 1347-1418, hits: 0)
+- Line (location: source ID 9, line 49, chars 1361-1407, hits: 0)
+- Statement (location: source ID 9, line 49, chars 1361-1407, hits: 0)
+- Line (location: source ID 9, line 52, chars 1428-1447, hits: 0)
+- Statement (location: source ID 9, line 52, chars 1428-1447, hits: 0)
+- Function "mint" (location: source ID 9, line 55, chars 1460-1797, hits: 0)
+- Line (location: source ID 9, line 56, chars 1540-1557, hits: 0)
+- Statement (location: source ID 9, line 56, chars 1540-1557, hits: 0)
+- Branch (branch: 2, path: 0) (location: source ID 9, line 56, chars 1559-1642, hits: 0)
+- Line (location: source ID 9, line 57, chars 1573-1631, hits: 0)
+- Statement (location: source ID 9, line 57, chars 1573-1631, hits: 0)
+- Line (location: source ID 9, line 59, chars 1655-1666, hits: 0)
+- Statement (location: source ID 9, line 59, chars 1655-1666, hits: 0)
+- Branch (branch: 3, path: 0) (location: source ID 9, line 59, chars 1668-1740, hits: 0)
+- Line (location: source ID 9, line 60, chars 1682-1729, hits: 0)
+- Statement (location: source ID 9, line 60, chars 1682-1729, hits: 0)
+- Line (location: source ID 9, line 63, chars 1750-1769, hits: 0)
+- Statement (location: source ID 9, line 63, chars 1750-1769, hits: 0)
+- Line (location: source ID 9, line 64, chars 1779-1790, hits: 0)
+- Statement (location: source ID 9, line 64, chars 1779-1790, hits: 0)
+
+Anchors for Contract "ERC20" (solc 0.8.28, source ID 2):
+
+Anchors for Contract "Context" (solc 0.8.28, source ID 6):
+
+Anchors for Contract "DecentralizedStableCoin" (solc 0.8.28, source ID 9):
+- IC 481 -> Item 0
+- Creation code
+  - Refers to item: Function "burn" (location: source ID 9, line 43, chars 1143-1454, hits: 0)
+- IC 1212 -> Item 1
+- Creation code
+  - Refers to item: Line (location: source ID 9, line 44, chars 1204-1215, hits: 0)
+- IC 1212 -> Item 2
+- Creation code
+  - Refers to item: Statement (location: source ID 9, line 44, chars 1204-1215, hits: 0)
+- IC 1220 -> Item 3
+- Creation code
+  - Refers to item: Branch (branch: 0, path: 0) (location: source ID 9, line 44, chars 1217-1300, hits: 0)
+- IC 1220 -> Item 4
+- Creation code
+  - Refers to item: Line (location: source ID 9, line 45, chars 1231-1289, hits: 0)
+- IC 1220 -> Item 5
+- Creation code
+  - Refers to item: Statement (location: source ID 9, line 45, chars 1231-1289, hits: 0)
+- IC 1281 -> Item 6
+- Creation code
+  - Refers to item: Line (location: source ID 9, line 48, chars 1314-1345, hits: 0)
+- IC 1281 -> Item 7
+- Creation code
+  - Refers to item: Statement (location: source ID 9, line 48, chars 1314-1345, hits: 0)
+- IC 1281 -> Item 8
+- Creation code
+  - Refers to item: Statement (location: source ID 9, line 48, chars 1324-1345, hits: 0)
+- IC 1297 -> Item 9
+- Creation code
+  - Refers to item: Branch (branch: 1, path: 0) (location: source ID 9, line 48, chars 1347-1418, hits: 0)
+- IC 1297 -> Item 10
+- Creation code
+  - Refers to item: Line (location: source ID 9, line 49, chars 1361-1407, hits: 0)
+- IC 1297 -> Item 11
+- Creation code
+  - Refers to item: Statement (location: source ID 9, line 49, chars 1361-1407, hits: 0)
+- IC 1347 -> Item 12
+- Creation code
+  - Refers to item: Line (location: source ID 9, line 52, chars 1428-1447, hits: 0)
+- IC 1347 -> Item 13
+- Creation code
+  - Refers to item: Statement (location: source ID 9, line 52, chars 1428-1447, hits: 0)
+- IC 433 -> Item 14
+- Creation code
+  - Refers to item: Function "mint" (location: source ID 9, line 55, chars 1460-1797, hits: 0)
+- IC 1022 -> Item 15
+- Creation code
+  - Refers to item: Line (location: source ID 9, line 56, chars 1540-1557, hits: 0)
+- IC 1022 -> Item 16
+- Creation code
+  - Refers to item: Statement (location: source ID 9, line 56, chars 1540-1557, hits: 0)
+- IC 1073 -> Item 17
+- Creation code
+  - Refers to item: Branch (branch: 2, path: 0) (location: source ID 9, line 56, chars 1559-1642, hits: 0)
+- IC 1073 -> Item 18
+- Creation code
+  - Refers to item: Line (location: source ID 9, line 57, chars 1573-1631, hits: 0)
+- IC 1073 -> Item 19
+- Creation code
+  - Refers to item: Statement (location: source ID 9, line 57, chars 1573-1631, hits: 0)
+- IC 1134 -> Item 20
+- Creation code
+  - Refers to item: Line (location: source ID 9, line 59, chars 1655-1666, hits: 0)
+- IC 1134 -> Item 21
+- Creation code
+  - Refers to item: Statement (location: source ID 9, line 59, chars 1655-1666, hits: 0)
+- IC 1142 -> Item 22
+- Creation code
+  - Refers to item: Branch (branch: 3, path: 0) (location: source ID 9, line 59, chars 1668-1740, hits: 0)
+- IC 1142 -> Item 23
+- Creation code
+  - Refers to item: Line (location: source ID 9, line 60, chars 1682-1729, hits: 0)
+- IC 1142 -> Item 24
+- Creation code
+  - Refers to item: Statement (location: source ID 9, line 60, chars 1682-1729, hits: 0)
+- IC 1192 -> Item 25
+- Creation code
+  - Refers to item: Line (location: source ID 9, line 63, chars 1750-1769, hits: 0)
+- IC 1192 -> Item 26
+- Creation code
+  - Refers to item: Statement (location: source ID 9, line 63, chars 1750-1769, hits: 0)
+- IC 1202 -> Item 27
+- Creation code
+  - Refers to item: Line (location: source ID 9, line 64, chars 1779-1790, hits: 0)
+- IC 1202 -> Item 28
+- Creation code
+  - Refers to item: Statement (location: source ID 9, line 64, chars 1779-1790, hits: 0)
+
+Anchors for Contract "IERC1155Errors" (solc 0.8.28, source ID 1):
+
+Anchors for Contract "DSCEngineInterface" (solc 0.8.28, source ID 8):
+
+Anchors for Contract "IERC20" (solc 0.8.28, source ID 3):
+
+Anchors for Contract "Ownable" (solc 0.8.28, source ID 0):
+
+Anchors for Contract "IERC721Errors" (solc 0.8.28, source ID 1):
+
+Anchors for Contract "IERC20Metadata" (solc 0.8.28, source ID 5):
+
+Anchors for Contract "DSCEngine" (solc 0.8.28, source ID 7):
+
+Anchors for Contract "IERC20Errors" (solc 0.8.28, source ID 1):
+
+Anchors for Contract "ERC20Burnable" (solc 0.8.28, source ID 4):
+

@@ -30,4 +30,7 @@
 -> type(int256).min , type(I).interfaceId , bytes1 a = 0xb5; //  [10110101] , 
 -> EIP-165 is a standard that enables smart contracts to declare the interfaces they implement. The interface identifier for an interface like IERC20 is derived by XORing all of the function selectors in that interface. This identifier is stored as type(IERC20).interfaceId and helps other contracts verify that a given contract implements IERC20 without needing to know the implementation details
 -> For example, if a function is defined as function transfer(address to, uint256 amount), its signature is "transfer(address,uint256)". The function selector is then the first 4 bytes of the Keccak-256 hash of this signature
+-> In Solidity, when you define a public state variable of a struct type, the compiler automatically generates a "getter" function for you. However, if your struct contains dynamic arrays (such as address[], uint256[], etc.), the default getter cannot provide a complete representation of the struct - why we have this exception in solidity as reading data from blockchain is free
+-> Mappings are not iterable because keys are not stored in a specific order or as a list
+-> mappings are implemented in Solidity—they are not iterable or copyable since their data structure resides only in storage and not in memory.
 

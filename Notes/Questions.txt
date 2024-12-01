@@ -1,0 +1,2 @@
+why link token is erc677
+what are semi fungible token - erc-1155

@@ -25,8 +25,12 @@
 -> A successful PING-PONG "bonds" the new node to a bootnode
 -> start client --> connect to bootnode --> bond to bootnode --> find neighbours --> bond to neighbours
 -> storage optimisations and categorises them into replication-based, redaction-based, and content-based optimisations. Replication-based optimisations focus on reducing duplication of blockchain data shared among participants after committing data on the blockchain ledger. Redaction-based optimisations allow users to modify or delete data already committed on the ledger in various ways, while content-based optimisations compress data before or after committing it to the ledger
-
-
+-> base64 -i example.svg --> data:image/svg+xml;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII
+-> . In a function call, what is the difference between 'call' and 'staticcall'?
+-> On Ethereum there are a few different types of transactions:
+    -> Regular transactions: a transaction from one account to another.
+    -> Contract deployment transactions: a transaction without a 'to' address, where the data field is used for the contract code.
+    -> Execution of a contract: a transaction that interacts with a deployed smart contract. In this case, 'to' address is the smart contract address.
 
 
 

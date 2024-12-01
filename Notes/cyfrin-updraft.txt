@@ -17,3 +17,5 @@
 —> consensus types 1) chain selecrion and 2 ) sybil resistance ( POW )
 —> sharding and roll ups are solutions for the scalability issues 
 —> bridging mechanisms 1) locking and unlocking 2) burning and minting 
+-> algorithmic stablecoin : Dai , Frax and rai
+-> Cureve - decentralized stablecoin exchange

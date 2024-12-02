@@ -4,12 +4,12 @@ pragma solidity ^0.8.0;
 
 import {DecentralizedStableCoin} from "./DecentralizedStableCoin.sol";
 import {DSCEngineInterface} from "./DSCEngineInterface.i.sol";
-import {DecentralizedStableCoin} from "./DecentralizedStableCoin.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
+import {console} from "forge-std/console.sol";
 
-contract DSCEngine is  ReentrancyGuard {
+contract DSCEngine is ReentrancyGuard {
     error DSCEngine_mustBeMoreThanZero();
     error DSCEngine_tokenNotAllowed();
     error DSCEngine_tokenAddressMismatchToPriceFeed();
@@ -61,17 +61,19 @@ contract DSCEngine is  ReentrancyGuard {
 
     function DepositCollateralAndMintDsc() external {}
 
-    function DepositCollateral(address tokenAddress, uint256 amount)
+    function depositCollateral(address tokenAddress, uint256 amount)
         external
         moreThanZero(amount)
         isTokenAllowed(tokenAddress)
         nonReentrant
+        returns (bool)
     {
         // how are we sure that user has been paying to us the amount he has been inputing
         s_collateralDeposited[msg.sender][tokenAddress] += amount;
         emit CollateralDeposited(msg.sender, tokenAddress, amount);
         bool success = IERC20(tokenAddress).transferFrom(msg.sender, address(this), amount);
         if (!success) revert DSCEngine_tokenTransferFailed();
+        return success;
     }
 
     function mintDsc(uint256 dscAmountToMint) external moreThanZero(dscAmountToMint) nonReentrant {
@@ -92,7 +94,7 @@ contract DSCEngine is  ReentrancyGuard {
         return (collaternalAdjustedForThreshold * PRECISION) / totalDscMinted;
     }
 
-    function revertIfHealtFactorIsBroken(uint256 dscAmountToMint) internal view {
+    function revertIfHealtFactorIsBroken(uint256 dscAmountToMint) internal {
         s_amountOfDscMinted[msg.sender] += dscAmountToMint;
         uint256 userHealthFactor = _healthFactor(msg.sender);
         if (userHealthFactor < MIN_HEALTH_FACTOR) {
@@ -112,12 +114,16 @@ contract DSCEngine is  ReentrancyGuard {
         }
     }
 
+    /**
+     *
+     * @param token address of the collateral token
+     * @param amount amount to be calculated in USD value
+     * @return amount in USD value with DECIMALS Ex : for 1 eth amount this will return 37001e18
+     */
     function getUsdValue(address token, uint256 amount) public view returns (uint256) {
-        // uint256 tokenDecimals = uint256(IERC20(token).decimals());
         AggregatorV3Interface priceFeed = AggregatorV3Interface(s_tokenAddToPriceFeed[token]);
-        (uint80 roundId, int256 price, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound) =
-            priceFeed.latestRoundData();
+        (, int256 price,,,) = priceFeed.latestRoundData();
         uint256 tokenDecimals = uint256(priceFeed.decimals());
-        return ((uint256(price) * (PRECISION - 10 ** tokenDecimals)) * amount) / PRECISION;
+        return ((uint256(price) * (PRECISION / 10 ** tokenDecimals)) * amount) / PRECISION;
     }
 }

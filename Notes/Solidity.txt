@@ -33,4 +33,10 @@
 -> In Solidity, when you define a public state variable of a struct type, the compiler automatically generates a "getter" function for you. However, if your struct contains dynamic arrays (such as address[], uint256[], etc.), the default getter cannot provide a complete representation of the struct - why we have this exception in solidity as reading data from blockchain is free
 -> Mappings are not iterable because keys are not stored in a specific order or as a list
 -> mappings are implemented in Solidity—they are not iterable or copyable since their data structure resides only in storage and not in memory.
+-> Member "push" is not available in address[] memory outside of storage ? - In Solidity, the push method is only available for dynamic storage arrays. It is not available for arrays declared in memory because memory arrays are fixed in size when they are created, even if they are declared as dynamic. This is a key design of Solidity to optimize performance and avoid dynamic memory allocation during execution
+-> if you define variables in Solidity without explicitly specifying their visibility, they are private
+-> uint256 test = uint256(1) / uint256(37); --> return value is zero why 
+     - Solidity uses integer arithmetic, so division always truncates toward zero.
+     - To retain precision, scale values before performing the division.
+-> 
 

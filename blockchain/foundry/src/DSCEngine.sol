@@ -39,7 +39,7 @@ contract DSCEngine is ReentrancyGuard {
     uint256 private constant MIN_HEALTH_FACTOR = 1;
 
     // Events
-    event CollateralDeposited(address indexed user, address indexed token, uint256 indexed amount);
+    event CollateralDeposited(address indexed user, address indexed token, uint256 amount);
     event CollateralRedeemed(address from, address indexed redeemTo, address token, uint256 amount);
     event NearOverCollateralWarning(address indexed user);
 
@@ -102,8 +102,9 @@ contract DSCEngine is ReentrancyGuard {
 
     function _healthFactor(address user) internal returns (uint256) {
         // Health Factor = (Total Collateral Value * Weighted Average Liquidation Threshold) / Total Borrow Value
-        uint256 totalCollateralValueInUsd = getAccountCollateralValue(user);
         uint256 totalDscMinted = s_amountOfDscMinted[user];
+        if (totalDscMinted == 0) return type(uint256).max;
+        uint256 totalCollateralValueInUsd = getAccountCollateralValue(user);
         uint256 collateralAdjustedForWarning =
             totalCollateralValueInUsd * WARNING_LIQUIDATION_THRESHOLD / LIQUIDATION_PRECISION;
         bool warningPosition = (collateralAdjustedForWarning / totalDscMinted) < MIN_HEALTH_FACTOR;

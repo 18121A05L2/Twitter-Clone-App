@@ -10,6 +10,7 @@ import {Test} from "forge-std/Test.sol";
 import {console} from "forge-std/console.sol";
 import {Constants} from "../../script/Constants.c.sol";
 import {ERC20Mock} from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Vm} from "forge-std/Vm.sol";
 
 contract DscEngineTest is Test, Constants {
@@ -88,6 +89,7 @@ contract DscEngineTest is Test, Constants {
 
     modifier depositedCollateral() {
         vm.startPrank(USER);
+        vm.recordLogs();
         ERC20Mock(weth).approve(address(dscEngine), COLLATERAL_DEPOSITED);
         dscEngine.depositCollateral(weth, COLLATERAL_DEPOSITED);
         _;
@@ -96,8 +98,19 @@ contract DscEngineTest is Test, Constants {
     function testDepositCollateralSucceeds() public depositedCollateral {}
 
     function testDepositCollateralEvents() public depositedCollateral {
-        // Vm.Log[] memory events = vm.getRecordedLogs();
-        // console.log(events[0]);
+        Vm.Log[] memory events = vm.getRecordedLogs();
+
+        // checking the event selector
+        assertEq(DSCEngine.CollateralDeposited.selector, events[1].topics[0]);
+
+        // checking the event data
+        address user = address(uint160(uint256(events[1].topics[1])));
+        address token = address(uint160(uint256(events[1].topics[2])));
+        uint256 amount = abi.decode(events[1].data, (uint256));
+
+        assertEq(USER, user);
+        assertEq(weth, token);
+        assertEq(amount, COLLATERAL_DEPOSITED);
     }
 
     function testMintDscForZeroAmount() public {
@@ -138,5 +151,17 @@ contract DscEngineTest is Test, Constants {
 
         // warning event and for successful minting transfer of tokens from zero address / contract to the initiator
         assertEq(eventLogs.length, 2);
+    }
+
+    function testRedeemCollateralSuccess() external depositedCollateral {
+        // balance
+        uint256 currentUserbalance = IERC20(weth).balanceOf(USER);
+        dscEngine.redeemCollateral(weth, COLLATERAL_DEPOSITED);
+        uint256 userBalanceAfterRedeemed = IERC20(weth).balanceOf(USER);
+        assertEq(userBalanceAfterRedeemed, currentUserbalance + COLLATERAL_DEPOSITED);
+
+        //event
+        Vm.Log[] memory events = vm.getRecordedLogs();
+        assertEq(DSCEngine.CollateralRedeemed.selector, events[4].topics[0]);
     }
 }

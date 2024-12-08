@@ -23,3 +23,4 @@
 --> cast --calldata-decode "transferFrom(address,address, uint256)" <CallData> - will deocode the function selector along with the arguments
 --> FUZZ Testing
 --> Cheat code address, 0x7109709ECfa91a80626fF3989D68f67F5b1DD12D.
+--> forge inspect <contractAddress> methods - will print all functions with its selectors

@@ -57,7 +57,6 @@ contract DscEngineTest is Test, Constants {
         uint256 ethAmountRand = 3e16;
         uint256 expectedEthValueInUsdRand = 111e18;
         uint256 usdValueRand = dscEngine.getUsdValue(weth, ethAmountRand);
-        console.log(usdValueRand);
         assertEq(usdValueRand, expectedEthValueInUsdRand);
     }
 
@@ -73,7 +72,6 @@ contract DscEngineTest is Test, Constants {
         uint256 wethTokenAmountInUsd = 100;
         uint256 expectedTokenAmount = 27027027027027027; // 100/3700 = 0.027027027027027027
         uint256 tokenAmount = dscEngine.getTokenAmountFromUsd(weth, wethTokenAmountInUsd);
-        console.log("tokenAmount", tokenAmount);
         assertEq(tokenAmount, expectedTokenAmount);
     }
 
@@ -88,17 +86,26 @@ contract DscEngineTest is Test, Constants {
         vm.stopPrank();
     }
 
-    function testDepositCollateralSucceeds() public {
+    modifier depositedCollateral() {
         vm.startPrank(USER);
         ERC20Mock(weth).approve(address(dscEngine), COLLATERAL_DEPOSITED);
         dscEngine.depositCollateral(weth, COLLATERAL_DEPOSITED);
-        // vm.stopPrank();
+        _;
     }
 
-    function testMintDscForSuccess() external {
+    function testDepositCollateralSucceeds() public depositedCollateral {}
+
+    function testDepositCollateralEvents() public depositedCollateral {
+        // Vm.Log[] memory events = vm.getRecordedLogs();
+        // console.log(events[0]);
+    }
+
+    function testMintDscForZeroAmount() public {
         vm.expectRevert(DSCEngine.DSCEngine_mustBeMoreThanZero.selector);
         dscEngine.mintDsc(0 ether);
-        testDepositCollateralSucceeds();
+    }
+
+    function testMintDscSuccessScenario() external depositedCollateral {
         (bool success) = dscEngine.mintDsc(2775e18);
         assertEq(success, true);
     }
@@ -116,14 +123,20 @@ contract DscEngineTest is Test, Constants {
         dscEngine.mintDsc(overCollateralizedAmount);
     }
 
-    // function testMintDscForWarningCollateralized() external {
-    //     testDepositCollateralSucceeds();
-    //     uint256 warningAmount = 2700e18;
-    //     vm.recordLogs();
-    //     dscEngine.mintDsc(warningAmount);
-    //     Vm.Log[] memory memoryEntries = vm.getRecordedLogs();
-    //     // need to test this effectively as we have multiple evnet emissions
-    //     address nearOverCollareralWarningAddr = address(uint160(uint256(memoryEntries[1].topics[0])));
-    //     assertEq(nearOverCollareralWarningAddr, USER);
-    // }
+    function testMintDscForWarningCollateralizedEvent() external depositedCollateral {
+        uint256 warningAmount = 2700e18;
+        vm.recordLogs();
+        dscEngine.mintDsc(warningAmount);
+        Vm.Log[] memory eventLogs = vm.getRecordedLogs();
+        // events in solidiy are stored as hex as bytes-32
+        address nearOverCollareralWarningAddr = address(uint160(uint256(eventLogs[0].topics[1])));
+        assertEq(nearOverCollareralWarningAddr, USER);
+
+        // testing the event selector
+        bytes32 expectedEventSelector = keccak256("NearOverCollateralWarning(address)");
+        assertEq(eventLogs[0].topics[0], expectedEventSelector);
+
+        // warning event and for successful minting transfer of tokens from zero address / contract to the initiator
+        assertEq(eventLogs.length, 2);
+    }
 }

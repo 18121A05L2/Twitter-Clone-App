@@ -8,6 +8,7 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import {console} from "forge-std/console.sol";
+import {Oraclelib} from "./libraries/Oraclelib.sol";
 
 contract DSCEngine is ReentrancyGuard {
     error DSCEngine_mustBeMoreThanZero();
@@ -20,6 +21,8 @@ contract DSCEngine is ReentrancyGuard {
     error DSCEngine_userMustOwnTheToken();
     error DSCEngine_healthFacorIsOkay();
     error DSCEngine_healthFacorIsNotImproved();
+
+    using Oraclelib for AggregatorV3Interface; // Attach OracleLib functions to AggregatorV3Interface
 
     mapping(address token => address priceFeed) private s_tokenAddToPriceFeed;
     mapping(address user => mapping(address token => uint256 amount)) public s_collateralDeposited;
@@ -87,7 +90,6 @@ contract DSCEngine is ReentrancyGuard {
     }
 
     function mintDsc(uint256 dscAmountToMint) public moreThanZero(dscAmountToMint) nonReentrant returns (bool) {
-        console.log(s_amountOfDscMinted[msg.sender]);
         s_amountOfDscMinted[msg.sender] += dscAmountToMint;
         revertIfHealtFactorIsBroken(msg.sender);
         (bool minted) = i_dscContractAddress.mint(msg.sender, dscAmountToMint);
@@ -104,11 +106,9 @@ contract DSCEngine is ReentrancyGuard {
         uint256 totalDscMinted = s_amountOfDscMinted[user];
         uint256 collateralAdjustedForWarning =
             totalCollateralValueInUsd * WARNING_LIQUIDATION_THRESHOLD / LIQUIDATION_PRECISION;
-        console.log((collateralAdjustedForWarning / totalDscMinted) < MIN_HEALTH_FACTOR);
         bool warningPosition = (collateralAdjustedForWarning / totalDscMinted) < MIN_HEALTH_FACTOR;
         // nedd to test his emit event
         if (warningPosition) {
-            console.log("user", user);
             emit NearOverCollateralWarning(user);
         }
         uint256 collaternalAdjustedForThreshold =
@@ -143,7 +143,7 @@ contract DSCEngine is ReentrancyGuard {
      */
     function getUsdValue(address token, uint256 amount) public view returns (uint256) {
         AggregatorV3Interface priceFeed = AggregatorV3Interface(s_tokenAddToPriceFeed[token]);
-        (, int256 price,,,) = priceFeed.latestRoundData();
+        (, int256 price,,,) = priceFeed.staleCheckForLatestRoundData();
         uint256 tokenDecimals = uint256(priceFeed.decimals());
         return ((uint256(price) * (PRECISION / 10 ** tokenDecimals)) * amount) / PRECISION;
     }
@@ -154,7 +154,7 @@ contract DSCEngine is ReentrancyGuard {
      */
     function getTokenAmountFromUsd(address token, uint256 amountUsdInWei) public view returns (uint256) {
         AggregatorV3Interface priceFeed = AggregatorV3Interface(s_tokenAddToPriceFeed[token]);
-        (, int256 price,,,) = priceFeed.latestRoundData();
+        (, int256 price,,,) = priceFeed.staleCheckForLatestRoundData();
         uint256 tokenDecimals = uint256(priceFeed.decimals());
         // removing precesion to scale down the denominator so that numerator is in scaled up position
         uint256 denominator = (uint256(price) * (PRECISION / 10 ** tokenDecimals)) / PRECISION;

@@ -38,5 +38,9 @@
 -> uint256 test = uint256(1) / uint256(37); --> return value is zero why 
      - Solidity uses integer arithmetic, so division always truncates toward zero.
      - To retain precision, scale values before performing the division.
--> 
+-> When a transaction reverts:
+     - All state changes made during the transaction are undone.
+     - Events emitted during the transaction are also discarded.
+     - The transaction is effectively as if it never happened.
+
 

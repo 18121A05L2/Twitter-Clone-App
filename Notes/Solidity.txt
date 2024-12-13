@@ -42,5 +42,12 @@
      - All state changes made during the transaction are undone.
      - Events emitted during the transaction are also discarded.
      - The transaction is effectively as if it never happened.
+-> in Upgradable smart contracts ( in implementation contracts we can add new varialbles but can't reorder the existing storage variables)
+-> EIP - 2535 Diamond proxy pattern
+-> Proxy patterns ( https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies)
+     - Unstructured Storage Proxies
+     - Beacon contract address in EIP-1967 ( Beacon Proxy pattern ) - It simplifies the upgrade process for multiple proxies by centralizing the management of the implementation contract address
+     - Storage Collisions between Proxy and Implementation Contracts - above EIP is the solution
+     - Storage Collisions Between Implementation Versions - need to adapt to previos implementation Contracts
 
 

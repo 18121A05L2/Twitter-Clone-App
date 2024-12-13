@@ -21,12 +21,15 @@ contract DSCEngine is ReentrancyGuard {
     error DSCEngine_userMustOwnTheToken();
     error DSCEngine_healthFacorIsOkay();
     error DSCEngine_healthFacorIsNotImproved();
+    error DSCEngine_ReentrancyCallDetected();
 
     using Oraclelib for AggregatorV3Interface; // Attach OracleLib functions to AggregatorV3Interface
 
     mapping(address token => address priceFeed) private s_tokenAddToPriceFeed;
     mapping(address user => mapping(address token => uint256 amount)) public s_collateralDeposited;
     mapping(address user => uint256 amountOfDsc) public s_amountOfDscMinted;
+    mapping(address => bool) private reentrancyLock;
+
     address[] s_collateralTokens;
 
     DecentralizedStableCoin private immutable i_dscContractAddress;
@@ -55,6 +58,16 @@ contract DSCEngine is ReentrancyGuard {
             revert DSCEngine_tokenNotAllowed();
         }
         _;
+    }
+    // for cross function reentrancy , need to check how can this happen
+
+    modifier userLock() {
+        if (!reentrancyLock[msg.sender]) {
+            revert DSCEngine_ReentrancyCallDetected();
+        }
+        reentrancyLock[msg.sender] = true;
+        _;
+        reentrancyLock[msg.sender] = false;
     }
 
     constructor(address[] memory tokenAddresses, address[] memory priceFeedAddresses, address dscContractAddress) {
@@ -146,7 +159,9 @@ contract DSCEngine is ReentrancyGuard {
         AggregatorV3Interface priceFeed = AggregatorV3Interface(s_tokenAddToPriceFeed[token]);
         (, int256 price,,,) = priceFeed.staleCheckForLatestRoundData();
         uint256 tokenDecimals = uint256(priceFeed.decimals());
-        return ((uint256(price) * (PRECISION / 10 ** tokenDecimals)) * amount) / PRECISION;
+        // Solidity's integer division truncates. Thus, performing division before multiplication can lead to precision loss.
+        // return ((uint256(price) * (PRECISION / 10 ** tokenDecimals)) * amount) / PRECISION;
+        return (uint256(price) * PRECISION * amount) / (PRECISION * 10 ** tokenDecimals);
     }
 
     /**
@@ -158,7 +173,9 @@ contract DSCEngine is ReentrancyGuard {
         (, int256 price,,,) = priceFeed.staleCheckForLatestRoundData();
         uint256 tokenDecimals = uint256(priceFeed.decimals());
         // removing precesion to scale down the denominator so that numerator is in scaled up position
-        uint256 denominator = (uint256(price) * (PRECISION / 10 ** tokenDecimals)) / PRECISION;
+        // Solidity's integer division truncates. Thus, performing division before multiplication can lead to precision loss.
+        // uint256 denominator = (uint256(price) * (PRECISION / 10 ** tokenDecimals)) / PRECISION;
+        uint256 denominator = (uint256(price) * PRECISION) / (PRECISION * 10 ** tokenDecimals);
         return ((amountUsdInWei * PRECISION) / denominator);
     }
 

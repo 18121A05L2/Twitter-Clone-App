@@ -16,3 +16,6 @@
 
 -> ERC-165 
    Standarad Interface Detection
+
+-> EIP - 191
+   Signatures and Verifications

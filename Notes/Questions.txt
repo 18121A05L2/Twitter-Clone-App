@@ -1,3 +1,5 @@
 why link token is erc677
 what are semi fungible token - erc-1155
 how to convert to address from various types of types in solidity
+If we call a contract with some function that was not defined will the fallback function triggered ?
+What is Universal Upgradable smart contracts

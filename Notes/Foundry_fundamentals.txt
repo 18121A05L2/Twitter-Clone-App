@@ -24,3 +24,5 @@
 --> FUZZ Testing
 --> Cheat code address, 0x7109709ECfa91a80626fF3989D68f67F5b1DD12D.
 --> forge inspect <contractAddress> methods - will print all functions with its selectors
+--> python3 -m pip install slither-analyzer - security audit analysis
+--> Solidity's integer division truncates. Thus, performing division before multiplication can lead to precision loss.

@@ -40,3 +40,6 @@
 [submodule "blockchain/projects/merkle-airdrop/lib/openzeppelin-contracts"]
 	path = blockchain/projects/merkle-airdrop/lib/openzeppelin-contracts
 	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "blockchain/projects/merkle-airdrop/lib/murky"]
+	path = blockchain/projects/merkle-airdrop/lib/murky
+	url = https://github.com/dmfxyz/murky

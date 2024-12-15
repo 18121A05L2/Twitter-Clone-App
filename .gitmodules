@@ -43,3 +43,6 @@
 [submodule "blockchain/projects/merkle-airdrop/lib/murky"]
 	path = blockchain/projects/merkle-airdrop/lib/murky
 	url = https://github.com/dmfxyz/murky
+[submodule "blockchain/projects/proxy-contracts/lib/forge-std"]
+	path = blockchain/projects/proxy-contracts/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

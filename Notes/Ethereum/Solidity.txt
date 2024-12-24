@@ -49,5 +49,11 @@
      - Beacon contract address in EIP-1967 ( Beacon Proxy pattern ) - It simplifies the upgrade process for multiple proxies by centralizing the management of the implementation contract address
      - Storage Collisions between Proxy and Implementation Contracts - above EIP is the solution
      - Storage Collisions Between Implementation Versions - need to adapt to previos implementation Contracts
+-> for stack too deep error in solidity , try to add variables into a struct
+-> Multuply first and then to division 
+-> By default, Solidity does not return 0 for non-existent indices in arrays; it throws an out-of-bounds error.
+-> Event logs come with a timestamp, so there is no need to add another timestamp variable in it.
+-> Bitmask for storing boolean storage variables
+-> central logging contracts
 
 

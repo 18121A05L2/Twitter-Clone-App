@@ -1,3 +1,4 @@
 -> Events logs in solidity are stored as topics[0] will be the selctore and topics[1] will be the index params if we have
 -> Stateless Fuzz Testing : Where the state of the previous run is discarded for every new run.
 -> Stateful Fuzz Testing : Where the final state of the previous run is the starting state of the next run
+-> In an individaul test follow these steps -> Arrange , Act and Assert

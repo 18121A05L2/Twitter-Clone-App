@@ -7,3 +7,5 @@ https://github.com/Cyfrin/foundry-defi-stablecoin-cu
 https://github.com/Cyfrin/foundry-merkle-airdrop-cu
 https://github.com/smartcontractkit/defi-minimal
 https://github.com/nascentxyz/simple-security-toolkit/blob/main/audit-readiness-checklist.md - security audit
+https://github.com/Cyfrin/minimal-account-abstraction
+https://github.com/Cyfrin/foundry-dao-cu

@@ -8,3 +8,6 @@ why address is only 20 bytes
 if we deploy AA code in one chain , do we need to deploy in all other chains like L2s to achieve this
 difference between console and console2
 solidity optmimizer - lower deployment cost ? lower execution cost
+what happend if there is a bug in one of the Ethereum client like GETH
+what is , snark the whole chain ?
+if L2 breaks how user can easily escape the funds from L2 to L1 ( withdrawsls in escape hatch mode)

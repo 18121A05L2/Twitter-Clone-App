@@ -7,7 +7,7 @@
 --> forge fmt
 --> forge coverage
 --> forge coverage --report debug > coverage.txt
---> forge test test --debug <TestFunctionName>
+--> forge test --debug <TestFunctionName>
 --> forge test -mt <TestFunctionName>
 --> cast call 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9 "retrieve()"
     - 0x0000000000000000000000000000000000000000000000000000000000000159
@@ -15,14 +15,13 @@
     - 345
 --> To install a dependency - forge install smartcontractkit/chainlink-brownie-contracts --no-commit
 --> setUp() in test will run each time a test function is executed
---> if we want to generate addresses using number that number type must be a uint160
---> forge snapshot -m <testFunctionName>
+--> Generate a gas snapshot file - forge snapshot -m <testFunctionName>
 --> forge inspect FundMe storageLayout
 --> cast storage <contractAddress>
 --> cast sig "fund()" - will return the hex code of the selector
---> cast --calldata-decode "transferFrom(address,address, uint256)" <CallData> - will deocode the function selector along with the arguments
+--> cast --calldata-decode "transferFrom(address,address, uint256)" <CallData> -  provides the ouptut of argument values
 --> FUZZ Testing
 --> Cheat code address, 0x7109709ECfa91a80626fF3989D68f67F5b1DD12D.
 --> forge inspect <contractAddress> methods - will print all functions with its selectors
---> python3 -m pip install slither-analyzer - security audit analysis
+--> security audit analysis - python3 -m pip install slither-analyzer 
 --> Solidity's integer division truncates. Thus, performing division before multiplication can lead to precision loss.

@@ -1,3 +1,4 @@
+-------------------- ADDRESSES -------------------------------
 -> privatekey - 32 bytes , publickey - 64 bytes , address - 20 bytes
 -> generating a public , private and address - https://kobl.one/blog/create-full-ethereum-keypair-and-address/#generating-the-ec-private-key
 -> # Generate the private and public keys
@@ -17,3 +18,10 @@
 
 -> address for an empty pubic key  - 0xdcc703c0e500b653ca82273b7bfad8045d85a470
 -> 0x at the start of the address represents the address is in hexa decimal format
+
+
+
+--------------------------- GRAPH | QUERYING THE BLOCKCHAIN --------------------------
+-> Graph - Access the workd blockchain data
+-> https://miniscan.xyz/?network=ethereum
+

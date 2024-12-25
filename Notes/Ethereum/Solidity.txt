@@ -55,5 +55,6 @@
 -> Event logs come with a timestamp, so there is no need to add another timestamp variable in it.
 -> Bitmask for storing boolean storage variables
 -> central logging contracts
+-> if we want to generate addresses using number that number type must be a uint160
 
 

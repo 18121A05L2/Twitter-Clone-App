@@ -24,4 +24,6 @@
 --------------------------- GRAPH | QUERYING THE BLOCKCHAIN --------------------------
 -> Graph - Access the workd blockchain data
 -> https://miniscan.xyz/?network=ethereum
+-> https://api.studio.thegraph.com/query/99340/twitterclone/v0.0.1
+-> Problem #1: Indexing a Proxy Pattern Smart Contract
 

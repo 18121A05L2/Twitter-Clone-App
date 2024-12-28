@@ -1,0 +1,11 @@
+chainlink
+graph protocol
+IPFS -> File coin - pinata (API provider)
+zksync -> layer 2 scaling solution
+Foundry - framework for building decentralized applications
+solidity 
+openzepplin
+slither -> security tool
+
+
+

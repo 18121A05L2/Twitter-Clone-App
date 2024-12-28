@@ -56,5 +56,10 @@
 -> Bitmask for storing boolean storage variables
 -> central logging contracts
 -> if we want to generate addresses using number that number type must be a uint160
+-> we can write custom erros and free functions outside of the smart contract too
+-> with call function we can able to call functions in other smart contracts
+-> keccack hash collision 
+     - this will happen only when we have two dynamic data types next to each other ( string , string )
+
 
 

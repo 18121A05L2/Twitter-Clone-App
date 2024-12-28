@@ -11,3 +11,5 @@ solidity optmimizer - lower deployment cost ? lower execution cost
 what happend if there is a bug in one of the Ethereum client like GETH
 what is , snark the whole chain ?
 if L2 breaks how user can easily escape the funds from L2 to L1 ( withdrawsls in escape hatch mode)
+How to create a smart contract using another smart contract
+

@@ -14,8 +14,8 @@
 —>  plasma framework for layer2 - child chains ( omg network ) ?
 —> side chains - xthai ( side chains derive their security based on their own protocols , but Roll ups derive their security from the base layers ) 
 —> what is sharding , proto-danksharding and danksharding
-—> consensus types 1) chain selecrion and 2 ) sybil resistance ( POW )
+—> consensus types 1) chain selection and 2 ) sybil resistance ( POW )
 —> sharding and roll ups are solutions for the scalability issues 
 —> bridging mechanisms 1) locking and unlocking 2) burning and minting 
 -> algorithmic stablecoin : Dai , Frax and rai
--> Cureve - decentralized stablecoin exchange
+-> Curve - decentralized stablecoin exchange

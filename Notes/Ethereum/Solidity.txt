@@ -54,12 +54,27 @@
 -> By default, Solidity does not return 0 for non-existent indices in arrays; it throws an out-of-bounds error.
 -> Event logs come with a timestamp, so there is no need to add another timestamp variable in it.
 -> Bitmask for storing boolean storage variables
--> central logging contracts
+-> central logging mechanism like logs needs to be emitted by only one main contract
 -> if we want to generate addresses using number that number type must be a uint160
 -> we can write custom erros and free functions outside of the smart contract too
 -> with call function we can able to call functions in other smart contracts
 -> keccack hash collision 
      - this will happen only when we have two dynamic data types next to each other ( string , string )
+-> selfdesctruct is deprecated now - but previously it has a capability to force send the Ehter if the caller contract does not have any fallback function which is capable of receiving ether
+-> Generating Bytecode of a contract - abi.encodePacked(type(ContractName).creationCode) , if it has any constants or immutable data types we need to add those to the encodePacked
+-> witht the hlep of create2 deployment method we can precompile the address of the smart contract as we are the person who is going to provide salt bytes to create a contract
+-> abi.encodeWithSignature('functionName(uint256)',200)
+   abi.encodeWithSelector(this.functionName.selector,200)
+   abi.encodeWithSelector(bytes4(keccak256(bytes('functionName(uint256)'))))
+-> this.functionName is the function pointer
+-> multi call - we can do it with call or staticCall
+-> staticcall - Invoking a view or pure function in another contract to read state or perform computations without modifying the blockchain state , where as call function is used when we want to change the state of the blockchain
+-> we can call any function in solidity with 
+
+
+
+
+
 
 
 

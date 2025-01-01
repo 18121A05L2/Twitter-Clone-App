@@ -6,6 +6,16 @@ Foundry - framework for building decentralized applications
 solidity 
 openzepplin
 slither -> security tool
+tenderly - to monitor the smart contract actions
+
+
+
+
+
+
+dapptools -> Unix-inspired Ethereum toolkit
+ev.storage -> contract storage layout
+MEV data - ether pi
 
 
 

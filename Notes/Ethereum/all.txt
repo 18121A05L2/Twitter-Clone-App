@@ -16,7 +16,7 @@
     # (Optional) import the private key to geth
     > geth account import priv
 
--> address for an empty pubic key  - 0xdcc703c0e500b653ca82273b7bfad8045d85a470
+-> address for an empty public key  - 0xdcc703c0e500b653ca82273b7bfad8045d85a470
 -> 0x at the start of the address represents the address is in hexa decimal format
 
 

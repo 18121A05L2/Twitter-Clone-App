@@ -12,7 +12,7 @@ tenderly - to monitor the smart contract actions
 
 
 
-
+Notes - Vs notes
 dapptools -> Unix-inspired Ethereum toolkit
 ev.storage -> contract storage layout
 MEV data - ether pi

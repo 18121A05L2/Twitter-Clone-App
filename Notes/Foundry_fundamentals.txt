@@ -18,6 +18,8 @@
 --> Generate a gas snapshot file - forge snapshot -m <testFunctionName>
 --> forge inspect FundMe storageLayout
 --> cast storage <contractAddress>
+--> cast parse-bytes32-string <bytes32>
+--> cast storage <contractAddress> <slotnumber> --rpc-url $LOCAL_RPC_URL
 --> cast sig "fund()" - will return the hex code of the selector
 --> cast --calldata-decode "transferFrom(address,address, uint256)" <CallData> -  provides the ouptut of argument values
 --> FUZZ Testing
@@ -25,3 +27,5 @@
 --> forge inspect <contractAddress> methods - will print all functions with its selectors
 --> security audit analysis - python3 -m pip install slither-analyzer 
 --> Solidity's integer division truncates. Thus, performing division before multiplication can lead to precision loss.
+--> forge test --fork-url $MAINNET_RPC_URL --fork-block-number $BLOCK_NUMBER
+

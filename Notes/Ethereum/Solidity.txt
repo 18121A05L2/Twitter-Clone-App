@@ -60,7 +60,7 @@
 -> with call function we can able to call functions in other smart contracts
 -> keccack hash collision 
      - this will happen only when we have two dynamic data types next to each other ( string , string )
--> selfdesctruct is deprecated now - but previously it has a capability to force send the Ehter if the caller contract does not have any fallback function which is capable of receiving ether
+-> selfdesctruct is deprecated now - but previously it has a capability to force send the Ehter if the caller contract does not have any payable fallback function which is capable of receiving ether
 -> Generating Bytecode of a contract - abi.encodePacked(type(ContractName).creationCode) , if it has any constants or immutable data types we need to add those to the encodePacked
 -> witht the hlep of create2 deployment method we can precompile the address of the smart contract as we are the person who is going to provide salt bytes to create a contract
 -> abi.encodeWithSignature('functionName(uint256)',200)
@@ -70,6 +70,10 @@
 -> multi call - we can do it with call or staticCall
 -> staticcall - Invoking a view or pure function in another contract to read state or perform computations without modifying the blockchain state , where as call function is used when we want to change the state of the blockchain
 -> we can call any function in solidity with 
+-> abi.encodePacked("hello") and bytes("hello") gives the same output
+-> bytes(string) costs roughly 445 less Gas -  The first is copying the memory, the second is just casting the pointer type.
+-> to decode an encodePacked we need to seperate all the different data types and need to type cast with that respective data type and there is not other decoding strategy for this 
+-> For reference types (e.g., arrays, mappings, structs): delete resets the reference itself but retains the data in storage for arrays and mappings
 
 
 

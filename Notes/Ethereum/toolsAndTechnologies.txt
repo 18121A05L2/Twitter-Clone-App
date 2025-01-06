@@ -1,12 +1,13 @@
-chainlink
-graph protocol
+chainlink - decentralized oracle network
+graph protocol - indexing protocol for querying data for networks like Ethereum and IPFS
 IPFS -> File coin - pinata (API provider)
 zksync -> layer 2 scaling solution
 Foundry - framework for building decentralized applications
-solidity 
-openzepplin
-slither -> security tool
+solidity - smart contract language
+openzepplin - smart contract library
+slither ->  security tool
 tenderly - to monitor the smart contract actions
+huff , yul - low level languages
 
 
 

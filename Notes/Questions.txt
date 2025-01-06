@@ -15,5 +15,7 @@ How to create a smart contract using another smart contract
 How self Destruct can able to delete a immutablel smart contract code , what does it actually do 
 How arrays storage slot looks like
 How to decode a abi.encodePacked data types
+Why optocodes deals with storage has more gas cost than memory or stack , what does it actually do or how does it differs internally
+
 
 

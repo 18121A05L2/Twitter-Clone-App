@@ -74,6 +74,11 @@
 -> bytes(string) costs roughly 445 less Gas -  The first is copying the memory, the second is just casting the pointer type.
 -> to decode an encodePacked we need to seperate all the different data types and need to type cast with that respective data type and there is not other decoding strategy for this 
 -> For reference types (e.g., arrays, mappings, structs): delete resets the reference itself but retains the data in storage for arrays and mappings
+-> updateValue(uint256) is the function signature and the hash generated with this is function selector
+-> the hex code data which we send from our wallet ( metamask ) is call data which contains function selector at the first four bytes
+-> difference between vyper and solidity is free memory pointer ( dynamic memory allocation ) , vyper does not have this feature
+-> for every function written in lowlevel language we must have stop optcode at the end of the function ( if we have return which halts the execution stop is not required )
+-> 
 
 
 

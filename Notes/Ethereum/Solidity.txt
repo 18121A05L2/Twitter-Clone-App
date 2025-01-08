@@ -78,7 +78,8 @@
 -> the hex code data which we send from our wallet ( metamask ) is call data which contains function selector at the first four bytes
 -> difference between vyper and solidity is free memory pointer ( dynamic memory allocation ) , vyper does not have this feature
 -> for every function written in lowlevel language we must have stop optcode at the end of the function ( if we have return which halts the execution stop is not required )
--> 
+-> precompiled contracts
+-> byte offset refers to the starting from nth byte in the memory or storage or stack
 
 
 

@@ -1,3 +1,4 @@
+--------------- MOSTLY USED -----------------------
 chainlink - decentralized oracle network
 graph protocol - indexing protocol for querying data for networks like Ethereum and IPFS
 IPFS -> File coin - pinata (API provider)
@@ -8,11 +9,14 @@ openzepplin - smart contract library
 slither ->  security tool
 tenderly - to monitor the smart contract actions
 huff , yul - low level languages
+remix - IDE for solidity
 
 
 
 
 
+------- LESS USED --------------
+dedaub - decompiler
 Notes - Vs notes
 dapptools -> Unix-inspired Ethereum toolkit
 ev.storage -> contract storage layout

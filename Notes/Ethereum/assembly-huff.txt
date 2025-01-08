@@ -7,3 +7,4 @@
 -> CALLDATALOAD - loads 32 bytes from the calldata by removing the number of bytes we provided as stack input ( EX : if we give zero it wold store from the 0th byte of the calldata , and for 1 it would store from 1st byte of the calldata (removing first byte) )
 -> run time byteCode - huffc <FileLocaltion> --bin-runtime
 -> JUMPDEST is a marker for valid jump locations in EVM bytecode, ensuring safe and predictable control flow for smart contracts. Without it, arbitrary jumps could break contract logic or create security vulnerabilities
+-> dedaub - decompiler

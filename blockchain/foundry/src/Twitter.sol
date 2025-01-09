@@ -8,20 +8,23 @@ import "./TwitterNfts.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
+import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 error Twitter_NotOwner();
 
 /**
  * @title integrating twitter with blockchain
  * @author Lakshmi Sanikommu
- * @notice Implemention twitter in a decentralized way
+ * @notice This is Implementation Contract
  */
-contract Twitter is TwitterToken, ERC165 {
+contract Twitter is TwitterToken, ERC165, Initializable, OwnableUpgradeable, UUPSUpgradeable {
     address public contractAddress;
 
     using FundMe for uint256;
 
-    address public immutable i_owner;
+    address public i_owner;
     AggregatorV3Interface internal s_priceFeed;
     address[] public s_funders;
     mapping(address => uint256) public s_addressToAmountFunded;
@@ -32,13 +35,26 @@ contract Twitter is TwitterToken, ERC165 {
     mapping(address => string) public profiles;
     TwitterNfts public nftContract;
 
-    modifier onlyOwner() {
-        if (msg.sender != i_owner) revert Twitter_NotOwner();
-        _;
+    // modifier onlyOwner() {
+    //     if (msg.sender != i_owner) revert Twitter_NotOwner();
+    //     _;
+    // }
+
+    // TODO : need to check Gas const for this constructor
+    constructor() {
+        _disableInitializers();
     }
 
-    constructor(address priceFeedAddress) payable {
-        require(msg.value > 0, "Must send ETH to deploy");
+    // constructor(address priceFeedAddress) payable {
+    //     require(msg.value > 0, "Must send ETH to deploy");
+    //     i_owner = msg.sender;
+    //     s_priceFeed = AggregatorV3Interface(priceFeedAddress);
+    //     contractAddress = address(this);
+    // }
+
+    function __Twitter_init(address initialOwner, address priceFeedAddress) public payable initializer {
+        __Ownable_init(initialOwner);
+        require(msg.value > 0 && msg.value < 1 ether, "Must send ETH to deploy");
         i_owner = msg.sender;
         s_priceFeed = AggregatorV3Interface(priceFeedAddress);
         contractAddress = address(this);
@@ -113,6 +129,8 @@ contract Twitter is TwitterToken, ERC165 {
     function supportsInterface(bytes4 interfaceId) public view override(ERC165) returns (bool) {
         return interfaceId == type(IERC165).interfaceId || super.supportsInterface(interfaceId);
     }
+
+    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
     // A fallback function to accept ETH
     receive() external payable {}

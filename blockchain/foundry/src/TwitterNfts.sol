@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // ERC721 Contract
 pragma solidity ^0.8.0;
+
 import "./Twitter.sol";
 import "./interfaces/IERC721Receiver.sol";
-
 
 contract TwitterNfts {
     string public name;
@@ -24,36 +24,16 @@ contract TwitterNfts {
     // token id => token uri
     mapping(uint256 => string) _tokenUris;
 
-    event Transfer(
-        address indexed _from,
-        address indexed _to,
-        uint256 indexed _tokenId
-    );
+    event Transfer(address indexed _from, address indexed _to, uint256 indexed _tokenId);
 
-    event Approval(
-        address indexed _owner,
-        address indexed _approved,
-        uint256 indexed _tokenId
-    );
+    event Approval(address indexed _owner, address indexed _approved, uint256 indexed _tokenId);
 
-    event ApprovalForAll(
-        address indexed _owner,
-        address indexed _operator,
-        bool _approved
-    );
+    event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);
 
     // Market place variables
 
-    event NFTListed(
-        uint256 indexed tokenId,
-        address indexed owner,
-        uint256 price
-    );
-    event NFTSold(
-        uint256 indexed tokenId,
-        address indexed buyer,
-        uint256 price
-    );
+    event NFTListed(uint256 indexed tokenId, address indexed owner, uint256 price);
+    event NFTSold(uint256 indexed tokenId, address indexed buyer, uint256 price);
     event NFTCanceled(uint256 indexed tokenId, address indexed owner);
 
     struct NFT {
@@ -98,44 +78,26 @@ contract TwitterNfts {
         return _owners[_tokenId];
     }
 
-    function safeTransferFrom(
-        address _from,
-        address _to,
-        uint256 _tokenId
-    ) public payable {
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) public payable {
         safeTransferFrom(_from, _to, _tokenId, "");
     }
 
-    function safeTransferFrom(
-        address _from,
-        address _to,
-        uint256 _tokenId,
-        bytes memory _data
-    ) public payable {
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes memory _data) public payable {
         require(
-            ownerOf(_tokenId) == msg.sender ||
-                _tokenApprovals[_tokenId] == msg.sender ||
-                _operatorApprovals[ownerOf(_tokenId)][msg.sender],
+            ownerOf(_tokenId) == msg.sender || _tokenApprovals[_tokenId] == msg.sender
+                || _operatorApprovals[ownerOf(_tokenId)][msg.sender],
             "!Auth"
         );
         // trigger func check
-        require(
-            _checkOnERC721Received(_from, _to, _tokenId, _data),
-            "!ERC721Implementer"
-        );
+        require(_checkOnERC721Received(_from, _to, _tokenId, _data), "!ERC721Implementer");
         _transfer(_from, _to, _tokenId);
     }
 
-    function transferFrom(
-        address _from,
-        address _to,
-        uint256 _tokenId
-    ) public payable {
+    function transferFrom(address _from, address _to, uint256 _tokenId) public payable {
         // unsafe transfer without onERC721Received, used for contracts that dont implement
         require(
-            ownerOf(_tokenId) == msg.sender ||
-                _tokenApprovals[_tokenId] == msg.sender ||
-                _operatorApprovals[ownerOf(_tokenId)][msg.sender],
+            ownerOf(_tokenId) == msg.sender || _tokenApprovals[_tokenId] == msg.sender
+                || _operatorApprovals[ownerOf(_tokenId)][msg.sender],
             "!Auth"
         );
         _transfer(_from, _to, _tokenId);
@@ -156,10 +118,7 @@ contract TwitterNfts {
         return _tokenApprovals[_tokenId];
     }
 
-    function isApprovedForAll(
-        address _owner,
-        address _operator
-    ) public view returns (bool) {
+    function isApprovedForAll(address _owner, address _operator) public view returns (bool) {
         return _operatorApprovals[_owner][_operator];
     }
 
@@ -195,28 +154,17 @@ contract TwitterNfts {
     }
 
     // INTERNAL FUNCTIONS
-    function _checkOnERC721Received(
-        address from,
-        address to,
-        uint256 tokenId,
-        bytes memory data
-    ) private returns (bool) {
+    function _checkOnERC721Received(address from, address to, uint256 tokenId, bytes memory data)
+        private
+        returns (bool)
+    {
         // check if to is an contract, if yes, to.code.length will always > 0
         if (to.code.length > 0) {
-            try
-                IERC721Receiver(to).onERC721Received(
-                    msg.sender,
-                    from,
-                    tokenId,
-                    data
-                )
-            returns (bytes4 retval) {
+            try IERC721Receiver(to).onERC721Received(msg.sender, from, tokenId, data) returns (bytes4 retval) {
                 return retval == IERC721Receiver.onERC721Received.selector;
             } catch (bytes memory reason) {
                 if (reason.length == 0) {
-                    revert(
-                        "ERC721: transfer to non ERC721Receiver implementer"
-                    );
+                    revert("ERC721: transfer to non ERC721Receiver implementer");
                 } else {
                     /// @solidity memory-safe-assembly
                     assembly {
@@ -268,10 +216,7 @@ contract TwitterNfts {
 
     // ----------------------------------- MarketPlace Code ---------------------------------
 
-    function listNFT(
-        uint256 _tokenId,
-        uint256 _price
-    ) external ownerOfToken(_tokenId) {
+    function listNFT(uint256 _tokenId, uint256 _price) external ownerOfToken(_tokenId) {
         require(_price > 0, "Price must be greater than zero");
         // Transfer the NFT from the owner to the marketplace contract
         // transferFrom(msg.sender, address(this), _tokenId);
@@ -281,18 +226,12 @@ contract TwitterNfts {
         emit NFTListed(_tokenId, msg.sender, _price);
     }
 
-    function buyNFT(
-        uint256 _tokenId,
-        uint256 _price
-    ) external payable nonReentrant {
+    function buyNFT(uint256 _tokenId, uint256 _price) external payable nonReentrant {
         NFT storage nft = listedNfts[_tokenId];
         require(!nft.sold, "NFT already sold");
         require(nft.price == _price, "Incorrect price");
         require(nft.owner != msg.sender, "Cannot buy your own NFT");
-        require(
-            twitterContract.s_balanceOf(msg.sender) >= _price,
-            "Insufficient token balance"
-        );
+        require(twitterContract.s_balanceOf(msg.sender) >= _price, "Insufficient token balance");
 
         nft.sold = true;
         address seller = nft.owner;
@@ -305,11 +244,7 @@ contract TwitterNfts {
         safeTransferFrom(address(this), msg.sender, _tokenId);
 
         // Transfer the payment to the seller
-        twitterContract.approveTokensForNftContract(
-            msg.sender,
-            address(this),
-            _price
-        );
+        twitterContract.approveTokensForNftContract(msg.sender, address(this), _price);
         twitterContract.transferFrom(msg.sender, seller, nft.price);
         emit NFTSold(_tokenId, msg.sender, nft.price);
         // Remove the NFT from the listings
@@ -341,9 +276,7 @@ contract TwitterNfts {
         return nfts;
     }
 
-    function setTwitterContractAddress(
-        address payable _twitterTokenContract
-    ) public onlyOwner {
+    function setTwitterContractAddress(address payable _twitterTokenContract) public onlyOwner {
         twitterContract = Twitter(_twitterTokenContract);
     }
 

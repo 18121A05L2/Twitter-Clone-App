@@ -2,7 +2,6 @@
 // ERC20 Contract
 pragma solidity ^0.8.0;
 
-
 error TwitterToken_InefficientBalane();
 error TwitterToken_NotEnoughAllowances();
 
@@ -20,11 +19,7 @@ contract TwitterToken {
     }
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
-    event Approval(
-        address indexed _owner,
-        address indexed _spender,
-        uint256 _value
-    );
+    event Approval(address indexed _owner, address indexed _spender, uint256 _value);
 
     function name() public view returns (string memory) {
         return s_name;
@@ -60,20 +55,13 @@ contract TwitterToken {
         assert(s_balanceOf[_from] + s_balanceOf[_to] == previousBalances);
     }
 
-    function transfer(
-        address _to,
-        uint256 _value
-    ) public returns (bool success) {
+    function transfer(address _to, uint256 _value) public returns (bool success) {
         _transfer(msg.sender, _to, _value);
         return true;
     }
 
     // claiming approval
-    function transferFrom(
-        address _from,
-        address _to,
-        uint256 _value
-    ) public returns (bool success) {
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
         if (_value > s_allowances[_from][msg.sender]) {
             revert TwitterToken_NotEnoughAllowances();
         }
@@ -84,35 +72,19 @@ contract TwitterToken {
         return true;
     }
 
-    function approve(
-        address _spender,
-        uint256 _value
-    ) public returns (bool success) {
-        require(
-            s_balanceOf[msg.sender] >= _value,
-            " User doesn't have enought tokens "
-        );
+    function approve(address _spender, uint256 _value) public returns (bool success) {
+        require(s_balanceOf[msg.sender] >= _value, " User doesn't have enought tokens ");
         s_allowances[msg.sender][_spender] = _value;
         emit Approval(msg.sender, _spender, _value);
         return true;
     }
 
-    function allowance(
-        address _owner,
-        address _spender
-    ) public view returns (uint256 remaining) {}
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining) {}
 
     //----------------------------- End of ERC-20 Token implementation -----------------------------
 
-    function approveTokensForNftContract(
-        address _from,
-        address _spender,
-        uint256 _value
-    ) public {
-        require(
-            s_balanceOf[_from] >= _value,
-            " User doesn't have enought tokens "
-        );
+    function approveTokensForNftContract(address _from, address _spender, uint256 _value) public {
+        require(s_balanceOf[_from] >= _value, " User doesn't have enought tokens ");
         s_allowances[_from][_spender] = _value;
     }
 }

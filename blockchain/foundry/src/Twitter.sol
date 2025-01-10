@@ -54,7 +54,7 @@ contract Twitter is TwitterToken, ERC165, Initializable, OwnableUpgradeable, UUP
 
     function __Twitter_init(address initialOwner, address priceFeedAddress) public payable initializer {
         __Ownable_init(initialOwner);
-        require(msg.value > 0 && msg.value < 1 ether, "Must send ETH to deploy");
+        require(msg.value > 0 && msg.value < 0.11 ether, "Must send ETH to deploy");
         i_owner = msg.sender;
         s_priceFeed = AggregatorV3Interface(priceFeedAddress);
         contractAddress = address(this);

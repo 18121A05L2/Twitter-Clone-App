@@ -11,7 +11,7 @@ import {ERC1967Utils} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.s
  * @notice This follows ERC1967 : Proxy Storage Slots
  */
 contract TwitterProxy is ERC1967Proxy {
-    constructor(address implementation, bytes memory _data) ERC1967Proxy(implementation, _data) {
+    constructor(address implementation, bytes memory _data) payable ERC1967Proxy(implementation, _data) {
         ERC1967Utils.changeAdmin(msg.sender);
     }
 }

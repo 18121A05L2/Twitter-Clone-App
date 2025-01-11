@@ -22,7 +22,7 @@ coverage-report :; forge coverage --report debug > coverage-report.txt
 NETWORK_ARGS := --rpc-url http://localhost:8545 --private-key $(ANVIL_PRIVATE_KEY) --broadcast
 
 ifeq ($(findstring --network sepolia,$(ARGS)),--network sepolia) # ifeq (<value>,<value>)
-	NETWORK_ARGS := --rpc-url $(SEPOLIA_RPC_URL) --account Real_account_private_key  --broadcast --verify --etherscan-api-key $(ETHERSCAN_API_KEY) -vvvv
+	NETWORK_ARGS := --rpc-url $(SEPOLIA_RPC_URL) --account Real_account_private_key  --broadcast --verify --etherscan-api-key $(ETHERSCAN_API_KEY)
 endif
 
 deploy:

@@ -20,11 +20,11 @@ contract Upgrade is Script, Constants {
         DeployProxyAndImplementation proxyAndImplementation = new DeployProxyAndImplementation();
         (, TwitterProxy twitterProxy) = proxyAndImplementation.run();
         (account,) = config.activeNetworkConfig();
-        // TODO :
-        // proxy = DevOpsTools.get_most_recent_deployment("TwitterProxy", block.chainid);
+        // TODO : Existing deployed contract need to work , no need to deploy again
+        // address proxy = DevOpsTools.get_most_recent_deployment("TwitterProxy", block.chainid);
+
         vm.startBroadcast(account);
         TwitterV2 twitterV2 = new TwitterV2();
-        // upgradeToAndCall(address(twitterV2), "");
         vm.stopBroadcast();
         return (address(twitterProxy), twitterV2, account);
     }

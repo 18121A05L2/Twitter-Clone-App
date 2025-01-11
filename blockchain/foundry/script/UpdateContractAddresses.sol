@@ -19,10 +19,7 @@ contract UpdateContractAddresses is Script {
         address twitterProxy = DevOpsTools.get_most_recent_deployment("TwitterProxy", block.chainid);
         address twitterV2 = DevOpsTools.get_most_recent_deployment("TwitterV2", block.chainid);
         address twitter = DevOpsTools.get_most_recent_deployment("Twitter", block.chainid);
-        console.log(block.chainid);
-        string memory chainName = block.chainid == 1
-            ? "mainnet"
-            : block.chainid == 11155111 ? "sepolia" : block.chainid == 31337 ? "localhost" : "unknown";
+        string memory chainId = Strings.toString(block.chainid);
 
         // TODO : need to append to the existing json file
         string memory existingContractAddresses = vm.readFile(frontEndContractAddresses);
@@ -40,17 +37,17 @@ contract UpdateContractAddresses is Script {
         // TwitterProxy
         string memory tempString = Strings.toHexString(uint256(uint160(twitterProxy)), 20);
         string memory tempString2 = vm.serializeString(obj2, "TwitterProxy", tempString);
-        vm.serializeString(obj1, chainName, tempString2);
+        vm.serializeString(obj1, chainId, tempString2);
 
         // Twitter
         string memory tempString3 = Strings.toHexString(uint256(uint160(twitter)), 20);
         string memory tempString4 = vm.serializeString(obj2, "Twitter", tempString3);
-        vm.serializeString(obj1, chainName, tempString4);
+        vm.serializeString(obj1, chainId, tempString4);
 
         // TwitterV2
         string memory tempString5 = Strings.toHexString(uint256(uint160(twitterV2)), 20);
         string memory tempString6 = vm.serializeString(obj2, "TwitterV2", tempString5);
-        string memory nestedJson3 = vm.serializeString(obj1, chainName, tempString6);
+        string memory nestedJson3 = vm.serializeString(obj1, chainId, tempString6);
 
         // Write the updated JSON back to the file
         vm.writeFile(frontEndContractAddresses, nestedJson3);

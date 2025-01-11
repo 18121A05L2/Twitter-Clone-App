@@ -90,18 +90,6 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_owner", "type": "address" },
-      { "internalType": "address", "name": "_spender", "type": "address" }
-    ],
-    "name": "allowance",
-    "outputs": [
-      { "internalType": "uint256", "name": "remaining", "type": "uint256" }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
       { "internalType": "address", "name": "_spender", "type": "address" },
       { "internalType": "uint256", "name": "_value", "type": "uint256" }
     ],
@@ -324,15 +312,6 @@
     "name": "setProfileAtMint",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }
-    ],
-    "name": "supportsInterface",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-    "stateMutability": "view",
     "type": "function"
   },
   {

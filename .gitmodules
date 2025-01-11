@@ -64,3 +64,12 @@
 # [submodule "blockchain/foundry/lib/chainlink"]
 # 	path = blockchain/foundry/lib/chainlink
 # 	url = https://github.com/smartcontractkit/chainlink
+[submodule "blockchain/foundry/lib/chainlink"]
+	path = blockchain/foundry/lib/chainlink
+	url = https://github.com/smartcontractkit/chainlink
+[submodule "blockchain/foundry/lib/openzeppelin-contracts-upgradeable"]
+	path = blockchain/foundry/lib/openzeppelin-contracts-upgradeable
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable
+[submodule "blockchain/foundry/lib/openzeppelin-contracts"]
+	path = blockchain/foundry/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts

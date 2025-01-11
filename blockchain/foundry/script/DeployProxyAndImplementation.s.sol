@@ -13,7 +13,6 @@ contract DeployProxyAndImplementation is Script, Constants {
     function run() external returns (Twitter, TwitterProxy) {
         HelperConfig config = new HelperConfig();
         (address account, address priceFeed) = config.activeNetworkConfig();
-        vm.deal(account, 1000 ether);
         vm.startBroadcast(account);
         Twitter twitter = new Twitter();
         bytes memory initializationData = abi.encodeCall(Twitter.__Twitter_init, (account, priceFeed));

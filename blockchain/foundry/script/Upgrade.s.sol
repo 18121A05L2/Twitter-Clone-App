@@ -8,14 +8,17 @@ import {console} from "forge-std/console.sol";
 import {TwitterV2} from "../src/TwitterV2.sol";
 import {Twitter} from "../src/Twitter.sol";
 import {DevOpsTools} from "lib/foundry-devops/src/DevOpsTools.sol";
+import {HelperConfig} from "../script/HelperConfig.s.sol";
 
 contract Upgrade is Script, Constants {
     function run() external returns (address proxy) {
+        HelperConfig config = new HelperConfig();
+        (address account,) = config.activeNetworkConfig();
+
         proxy = DevOpsTools.get_most_recent_deployment("TwitterProxy", block.chainid);
-        // bytes memory initializationData = abi.encodeCall(TwitterV2.__TwitterV2_init, ());
-        vm.startBroadcast();
+        vm.startBroadcast(account);
         TwitterV2 twitterV2 = new TwitterV2();
-        Twitter(payable(proxy)).upgradeToAndCall(address(twitterV2), "");
+        TwitterV2(payable(proxy)).upgradeToAndCall(address(twitterV2), "");
         vm.stopBroadcast();
     }
 }

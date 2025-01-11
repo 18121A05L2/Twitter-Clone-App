@@ -1,6 +1,6 @@
 -include .env
 
-.PHONY: install build all clean coverage-report deploy example help
+.PHONY: install build all clean coverage-report deploy example help deploy-upgrade
 
 example:
 	echo "The value of MY_ENV is: $(MY_ENV)"
@@ -25,6 +25,9 @@ endif
 
 deploy:
 	@forge script script/ProxyAndImplementation.s.sol:DeployProxyAndImplementation ${NETWORK_ARGS}
+
+deploy-upgrade:
+	@forge script script/upgrade.s.sol:Upgrade ${NETWORK_ARGS}
 
 #awk: A text processing tool used for pattern matching and text manipulation.
 help:

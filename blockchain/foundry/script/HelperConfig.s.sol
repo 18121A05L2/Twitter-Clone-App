@@ -22,7 +22,8 @@ contract HelperConfig is Constants, Script {
         }
     }
 
-    function getSepoliaEthConfig() public view returns (NetworkConfig memory sepoliaNetworkConfig) {
+    function getSepoliaEthConfig() public returns (NetworkConfig memory sepoliaNetworkConfig) {
+        vm.deal(REAL_ACCOUNT, 1000 ether);
         sepoliaNetworkConfig = NetworkConfig({account: REAL_ACCOUNT, priceFeed: SEPOLIA_PRICE_FEED});
         return sepoliaNetworkConfig;
     }
@@ -31,6 +32,7 @@ contract HelperConfig is Constants, Script {
         if (activeNetworkConfig.account != address(0)) {
             return activeNetworkConfig;
         }
+        vm.deal(ANVIL_ACCOUNT, 1000 ether);
         vm.startBroadcast(ANVIL_ACCOUNT);
         MockV3Aggregator mockV3Aggregator = new MockV3Aggregator(DECIMALS, INITIAL_ANSWER);
         vm.stopBroadcast();

@@ -9,6 +9,9 @@ ffi = true
 fs_permissions = [
     { access = "read", path = "./broadcast" },
     { access = "read", path = "./reports" },
+    { access = "read-write", path = "../../frontend/utils/Blockchain/foundry/contractAddresses.json" },
+    { access = "read-write", path = "./output/example.json" },
+
 ]
 remappings = [
     "@chainlink/=lib/chainlink/",

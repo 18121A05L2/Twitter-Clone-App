@@ -46,5 +46,4 @@ contract TestProxy is Test, Constants {
         uint256 expectedVersion = 1;
         assertEq(version, expectedVersion);
     }
-
 }

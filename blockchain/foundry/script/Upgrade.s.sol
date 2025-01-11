@@ -9,16 +9,31 @@ import {TwitterV2} from "../src/TwitterV2.sol";
 import {Twitter} from "../src/Twitter.sol";
 import {DevOpsTools} from "lib/foundry-devops/src/DevOpsTools.sol";
 import {HelperConfig} from "../script/HelperConfig.s.sol";
+import {TwitterProxy} from "../src/TwitterProxy.sol";
+import {DeployProxyAndImplementation} from "../script/DeployProxyAndImplementation.s.sol";
 
 contract Upgrade is Script, Constants {
-    function run() external returns (address proxy) {
-        HelperConfig config = new HelperConfig();
-        (address account,) = config.activeNetworkConfig();
+    address account;
 
-        proxy = DevOpsTools.get_most_recent_deployment("TwitterProxy", block.chainid);
+    function run() external returns (address, TwitterV2, address) {
+        HelperConfig config = new HelperConfig();
+        DeployProxyAndImplementation proxyAndImplementation = new DeployProxyAndImplementation();
+        (, TwitterProxy twitterProxy) = proxyAndImplementation.run();
+        (account,) = config.activeNetworkConfig();
+        // TODO :
+        // proxy = DevOpsTools.get_most_recent_deployment("TwitterProxy", block.chainid);
         vm.startBroadcast(account);
         TwitterV2 twitterV2 = new TwitterV2();
-        TwitterV2(payable(proxy)).upgradeToAndCall(address(twitterV2), "");
+        // upgradeToAndCall(address(twitterV2), "");
+        vm.stopBroadcast();
+        return (address(twitterProxy), twitterV2, account);
+    }
+
+    function upgradeToAndCall(address implementation, bytes memory data, address twitterProxy, address broadcastAccount)
+        public
+    {
+        vm.startBroadcast(broadcastAccount);
+        TwitterV2(payable(address(twitterProxy))).upgradeToAndCall(implementation, data);
         vm.stopBroadcast();
     }
 }

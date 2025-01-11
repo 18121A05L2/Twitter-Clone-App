@@ -132,7 +132,7 @@ contract Twitter is TwitterToken, ERC165, Initializable, OwnableUpgradeable, UUP
 
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
-    function getVersion() external virtual pure returns (uint256) {
+    function getVersion() external pure virtual returns (uint256) {
         return 1;
     }
 

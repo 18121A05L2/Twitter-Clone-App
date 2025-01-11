@@ -17,5 +17,6 @@ abstract contract Constants {
     // slots
     bytes32 constant IMPLEMENTATION_SLOT = bytes32(uint256(keccak256("eip1967.proxy.implementation")) - 1);
     bytes32 constant ADMIN_SLOT = bytes32(uint256(keccak256("eip1967.proxy.admin")) - 1);
-    bytes32 constant OPENZEPPELIN_OWANABLE_SLOT = keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.Ownable")) - 1)) & ~bytes32(uint256(0xff));
+    bytes32 constant OPENZEPPELIN_OWANABLE_SLOT =
+        keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.Ownable")) - 1)) & ~bytes32(uint256(0xff));
 }

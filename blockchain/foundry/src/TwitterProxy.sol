@@ -12,6 +12,7 @@ import {ERC1967Utils} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.s
  */
 contract TwitterProxy is ERC1967Proxy {
     constructor(address implementation, bytes memory _data) payable ERC1967Proxy(implementation, _data) {
+        // TODO : need to check where and how we can use this or are we going to use openzepplin owanable one
         ERC1967Utils.changeAdmin(msg.sender);
     }
 }

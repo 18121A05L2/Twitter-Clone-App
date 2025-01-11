@@ -11,11 +11,11 @@ import {HelperConfig} from "../script/HelperConfig.s.sol";
 
 contract TestProxy is Test, Constants {
     TwitterProxy public twitterProxy;
-    Twitter public implementationContract;
+    Twitter public twitterV1;
     address deployedWithAccount;
 
     function setUp() public {
-        (implementationContract, twitterProxy) = new DeployProxyAndImplementation().run();
+        (twitterV1, twitterProxy) = new DeployProxyAndImplementation().run();
         HelperConfig config = new HelperConfig();
         (deployedWithAccount,) = config.activeNetworkConfig();
     }
@@ -29,7 +29,6 @@ contract TestProxy is Test, Constants {
         assertEq(zerothSlot, 0);
     }
 
-    // TODO
     function testProxyOwner() public view {
         bytes32 ownerAddressInBytes32 = vm.load(address(twitterProxy), ADMIN_SLOT);
         address ownerAddress = address(uint160(uint256(ownerAddressInBytes32)));
@@ -39,9 +38,13 @@ contract TestProxy is Test, Constants {
     function testImplementationAddress() public view {
         bytes32 implementationAddressInBytes32 = vm.load(address(twitterProxy), IMPLEMENTATION_SLOT);
         address implementationAddress = address(uint160(uint256(implementationAddressInBytes32)));
-        assertEq(implementationAddress, address(implementationContract));
-
-        // test function
-        // address impAddress = twitterProxy._implementation();
+        assertEq(implementationAddress, address(twitterV1));
     }
+
+    function testVersionV1() public view {
+        uint256 version = twitterV1.getVersion();
+        uint256 expectedVersion = 1;
+        assertEq(version, expectedVersion);
+    }
+
 }

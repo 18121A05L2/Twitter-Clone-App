@@ -1,0 +1,66 @@
+[submodule "foundry-template"]
+	path = foundry-template
+	url = https://github.com/PaulRBerg/foundry-template
+[submodule "blockchain/foundry/lib/forge-std"]
+	path = blockchain/foundry/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "blockchain/foundry/lib/chainlink-brownie-contracts"]
+	path = blockchain/foundry/lib/chainlink-brownie-contracts
+	url = https://github.com/smartcontractkit/chainlink-brownie-contracts
+[submodule "blockchain/foundry/lib/foundry-devops"]
+	path = blockchain/foundry/lib/foundry-devops
+	url = https://github.com/Cyfrin/foundry-devops
+[submodule "blockchain/foundry/lib/solmate"]
+	path = blockchain/foundry/lib/solmate
+	url = https://github.com/transmissions11/solmate
+[submodule "blockchain/foundry-pc/lib/foundry-devops"]
+	path = blockchain/foundry-pc/lib/foundry-devops
+	url = https://github.com/cyfrin/foundry-devops
+[submodule "blockchain/foundry-pc/lib/chainlink-brownie-contracts"]
+	path = blockchain/foundry-pc/lib/chainlink-brownie-contracts
+	url = https://github.com/smartcontractkit/chainlink-brownie-contracts
+[submodule "blockchain/foundry-pc/lib/forge-std"]
+	path = blockchain/foundry-pc/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "blockchain/foundry-pc/lib/solmate"]
+	path = blockchain/foundry-pc/lib/solmate
+	url = https://github.com/transmissions11/solmate
+[submodule "blockchain/foundry/lib/openzeppelin-contracts-upgradeable"]
+	path = blockchain/foundry/lib/openzeppelin-contracts-upgradeable
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable
+[submodule "blockchain/foundry/lib/openzeppelin-foundry-upgrades"]
+	path = blockchain/foundry/lib/openzeppelin-foundry-upgrades
+	url = https://github.com/openzeppelin/openzeppelin-foundry-upgrades
+[submodule "blockchain/foundry/lib/openzeppelin-contracts"]
+	path = blockchain/foundry/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "blockchain/foundry/projects/merkle-airdrop/lib/forge-std"]
+	path = blockchain/foundry/projects/merkle-airdrop/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "blockchain/projects/merkle-airdrop/lib/openzeppelin-contracts"]
+	path = blockchain/projects/merkle-airdrop/lib/openzeppelin-contracts
+	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "blockchain/projects/merkle-airdrop/lib/murky"]
+	path = blockchain/projects/merkle-airdrop/lib/murky
+	url = https://github.com/dmfxyz/murky
+[submodule "blockchain/projects/proxy-contracts/lib/forge-std"]
+	path = blockchain/projects/proxy-contracts/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "blockchain/projects/account-abstraction/lib/forge-std"]
+	path = blockchain/projects/account-abstraction/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "blockchain/projects/account-abstraction/lib/account-abstraction"]
+	path = blockchain/projects/account-abstraction/lib/account-abstraction
+	url = https://github.com/eth-infinitism/account-abstraction
+[submodule "blockchain/projects/account-abstraction/lib/openzeppelin-contracts"]
+	path = blockchain/projects/account-abstraction/lib/openzeppelin-contracts
+	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "blockchain/projects/account-abstraction/lib/foundry-era-contracts"]
+	path = blockchain/projects/account-abstraction/lib/foundry-era-contracts
+	url = https://github.com/cyfrin/foundry-era-contracts
+[submodule "blockchain/projects/dao/lib/forge-std"]
+	path = blockchain/projects/dao/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "blockchain/foundry/lib/chainlink"]
+	path = blockchain/foundry/lib/chainlink
+	url = https://github.com/smartcontractkit/chainlink

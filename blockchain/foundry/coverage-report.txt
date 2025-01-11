@@ -1,0 +1,26 @@
+Compiling 58 files with Solc 0.8.28
+Solc 0.8.28 finished in 1.89s
+Compiler run successful with warnings:
+Warning (3420): Source file does not specify required compiler version! Consider adding "pragma solidity ^0.8.28;"
+--> script/DeployMocks.s.sol
+
+Analysing contracts...
+Running tests...
+
+Ran 1 test for test/Contants.t.sol:TestConstants
+[PASS] testConstants() (gas: 4355)
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 8.97ms (1.27ms CPU time)
+
+Ran 3 tests for test/TestProxy.t.sol:TestProxy
+[PASS] testImplementationAddress() (gas: 8747)
+[PASS] testProxyBalance() (gas: 8108)
+[FAIL: assertion failed: 0x1804c8AB1F12E6bbf3894d4083f33e07309d1f38 != 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266] testProxyOwner() (gas: 8768)
+Suite result: FAILED. 2 passed; 1 failed; 0 skipped; finished in 134.29ms (1.37ms CPU time)
+
+Ran 2 test suites in 293.14ms (143.26ms CPU time): 3 tests passed, 1 failed, 0 skipped (4 total tests)
+
+Failing tests:
+Encountered 1 failing test in test/TestProxy.t.sol:TestProxy
+[FAIL: assertion failed: 0x1804c8AB1F12E6bbf3894d4083f33e07309d1f38 != 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266] testProxyOwner() (gas: 8768)
+
+Encountered a total of 1 failing tests, 3 tests succeeded

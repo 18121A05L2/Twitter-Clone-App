@@ -21,8 +21,6 @@ error Twitter_NotOwner();
  * @notice This is Implementation Contract
  */
 contract Twitter is TwitterToken, ERC165, Initializable, OwnableUpgradeable, UUPSUpgradeable {
-    address public contractAddress;
-
     using FundMe for uint256;
 
     address public i_owner;
@@ -55,10 +53,10 @@ contract Twitter is TwitterToken, ERC165, Initializable, OwnableUpgradeable, UUP
 
     function __Twitter_init(address initialOwner, address priceFeedAddress) public payable initializer {
         __Ownable_init(initialOwner);
+        __TwitterToken__init();
         require(msg.value > 0 && msg.value < 0.11 ether, "Must send ETH to deploy");
         i_owner = msg.sender;
         s_priceFeed = AggregatorV3Interface(priceFeedAddress);
-        contractAddress = address(this);
     }
 
     function setNftContractAddress(address _nftContractAddress) public onlyOwner {
@@ -70,7 +68,7 @@ contract Twitter is TwitterToken, ERC165, Initializable, OwnableUpgradeable, UUP
         require(uint256(msg.value) >= uint256(1 * 10 ** s_decimals), "need 1 TWT token");
         require(s_balanceOf[msg.sender] >= msg.value, " Not enough TWT token balance");
         s_balanceOf[msg.sender] -= msg.value;
-        s_balanceOf[contractAddress] += msg.value;
+        s_balanceOf[address(this)] += msg.value;
         s_addressToTweets[msg.sender].push(tweetUrl);
         emit Tweet(msg.sender, tweetUrl);
     }
@@ -101,13 +99,13 @@ contract Twitter is TwitterToken, ERC165, Initializable, OwnableUpgradeable, UUP
     }
 
     function faucet() public payable {
-        require(s_balanceOf[contractAddress] >= 10 * 10 ** s_decimals, " faucet failed ");
+        require(s_balanceOf[address(this)] >= 10 * 10 ** s_decimals, " faucet failed ");
         s_balanceOf[msg.sender] += 10 * 10 ** s_decimals;
-        s_balanceOf[contractAddress] -= 10 * 10 ** s_decimals;
+        s_balanceOf[address(this)] -= 10 * 10 ** s_decimals;
     }
 
     function freeEth(uint256 amount) public payable {
-        require(contractAddress.balance >= amount, " Contract not have 0.01 ETH");
+        require(address(this).balance >= amount, " Contract not have 0.01 ETH");
         (bool success,) = payable(msg.sender).call{value: amount}("");
         require(success, " Failed to send 0.01 ETH");
     }

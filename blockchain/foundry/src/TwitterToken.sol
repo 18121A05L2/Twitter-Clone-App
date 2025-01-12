@@ -13,7 +13,13 @@ contract TwitterToken {
     mapping(address => uint256) public s_balanceOf;
     mapping(address => mapping(address => uint256)) public s_allowances;
 
-    constructor() {
+    // we dont need to have constructors for Proxy contracts
+    // constructor() {
+    //     s_balanceOf[msg.sender] = (TOTAL_SUPPLY * 10 ** s_decimals) / 2;
+    //     s_balanceOf[address(this)] = (TOTAL_SUPPLY * 10 ** s_decimals) / 2;
+    // }
+
+    function __TwitterToken__init() public {
         s_balanceOf[msg.sender] = (TOTAL_SUPPLY * 10 ** s_decimals) / 2;
         s_balanceOf[address(this)] = (TOTAL_SUPPLY * 10 ** s_decimals) / 2;
     }
@@ -87,6 +93,8 @@ contract TwitterToken {
         require(s_balanceOf[_from] >= _value, " User doesn't have enought tokens ");
         s_allowances[_from][_spender] = _value;
     }
+
+    uint256[50] __gap;
 }
 
 // https://eips.ethereum.org/EIPS/eip-20#simple-summary

@@ -23,3 +23,4 @@ contract TwitterProxy is ERC1967Proxy {
 // Helful Docs
 // https://docs.openzeppelin.com/upgrades-plugins/writing-upgradeable#modifying-your-contracts
 // https://eips.ethereum.org/EIPS/eip-1967
+// https://eips.ethereum.org/EIPS/eip-1822

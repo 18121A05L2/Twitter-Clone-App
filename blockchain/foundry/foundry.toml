@@ -4,6 +4,11 @@ out = "out"
 libs = ["lib"]
 # broadcast = "broadcast"
 
+# [profile.default.zksync]
+# compile = true
+# fallback_oz = true
+# mode = '3'
+
 # file permissions
 ffi = true
 fs_permissions = [

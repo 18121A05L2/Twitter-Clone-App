@@ -11,6 +11,7 @@ import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import {ERC1967Utils} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.sol";
 
 error Twitter_NotOwner();
 
@@ -20,8 +21,6 @@ error Twitter_NotOwner();
  * @notice This is Implementation Contract
  */
 contract Twitter is TwitterToken, ERC165, Initializable, OwnableUpgradeable, UUPSUpgradeable {
-    address public contractAddress;
-
     using FundMe for uint256;
 
     address public i_owner;
@@ -54,10 +53,10 @@ contract Twitter is TwitterToken, ERC165, Initializable, OwnableUpgradeable, UUP
 
     function __Twitter_init(address initialOwner, address priceFeedAddress) public payable initializer {
         __Ownable_init(initialOwner);
+        __TwitterToken__init();
         require(msg.value > 0 && msg.value < 0.11 ether, "Must send ETH to deploy");
         i_owner = msg.sender;
         s_priceFeed = AggregatorV3Interface(priceFeedAddress);
-        contractAddress = address(this);
     }
 
     function setNftContractAddress(address _nftContractAddress) public onlyOwner {
@@ -69,7 +68,7 @@ contract Twitter is TwitterToken, ERC165, Initializable, OwnableUpgradeable, UUP
         require(uint256(msg.value) >= uint256(1 * 10 ** s_decimals), "need 1 TWT token");
         require(s_balanceOf[msg.sender] >= msg.value, " Not enough TWT token balance");
         s_balanceOf[msg.sender] -= msg.value;
-        s_balanceOf[contractAddress] += msg.value;
+        s_balanceOf[address(this)] += msg.value;
         s_addressToTweets[msg.sender].push(tweetUrl);
         emit Tweet(msg.sender, tweetUrl);
     }
@@ -100,13 +99,13 @@ contract Twitter is TwitterToken, ERC165, Initializable, OwnableUpgradeable, UUP
     }
 
     function faucet() public payable {
-        require(s_balanceOf[contractAddress] >= 10 * 10 ** s_decimals, " faucet failed ");
+        require(s_balanceOf[address(this)] >= 10 * 10 ** s_decimals, " faucet failed ");
         s_balanceOf[msg.sender] += 10 * 10 ** s_decimals;
-        s_balanceOf[contractAddress] -= 10 * 10 ** s_decimals;
+        s_balanceOf[address(this)] -= 10 * 10 ** s_decimals;
     }
 
     function freeEth(uint256 amount) public payable {
-        require(contractAddress.balance >= amount, " Contract not have 0.01 ETH");
+        require(address(this).balance >= amount, " Contract not have 0.01 ETH");
         (bool success,) = payable(msg.sender).call{value: amount}("");
         require(success, " Failed to send 0.01 ETH");
     }
@@ -132,8 +131,12 @@ contract Twitter is TwitterToken, ERC165, Initializable, OwnableUpgradeable, UUP
 
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
-    function getVersion() external virtual pure returns (uint256) {
+    function getVersion() external pure virtual returns (uint256) {
         return 1;
+    }
+
+    function getImplementation() external view returns (address) {
+        return ERC1967Utils.getImplementation();
     }
 
     // A fallback function to accept ETH

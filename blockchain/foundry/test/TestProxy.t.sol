@@ -47,4 +47,8 @@ contract TestProxy is Test, Constants {
         assertEq(version, expectedVersion);
     }
 
+    function testGetImplementation() public view {
+        address implementationAddress = Twitter(payable(address(twitterProxy))).getImplementation();
+        assertEq(implementationAddress, address(twitterV1));
+    }
 }

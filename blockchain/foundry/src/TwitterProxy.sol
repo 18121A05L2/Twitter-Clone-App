@@ -9,6 +9,7 @@ import {ERC1967Utils} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.s
  * @title Follows ERC-1822: Universal Upgradeable Proxy Standard (UUPS)
  * @author LakshmiSanikommu
  * @notice This follows ERC1967 : Proxy Storage Slots
+ * @dev If this exceeds the Limit of 24kb for Twitter contract we will implement a diamond proxy pattern contract - https://eips.ethereum.org/EIPS/eip-2535#reference-implementation
  */
 contract TwitterProxy is ERC1967Proxy {
     constructor(address implementation, bytes memory _data) payable ERC1967Proxy(implementation, _data) {

@@ -12,6 +12,7 @@ import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Own
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import {ERC1967Utils} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 error Twitter_NotOwner();
 
@@ -126,7 +127,7 @@ contract Twitter is TwitterToken, ERC165, Initializable, OwnableUpgradeable, UUP
     }
 
     function supportsInterface(bytes4 interfaceId) public view override(ERC165) returns (bool) {
-        return interfaceId == type(IERC165).interfaceId || super.supportsInterface(interfaceId);
+        return interfaceId == type(IERC20).interfaceId || super.supportsInterface(interfaceId);
     }
 
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}

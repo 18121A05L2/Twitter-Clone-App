@@ -1,7 +1,14 @@
 {
+  "31337": {
+    "Twitter": "0xdc64a140aa3e981100a9beca4e685f962f0cf6c9",
+    "TwitterProxy": "0x5fc8d32690cc91d4c39d9d3abcbd16989f875707",
+    "TwitterV2": "0xa513e6e4b8f2a923d98304ec87f64353c4d5c853",
+    "TwitterNfts": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+  },
   "11155111": {
     "Twitter": "0xee09339f9480b8415e1485be8864de5c027790e4",
     "TwitterProxy": "0xb36b4b2913651d3aa8893f083a736bf9eb89310d",
-    "TwitterV2": "0x3948b579b837fa7067462859cac26598d85f04f9"
+    "TwitterV2": "0x3948b579b837fa7067462859cac26598d85f04f9",
+    "TwitterNfts": "0x0056C1C4d55e07E490fC31FF8a96D17Ef71F85D1"
   }
 }

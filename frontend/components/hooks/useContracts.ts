@@ -3,7 +3,7 @@ import { RootState } from "../../Redux/app/store";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import {
-  contractAddresses,
+  chainSpecificAddresses,
   TwitterAbi,
   TwitterNftsAbi,
 } from "../../utils/exportJsons";
@@ -42,7 +42,7 @@ const useContracts = () => {
           //TODO: need to modify this
           // Twitter contract implementation
           let twitterContractAddress =
-            contractAddresses[Number(chainId)].Twitter;
+            chainSpecificAddresses[String(Number(chainId))].TwitterProxy;
           let twitterContract = new ethers.Contract(
             twitterContractAddress,
             TwitterAbi,
@@ -52,7 +52,7 @@ const useContracts = () => {
 
           // NFT contract implementation
           let nftContractAddress =
-            contractAddresses[chainId.toString()].TwitterNfts;
+            chainSpecificAddresses[chainId.toString()].TwitterNfts;
           let nftContract = new ethers.Contract(
             nftContractAddress,
             TwitterNftsAbi,

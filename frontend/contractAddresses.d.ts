@@ -1,7 +1,10 @@
 declare module "./constants/contractAddresses.json" {
   interface ContractAddress {
     Twitter: string;
-    TwitterNfts: string;
+    TwitterNfts?: string;
+    TwitterProxy;
+    string;
+    TwitterV2: string;
   }
 
   interface ContractAddresses {
@@ -14,7 +17,10 @@ declare module "./constants/contractAddresses.json" {
 
 interface ContractAddress {
   Twitter: string;
-  TwitterNfts: string;
+  TwitterNfts?: string;
+  TwitterProxy;
+  string;
+  TwitterV2: string;
 }
 
 interface ContractAddresses {

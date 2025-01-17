@@ -7,7 +7,7 @@ import {SmartWallet} from "../src/Ethereum/SmartWallet.sol";
 import {Constants} from "../src/Ethereum/Constants.sol";
 import {EntryPoint} from "lib/account-abstraction/contracts/core/EntryPoint.sol";
 import {ERC20Mock} from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
-import { console} from "forge-std/console.sol";
+import {console} from "forge-std/console.sol";
 
 contract HelperConfig is Script, Constants {
     struct NetworkConfig {

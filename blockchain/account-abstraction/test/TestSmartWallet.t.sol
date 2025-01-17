@@ -20,6 +20,8 @@ contract TestSmartWallet is Test {
     HelperConfig helperConfig;
     ERC20Mock usdc;
     SendPackedUserOps sendPackedUserOps;
+    address randomUser = makeAddr("RandomUser");
+    uint256 constant smartWalletInitialDeposit = 2 ether;
 
     function setUp() external {
         (smartWallet, helperConfig) = new DeploySmartWallet().run();
@@ -27,12 +29,15 @@ contract TestSmartWallet is Test {
         usdc = new ERC20Mock();
         sendPackedUserOps = new SendPackedUserOps();
         sendPackedUserOps.run();
+        vm.deal(address(smartWallet), smartWalletInitialDeposit);
     }
 
-    function testMinimalAccountWithOwner() external {
+    function testExecuteFunWithOwner() external {
         assertEq(usdc.balanceOf(address(smartWallet)), 0);
         uint256 amountToTransfer = 1e18;
         vm.prank(account);
+        // TODO : need to test by transfering 2 ether to it
+        // the mint function we are calling was not a payable function so cant send ether to a payable funtion
         smartWallet.execute(
             address(usdc), 0, abi.encodeWithSelector(ERC20Mock.mint.selector, address(smartWallet), amountToTransfer)
         );
@@ -53,8 +58,41 @@ contract TestSmartWallet is Test {
         assertEq(signer, smartWallet.owner());
     }
 
-    // function testValidateUserOps() external {
-    //     vm.startPrank(entrypoint);
-    //     // smartWallet.validateUserOp();
-    // }
+    function testValidateUserOpsAndDoExecution() external {
+        // Arrange
+        uint256 amountTransferedToSomeErc20Token = 2 ether; // this was MockWErc20 number , not real ether
+        uint256 usdcBalance = usdc.balanceOf(address(smartWallet));
+        bytes memory functionDataToExecute =
+            abi.encodeWithSelector(ERC20Mock.mint.selector, address(smartWallet), amountTransferedToSomeErc20Token);
+        bytes memory callData =
+            abi.encodeWithSelector(SmartWallet.execute.selector, address(usdc), 0, functionDataToExecute);
+        PackedUserOperation memory userOp =
+            sendPackedUserOps.generateSignedUserOperation(callData, address(smartWallet), entrypoint);
+        bytes32 userOpHash = IEntryPoint(entrypoint).getUserOpHash(userOp);
+        uint256 missingAccountFunds = 0;
+        uint256 missingFundsTrue = 1 ether;
+        PackedUserOperation[] memory ops = new PackedUserOperation[](1);
+        ops[0] = userOp;
+
+        // Act
+        vm.startPrank(entrypoint);
+        uint256 validationData = smartWallet.validateUserOp(userOp, userOpHash, missingAccountFunds);
+        IEntryPoint(entrypoint).handleOps(ops, payable(randomUser));
+        // with missigng funds
+        uint256 entryPointBalance = address(entrypoint).balance;
+        uint256 validationDataWithMissingFunds = smartWallet.validateUserOp(userOp, userOpHash, missingFundsTrue);
+
+        // Assert
+        assertEq(validationData, 0);
+        assertEq(validationDataWithMissingFunds, 0);
+        assertEq(address(entrypoint).balance, entryPointBalance + missingFundsTrue);
+        assertEq(usdc.balanceOf(address(smartWallet)), usdcBalance + amountTransferedToSomeErc20Token);
+        assert(randomUser.balance > 0);
+        // UserDeposit = OurSmartContractDepositedToEntryPoint -  benificieryUserPayment
+        // missingFundsTrue = 1 ether will also be transfered to deposits of our account in entrypoint
+        assertEq(
+            IEntryPoint(entrypoint).balanceOf(address(smartWallet)),
+            smartWalletInitialDeposit - address(smartWallet).balance - address(randomUser).balance
+        );
+    }
 }

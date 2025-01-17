@@ -18,13 +18,13 @@ contract SendPackedUserOps is Script {
     address smartWallet;
 
     function run() public returns (HelperConfig helperConfig) {
-        (, helperConfig) = new DeploySmartWallet().run();
+        helperConfig = new HelperConfig();
         smartWallet = DevOpsTools.get_most_recent_deployment("SmartWallet", block.chainid);
 
         (account,,) = helperConfig.activeNetworkConfig();
     }
 
-    function generateSignedUserOperation(bytes memory callData, address sender , address entryPoint)
+    function generateSignedUserOperation(bytes memory callData, address sender, address entryPoint)
         external
         view
         returns (PackedUserOperation memory)

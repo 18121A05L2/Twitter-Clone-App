@@ -20,6 +20,7 @@ contract SmartWallet is IAccount, Ownable {
 
     constructor(address entryPoint) Ownable(msg.sender) {
         i_entryPoint = IEntryPoint(entryPoint);
+        authorizedSenders.push(msg.sender);
     }
 
     modifier onlyEntryPoint() {

@@ -80,8 +80,8 @@ contract SmartWallet is IAccount, Ownable {
         }
         return false;
     }
-    // This is dynamic and we are going to give info to the handleOps function of what function need to call when the validateUserOps succeds
 
+    // This is dynamic and we are going to give info to the handleOps function of what function need to call when the validateUserOps succeds
     function execute(address dest, uint256 value, bytes calldata functionData) external requireFromEntryPointOrOwner {
         (bool success,) = dest.call{value: value}(functionData);
         if (!success) {

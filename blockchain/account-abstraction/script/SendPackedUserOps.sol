@@ -11,8 +11,9 @@ import {IEntryPoint} from "lib/account-abstraction/contracts/interfaces/IEntryPo
 import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 import {console} from "forge-std/console.sol";
 import {DeploySmartWallet} from "./DeploySmartWallet.sol";
+import {Constants} from "../src/Ethereum/Constants.sol";
 
-contract SendPackedUserOps is Script {
+contract SendPackedUserOps is Script, Constants {
     address account;
 
     address smartWallet;
@@ -24,11 +25,12 @@ contract SendPackedUserOps is Script {
         (account,,) = helperConfig.activeNetworkConfig();
     }
 
-    function generateSignedUserOperation(bytes memory callData, address sender, address entryPoint)
-        external
-        view
-        returns (PackedUserOperation memory)
-    {
+    function generateSignedUserOperation(
+        bytes memory callData,
+        address sender,
+        address entryPoint,
+        uint256 userPrivatekey
+    ) external view returns (PackedUserOperation memory) {
         uint256 nonce = vm.getNonce(smartWallet);
         PackedUserOperation memory userOp = _generateUnsignedUserOperation(callData, sender, nonce);
         bytes32 userOpHash = IEntryPoint(entryPoint).getUserOpHash(userOp);
@@ -39,8 +41,10 @@ contract SendPackedUserOps is Script {
         bytes32 r;
         bytes32 s;
         //TODO : need to add this as dynamic
-        uint256 ANVIL_PRIVATE_KEY = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
-        (v, r, s) = vm.sign(ANVIL_PRIVATE_KEY, digest);
+        if (userPrivatekey == ZERO_PRIVATE_KEY) {
+            userPrivatekey = vm.envUint("ANVIL_PRIVATE_KEY");
+        }
+        (v, r, s) = vm.sign(userPrivatekey, digest);
 
         userOp.signature = abi.encodePacked(r, s, v);
 

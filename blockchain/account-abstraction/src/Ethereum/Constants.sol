@@ -14,6 +14,7 @@ abstract contract Constants {
     uint8 constant DECIMALS = 8;
     int256 constant INITIAL_ANSWER = 340000000000;
     uint256 constant INITIAL_ETH_LOADED = 0.00000001 ether;
+    uint256 ZERO_PRIVATE_KEY = 0x0000000000000000000000000000000000000000000000000000000000000000;
     // chanin id
     uint256 constant ANVIL_CHAIN_ID = 31337;
     uint256 SEPOLIA_CHAIN_ID = 11155111;

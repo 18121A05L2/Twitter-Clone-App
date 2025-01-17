@@ -11,6 +11,7 @@ import {PackedUserOperation} from "lib/account-abstraction/contracts/interfaces/
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import {IEntryPoint} from "lib/account-abstraction/contracts/interfaces/IEntryPoint.sol";
 import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
+import {SIG_VALIDATION_FAILED, SIG_VALIDATION_SUCCESS} from "lib/account-abstraction/contracts/core/Helpers.sol";
 import {console} from "forge-std/console.sol";
 
 contract TestSmartWallet is Test {
@@ -20,8 +21,10 @@ contract TestSmartWallet is Test {
     HelperConfig helperConfig;
     ERC20Mock usdc;
     SendPackedUserOps sendPackedUserOps;
-    address randomUser = makeAddr("RandomUser");
+    address randomUser;
+    uint256 randomUserPrivateKey;
     uint256 constant smartWalletInitialDeposit = 2 ether;
+    uint256 anvilPrivateKey = vm.envUint("ANVIL_PRIVATE_KEY");
 
     function setUp() external {
         (smartWallet, helperConfig) = new DeploySmartWallet().run();
@@ -30,6 +33,7 @@ contract TestSmartWallet is Test {
         sendPackedUserOps = new SendPackedUserOps();
         sendPackedUserOps.run();
         vm.deal(address(smartWallet), smartWalletInitialDeposit);
+        (randomUser, randomUserPrivateKey) = makeAddrAndKey("RandomUser");
     }
 
     function testExecuteFunWithOwner() external {
@@ -48,7 +52,7 @@ contract TestSmartWallet is Test {
         vm.prank(account);
 
         PackedUserOperation memory userOp =
-            sendPackedUserOps.generateSignedUserOperation(hex"", address(smartWallet), entrypoint);
+            sendPackedUserOps.generateSignedUserOperation(hex"", address(smartWallet), entrypoint, anvilPrivateKey);
 
         bytes32 userOpHash = IEntryPoint(entrypoint).getUserOpHash(userOp);
 
@@ -67,7 +71,7 @@ contract TestSmartWallet is Test {
         bytes memory callData =
             abi.encodeWithSelector(SmartWallet.execute.selector, address(usdc), 0, functionDataToExecute);
         PackedUserOperation memory userOp =
-            sendPackedUserOps.generateSignedUserOperation(callData, address(smartWallet), entrypoint);
+            sendPackedUserOps.generateSignedUserOperation(callData, address(smartWallet), entrypoint, anvilPrivateKey);
         bytes32 userOpHash = IEntryPoint(entrypoint).getUserOpHash(userOp);
         uint256 missingAccountFunds = 0;
         uint256 missingFundsTrue = 1 ether;
@@ -83,7 +87,7 @@ contract TestSmartWallet is Test {
         uint256 validationDataWithMissingFunds = smartWallet.validateUserOp(userOp, userOpHash, missingFundsTrue);
 
         // Assert
-        assertEq(validationData, 0);
+        assertEq(validationData, SIG_VALIDATION_SUCCESS);
         assertEq(validationDataWithMissingFunds, 0);
         assertEq(address(entrypoint).balance, entryPointBalance + missingFundsTrue);
         assertEq(usdc.balanceOf(address(smartWallet)), usdcBalance + amountTransferedToSomeErc20Token);
@@ -94,5 +98,16 @@ contract TestSmartWallet is Test {
             IEntryPoint(entrypoint).balanceOf(address(smartWallet)),
             smartWalletInitialDeposit - address(smartWallet).balance - address(randomUser).balance
         );
+    }
+
+    function testAnotherAccountSigningTransaction() external {
+        vm.startPrank(account);
+        smartWallet.addAuthorizedSender(randomUser);
+        vm.stopPrank();
+        PackedUserOperation memory userOp =
+            sendPackedUserOps.generateSignedUserOperation(hex"", address(smartWallet), entrypoint, randomUserPrivateKey);
+        vm.startPrank(entrypoint);
+        uint256 validationData = smartWallet.validateUserOp(userOp, IEntryPoint(entrypoint).getUserOpHash(userOp), 0);
+        assertEq(validationData, SIG_VALIDATION_SUCCESS);
     }
 }

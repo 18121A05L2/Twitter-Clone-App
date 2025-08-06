@@ -33,6 +33,9 @@ endif
 ifeq ($(findstring --network bsc,$(args)),--network bsc) # ifeq (<value>,<value>)
 	NETWORK_ARGS := --rpc-url $(BSC_TEST_NET) --account Real_account_private_key  --broadcast --verify --etherscan-api-key $(ETHERSCAN_API_KEY)
 endif
+ifeq ($(findstring --network optimism,$(args)),--network optimism) # ifeq (<value>,<value>)
+	NETWORK_ARGS := --rpc-url $(OPTIMISM_SEPOLIA) --account Real_account_private_key  --broadcast --verify --etherscan-api-key $(ETHERSCAN_API_KEY)
+endif
 
 deploy:
 	forge script script/DeployProxyAndImplementation.s.sol:DeployProxyAndImplementation ${NETWORK_ARGS}
